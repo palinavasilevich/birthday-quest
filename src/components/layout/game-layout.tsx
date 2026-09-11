@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { AmbientMusic } from "@/components/audio/ambient-music";
 import { AmbientParticles } from "@/components/layout/ambient-particles";
 import { FullscreenButton } from "@/components/layout/fullscreen-button";
+import { SoundToggleButton } from "@/components/layout/sound-toggle-button";
 
 interface GameLayoutProps {
   backgroundImg?: string;
@@ -72,7 +73,7 @@ export function GameLayout({
       </div>
 
       <div className="absolute right-4 top-4 z-20 flex gap-3">
-        {/* <SoundToggleButton /> */}
+        <SoundToggleButton />
         <FullscreenButton />
       </div>
     </div>

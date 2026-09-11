@@ -1,6 +1,5 @@
 import type { PuzzleData } from "@/types/game";
-
-import { RunePuzzle } from "@/components/puzzle/rune-puzzle";
+import { RunePuzzle } from "./rune-puzzle";
 
 interface PuzzleProps {
   puzzle: PuzzleData;
@@ -9,7 +8,7 @@ interface PuzzleProps {
 export function Puzzle({ puzzle }: PuzzleProps) {
   switch (puzzle.type) {
     case "runes":
-      return <RunePuzzle nextScene={puzzle.nextScene} />;
+      return <RunePuzzle puzzleId={puzzle.id} nextScene={puzzle.nextScene} />;
 
     default:
       return null;

@@ -280,6 +280,7 @@ export const firstChapter: ChapterData = {
         text: "Перед тобой пять рун.",
       },
       puzzle: {
+        id: "chapter1-runes",
         type: "runes",
         nextScene: "chapter1-door",
       },

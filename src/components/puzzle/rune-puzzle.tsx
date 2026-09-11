@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { useGameStore } from "@/store/game-store";
 
 interface Rune {
@@ -9,6 +10,7 @@ interface Rune {
 }
 
 interface RunePuzzleProps {
+  puzzleId: string;
   nextScene: string;
 }
 
@@ -45,8 +47,6 @@ const RUNES: Rune[] = [
   },
 ];
 
-// Временная последовательность.
-// Позже заменим её на настоящую мелодию из Baldur's Gate 3.
 const CORRECT_SEQUENCE = ["quen", "aard", "igni", "yrden", "axii"];
 
 function playRuneSound(frequency: number) {
@@ -68,6 +68,7 @@ function playRuneSound(frequency: number) {
   const gain = context.createGain();
 
   oscillator.type = "sine";
+
   oscillator.frequency.setValueAtTime(frequency, context.currentTime);
 
   gain.gain.setValueAtTime(0, context.currentTime);
@@ -83,8 +84,9 @@ function playRuneSound(frequency: number) {
   oscillator.stop(context.currentTime + 1);
 }
 
-export function RunePuzzle({ nextScene }: RunePuzzleProps) {
+export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
   const setScene = useGameStore((state) => state.setScene);
+  const completePuzzle = useGameStore((state) => state.completePuzzle);
 
   const [sequence, setSequence] = useState<string[]>([]);
   const [activeRune, setActiveRune] = useState<string | null>(null);
@@ -98,34 +100,29 @@ export function RunePuzzle({ nextScene }: RunePuzzleProps) {
       return;
     }
 
-    // Проигрываем звук руны
     playRuneSound(rune.frequency);
 
-    // Визуально подсвечиваем руну
     setActiveRune(rune.id);
 
     window.setTimeout(() => {
       setActiveRune(null);
     }, 250);
 
-    // Какая руна ожидается сейчас
     const expectedRune = CORRECT_SEQUENCE[sequence.length];
 
-    // Игрок нажал неправильную руну
     if (rune.id !== expectedRune) {
       setSequence([]);
       setMessage("Мелодия нарушена. Попробуй снова.");
       return;
     }
 
-    // Игрок нажал правильную руну
     const nextSequence = [...sequence, rune.id];
 
     setSequence(nextSequence);
 
-    // Вся последовательность правильная
     if (nextSequence.length === CORRECT_SEQUENCE.length) {
       setIsSolved(true);
+      completePuzzle(puzzleId);
       setMessage("Мелодия отозвалась в камне.");
 
       window.setTimeout(() => {
@@ -140,12 +137,10 @@ export function RunePuzzle({ nextScene }: RunePuzzleProps) {
 
   return (
     <div className="mt-10 flex w-full max-w-2xl flex-col items-center">
-      {/* Message */}
       <p className="mb-8 text-center font-story text-xl italic text-white/70">
         {message}
       </p>
 
-      {/* Runes */}
       <div className="grid grid-cols-5 gap-4">
         {RUNES.map((rune) => {
           const isActive = activeRune === rune.id;
@@ -177,7 +172,6 @@ export function RunePuzzle({ nextScene }: RunePuzzleProps) {
                 }
               `}
             >
-              {/* Rune symbol */}
               <span
                 className={`
                   font-serif text-4xl
@@ -188,7 +182,6 @@ export function RunePuzzle({ nextScene }: RunePuzzleProps) {
                 {rune.symbol}
               </span>
 
-              {/* Rune name */}
               <span
                 className="
                   mt-2 text-[10px] uppercase
@@ -202,7 +195,6 @@ export function RunePuzzle({ nextScene }: RunePuzzleProps) {
         })}
       </div>
 
-      {/* Progress */}
       <div className="mt-8 flex gap-2">
         {CORRECT_SEQUENCE.map((_, index) => {
           const isCompleted = index < sequence.length;
