@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import { useGameStore } from "@/store/game-store";
 
+import { useRunePlayback } from "@/hooks/use-rune-playback";
+
 interface Rune {
   id: string;
   label: string;
@@ -19,128 +21,152 @@ const RUNES: Rune[] = [
     id: "quen",
     label: "QUEN",
     symbol: "ᛩ",
-    frequency: 261.63,
+    frequency: 493.88,
   },
   {
     id: "igni",
     label: "IGNI",
     symbol: "ᛁ",
-    frequency: 329.63,
+    frequency: 659.25,
   },
   {
     id: "aard",
     label: "AARD",
     symbol: "ᚨ",
-    frequency: 392,
+    frequency: 739.99,
   },
   {
     id: "axii",
     label: "AXII",
     symbol: "ᚨ",
-    frequency: 440,
+    frequency: 587.33,
   },
   {
     id: "yrden",
     label: "YRDEN",
     symbol: "ᛦ",
-    frequency: 523.25,
+    frequency: 783.99,
   },
 ];
 
-const CORRECT_SEQUENCE = ["quen", "aard", "igni", "yrden", "axii"];
+const PUZZLE_ROUNDS = [
+  ["quen", "igni", "aard", "axii"],
 
-function playRuneSound(frequency: number) {
-  const AudioContext =
-    window.AudioContext ||
-    (
-      window as typeof window & {
-        webkitAudioContext?: typeof window.AudioContext;
-      }
-    ).webkitAudioContext;
+  ["quen", "igni", "aard", "axii", "quen", "igni", "aard", "axii"],
 
-  if (!AudioContext) {
-    return;
-  }
-
-  const context = new AudioContext();
-
-  const oscillator = context.createOscillator();
-  const gain = context.createGain();
-
-  oscillator.type = "sine";
-
-  oscillator.frequency.setValueAtTime(frequency, context.currentTime);
-
-  gain.gain.setValueAtTime(0, context.currentTime);
-
-  gain.gain.linearRampToValueAtTime(0.18, context.currentTime + 0.02);
-
-  gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 1);
-
-  oscillator.connect(gain);
-  gain.connect(context.destination);
-
-  oscillator.start();
-  oscillator.stop(context.currentTime + 1);
-}
+  [
+    "quen",
+    "igni",
+    "aard",
+    "axii",
+    "quen",
+    "igni",
+    "aard",
+    "axii",
+    "quen",
+    "yrden",
+    "aard",
+  ],
+];
 
 export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
   const setScene = useGameStore((state) => state.setScene);
+
   const completePuzzle = useGameStore((state) => state.completePuzzle);
 
+  const [round, setRound] = useState(0);
   const [sequence, setSequence] = useState<string[]>([]);
-  const [activeRune, setActiveRune] = useState<string | null>(null);
-  const [message, setMessage] = useState(
-    "Коснись рун. Найди правильную мелодию.",
-  );
   const [isSolved, setIsSolved] = useState(false);
+  const [isMistake, setIsMistake] = useState(false);
+
+  const currentSequence = PUZZLE_ROUNDS[round];
+
+  const { isPlaying, activeRune, playRune, replay } = useRunePlayback({
+    runes: RUNES,
+    sequence: currentSequence,
+  });
 
   const handleRuneClick = (rune: Rune) => {
-    if (isSolved) {
+    if (isPlaying || isSolved) {
       return;
     }
 
-    playRuneSound(rune.frequency);
+    // Play the note when the player presses a rune.
+    playRune(rune.id);
 
-    setActiveRune(rune.id);
+    const expectedRune = currentSequence[sequence.length];
 
-    window.setTimeout(() => {
-      setActiveRune(null);
-    }, 250);
-
-    const expectedRune = CORRECT_SEQUENCE[sequence.length];
-
+    /*
+     * Wrong rune.
+     */
     if (rune.id !== expectedRune) {
+      setIsMistake(true);
       setSequence([]);
-      setMessage("Мелодия нарушена. Попробуй снова.");
+
+      window.setTimeout(() => {
+        setIsMistake(false);
+      }, 500);
+
       return;
     }
 
+    /*
+     * Correct rune.
+     */
     const nextSequence = [...sequence, rune.id];
 
     setSequence(nextSequence);
 
-    if (nextSequence.length === CORRECT_SEQUENCE.length) {
-      setIsSolved(true);
-      completePuzzle(puzzleId);
-      setMessage("Мелодия отозвалась в камне.");
+    /*
+     * Round is not complete yet.
+     */
+    if (nextSequence.length < currentSequence.length) {
+      return;
+    }
+
+    /*
+     * Round completed.
+     */
+    if (round < PUZZLE_ROUNDS.length - 1) {
+      setSequence([]);
 
       window.setTimeout(() => {
-        setScene(nextScene);
-      }, 1600);
+        setRound((currentRound) => currentRound + 1);
+      }, 900);
 
       return;
     }
 
-    setMessage("Звук отозвался в тишине...");
+    /*
+     * Puzzle completed.
+     */
+    setIsSolved(true);
+    completePuzzle(puzzleId);
+
+    window.setTimeout(() => {
+      setScene(nextScene);
+    }, 1800);
   };
 
   return (
     <div className="mt-10 flex w-full max-w-2xl flex-col items-center">
-      <p className="mb-8 text-center font-story text-xl italic text-white/70">
-        {message}
+      {/* Message */}
+      <p className="mb-3 min-h-8 text-center font-story text-xl italic text-white/70">
+        {isSolved
+          ? "Мелодия отозвалась в камне."
+          : isPlaying
+            ? "Вслушайся в мелодию..."
+            : isMistake
+              ? "Солнышко давай, я тебя люблю давай..."
+              : "Теперь повтори её."}
       </p>
 
+      {/* Round */}
+      <p className="mb-8 text-center text-xs uppercase tracking-[0.3em] text-[#ff9b00]/60">
+        Фрагмент {round + 1} / {PUZZLE_ROUNDS.length}
+      </p>
+
+      {/* Runes */}
       <div className="grid grid-cols-5 gap-4">
         {RUNES.map((rune) => {
           const isActive = activeRune === rune.id;
@@ -149,25 +175,34 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
             <button
               key={rune.id}
               type="button"
-              disabled={isSolved}
+              disabled={isPlaying || isSolved}
               onClick={() => handleRuneClick(rune)}
               aria-label={`Руна ${rune.label}`}
               className={`
                 group relative flex h-24 w-20
                 cursor-pointer flex-col items-center justify-center
-                border border-[#ff9b00]/40
+                border
                 bg-black/60
-                text-[#ff9b00]
                 outline-none
                 transition-all duration-200
+
+                ${
+                  isMistake && isActive
+                    ? "border-red-500 bg-red-500/10 text-red-400 shadow-[0_0_25px_rgba(239,68,68,0.4)]"
+                    : "border-[#ff9b00]/40 text-[#ff9b00]"
+                }
+
                 hover:border-[#ff9b00]
                 hover:bg-[#ff9b00]/10
+
                 focus-visible:border-[#ff9b00]
                 focus-visible:shadow-[0_0_20px_rgba(255,155,0,0.35)]
+
                 disabled:cursor-default
+
                 ${
-                  isActive
-                    ? "scale-105 border-[#ff9b00] bg-[#ff9b00]/20 shadow-[0_0_25px_rgba(255,155,0,0.45)]"
+                  isActive && !isMistake
+                    ? "scale-105 border-[#ff9b00] bg-[#ff9b00]/20 shadow-[0_0_30px_rgba(255,155,0,0.55)]"
                     : ""
                 }
               `}
@@ -176,7 +211,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
                 className={`
                   font-serif text-4xl
                   transition-all duration-200
-                  ${isActive ? "scale-110 text-white" : "text-[#ff9b00]"}
+                  ${isActive ? "scale-110 text-white" : ""}
                 `}
               >
                 {rune.symbol}
@@ -195,8 +230,9 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
         })}
       </div>
 
+      {/* Progress */}
       <div className="mt-8 flex gap-2">
-        {CORRECT_SEQUENCE.map((_, index) => {
+        {currentSequence.map((_, index) => {
           const isCompleted = index < sequence.length;
 
           return (
@@ -205,6 +241,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
               className={`
                 h-1.5 w-8
                 transition-all duration-300
+
                 ${
                   isCompleted
                     ? "bg-[#ff9b00] shadow-[0_0_8px_rgba(255,155,0,0.6)]"
@@ -215,6 +252,30 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
           );
         })}
       </div>
+
+      {/* Replay button */}
+      {!isSolved && (
+        <button
+          type="button"
+          disabled={isPlaying}
+          onClick={() => {
+            setSequence([]);
+            setIsMistake(false);
+            replay();
+          }}
+          className="
+            mt-8 cursor-pointer
+            text-xs uppercase tracking-[0.2em]
+            text-white/40
+            transition-colors
+            hover:text-[#ff9b00]
+            disabled:cursor-default
+            disabled:opacity-30
+          "
+        >
+          Послушать мелодию ещё раз
+        </button>
+      )}
     </div>
   );
 }

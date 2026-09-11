@@ -10,6 +10,10 @@ interface GameMusicProps {
   fadeDuration?: number;
 }
 
+function clampVolume(value: number) {
+  return Math.max(0, Math.min(1, value));
+}
+
 export function GameMusic({
   mode,
   chapterSrc,
@@ -19,112 +23,110 @@ export function GameMusic({
 }: GameMusicProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentSrcRef = useRef<string | null>(null);
+  const animationRef = useRef<number | null>(null);
 
   const targetSrc = mode === "puzzle" ? puzzleSrc : chapterSrc;
 
   useEffect(() => {
-    const currentAudio = audioRef.current;
+    const stopAnimation = () => {
+      if (animationRef.current !== null) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+    };
 
-    if (!currentAudio) {
-      const audio = new Audio(targetSrc);
+    const startFadeIn = (audio: HTMLAudioElement) => {
+      const startTime = performance.now();
+
+      const fadeIn = (time: number) => {
+        const progress = Math.min((time - startTime) / fadeDuration, 1);
+
+        audio.volume = clampVolume(volume * progress);
+
+        if (progress < 1) {
+          animationRef.current = requestAnimationFrame(fadeIn);
+        } else {
+          animationRef.current = null;
+        }
+      };
+
+      animationRef.current = requestAnimationFrame(fadeIn);
+    };
+
+    const startNewAudio = (src: string) => {
+      const audio = new Audio(src);
 
       audio.loop = true;
       audio.volume = 0;
 
       audioRef.current = audio;
-      currentSrcRef.current = targetSrc;
+      currentSrcRef.current = src;
 
-      const start = async () => {
-        try {
-          await audio.play();
-        } catch {
-          // Browser may block autoplay.
-          // The next user interaction will allow playback.
-        }
+      void audio
+        .play()
+        .then(() => {
+          startFadeIn(audio);
+        })
+        .catch(() => {
+          // Browser blocked autoplay.
+        });
+    };
 
-        const startTime = performance.now();
+    const currentAudio = audioRef.current;
 
-        const fadeIn = (time: number) => {
-          const progress = Math.min((time - startTime) / fadeDuration, 1);
+    /*
+     * First track.
+     */
+    if (!currentAudio) {
+      startNewAudio(targetSrc);
 
-          audio.volume = volume * progress;
-
-          if (progress < 1) {
-            requestAnimationFrame(fadeIn);
-          }
-        };
-
-        requestAnimationFrame(fadeIn);
-      };
-
-      void start();
-
-      return;
+      return stopAnimation;
     }
 
+    /*
+     * Same track — nothing to do.
+     */
     if (currentSrcRef.current === targetSrc) {
-      return;
+      return stopAnimation;
     }
+
+    /*
+     * Different track.
+     */
+    stopAnimation();
 
     const oldAudio = currentAudio;
     const oldVolume = oldAudio.volume;
-
     const fadeOutStart = performance.now();
 
     const fadeOut = (time: number) => {
       const progress = Math.min((time - fadeOutStart) / fadeDuration, 1);
 
-      oldAudio.volume = oldVolume * (1 - progress);
+      oldAudio.volume = clampVolume(oldVolume * (1 - progress));
 
       if (progress < 1) {
-        requestAnimationFrame(fadeOut);
+        animationRef.current = requestAnimationFrame(fadeOut);
+
         return;
       }
 
       oldAudio.pause();
       oldAudio.currentTime = 0;
 
-      const newAudio = new Audio(targetSrc);
-
-      newAudio.loop = true;
-      newAudio.volume = 0;
-
-      audioRef.current = newAudio;
-      currentSrcRef.current = targetSrc;
-
-      const start = async () => {
-        try {
-          await newAudio.play();
-        } catch {
-          return;
-        }
-
-        const startTime = performance.now();
-
-        const fadeIn = (currentTime: number) => {
-          const progress = Math.min(
-            (currentTime - startTime) / fadeDuration,
-            1,
-          );
-
-          newAudio.volume = volume * progress;
-
-          if (progress < 1) {
-            requestAnimationFrame(fadeIn);
-          }
-        };
-
-        requestAnimationFrame(fadeIn);
-      };
-
-      void start();
+      startNewAudio(targetSrc);
     };
 
-    requestAnimationFrame(fadeOut);
+    animationRef.current = requestAnimationFrame(fadeOut);
+
+    return stopAnimation;
   }, [targetSrc, volume, fadeDuration]);
 
   useEffect(() => {
     return () => {
+      if (animationRef.current !== null) {
+        cancelAnimationFrame(animationRef.current);
+      }
+
       const audio = audioRef.current;
 
       if (audio) {

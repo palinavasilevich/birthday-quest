@@ -277,7 +277,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Перед тобой пять рун.",
+        text: "",
       },
       puzzle: {
         id: "chapter1-runes",
