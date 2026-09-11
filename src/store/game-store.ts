@@ -13,7 +13,7 @@ interface GameState {
 }
 
 export const useGameStore = create<GameState>((set) => ({
-  currentSceneId: "chapter1-forest-1",
+  currentSceneId: "chapter1-forest",
   inventory: [],
   completedPuzzles: [],
   completedActions: [],
