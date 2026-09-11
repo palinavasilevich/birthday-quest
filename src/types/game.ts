@@ -10,6 +10,7 @@ export type SceneContent =
     };
 
 export type PuzzleData = {
+  id?: string;
   type: "runes";
   nextScene: string;
 };

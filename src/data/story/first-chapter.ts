@@ -499,7 +499,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты бросаешься следом.",
       },
-      nextScene: "chapter2-workshop",
+      nextScene: "chapter1-ending",
     },
     {
       id: "chapter1-ending",

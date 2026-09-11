@@ -1,7 +1,10 @@
 import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+
+import { AmbientMusic } from "@/components/audio/ambient-music";
 import { AmbientParticles } from "@/components/layout/ambient-particles";
+import { FullscreenButton } from "@/components/layout/fullscreen-button";
 
 interface GameLayoutProps {
   backgroundImg?: string;
@@ -9,6 +12,7 @@ interface GameLayoutProps {
   sceneKey?: string;
   isPuzzle?: boolean;
   classNameContentBlock?: string;
+  music?: string;
 }
 
 export function GameLayout({
@@ -17,6 +21,7 @@ export function GameLayout({
   sceneKey,
   isPuzzle = false,
   classNameContentBlock = "",
+  music,
 }: GameLayoutProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -29,8 +34,10 @@ export function GameLayout({
   return (
     <div
       ref={ref}
-      className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-black text-gray-100 font-story"
+      className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-black font-story text-gray-100"
     >
+      {music && <AmbientMusic src={music} />}
+
       {backgroundImg && (
         <motion.img
           key={backgroundImg}
@@ -65,8 +72,8 @@ export function GameLayout({
       </div>
 
       <div className="absolute right-4 top-4 z-20 flex gap-3">
-        {/* <SoundToggleButton />
-        <FullscreenButton /> */}
+        {/* <SoundToggleButton /> */}
+        <FullscreenButton />
       </div>
     </div>
   );
