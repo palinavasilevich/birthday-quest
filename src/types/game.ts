@@ -14,12 +14,20 @@ export type PuzzleData = {
   nextScene: string;
 };
 
+export interface SceneAction {
+  id: string;
+  label: string;
+  nextScene?: string;
+  puzzle?: PuzzleData;
+}
+
 export interface SceneData {
   id: string;
   background?: string;
   content: SceneContent;
   nextScene?: string;
   puzzle?: PuzzleData;
+  actions?: SceneAction[];
 }
 
 export interface ChapterData {
