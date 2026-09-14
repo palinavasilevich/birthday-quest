@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+export interface RuneNote {
+  runeId: string;
+  duration: number;
+  gap: number;
+}
+
 interface Rune {
   id: string;
   frequency: number;
@@ -7,10 +13,7 @@ interface Rune {
 
 interface UseRunePlaybackOptions {
   runes: Rune[];
-  sequence: string[];
-  replayKey?: number;
-  noteDuration?: number;
-  noteGap?: number;
+  sequence: RuneNote[];
   startDelay?: number;
 }
 
@@ -63,38 +66,43 @@ function playRuneSound(frequency: number) {
 export function useRunePlayback({
   runes,
   sequence,
-  replayKey = 0,
-  noteDuration = 650,
-  noteGap = 120,
   startDelay = 800,
 }: UseRunePlaybackOptions): UseRunePlaybackResult {
   const [isPlaying, setIsPlaying] = useState(true);
   const [activeRune, setActiveRune] = useState<string | null>(null);
-
-  const [replayVersion, setReplayVersion] = useState(0);
+  const [replayKey, setReplayKey] = useState(0);
 
   const mountedRef = useRef(true);
+  const timersRef = useRef<number[]>([]);
+  const activeTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     mountedRef.current = true;
 
     return () => {
       mountedRef.current = false;
+
+      timersRef.current.forEach((timer) => {
+        window.clearTimeout(timer);
+      });
+
+      timersRef.current = [];
+
+      if (activeTimeoutRef.current !== null) {
+        window.clearTimeout(activeTimeoutRef.current);
+      }
     };
   }, []);
 
-  const replay = useCallback(() => {
-    if (!mountedRef.current) {
-      return;
-    }
-
-    setActiveRune(null);
-    setIsPlaying(true);
-    setReplayVersion((version) => version + 1);
-  }, []);
-
+  /*
+   * Play one rune when the player clicks it.
+   */
   const playRune = useCallback(
     (runeId: string) => {
+      if (!mountedRef.current) {
+        return;
+      }
+
       const rune = runes.find((item) => item.id === runeId);
 
       if (!rune) {
@@ -102,59 +110,105 @@ export function useRunePlayback({
       }
 
       playRuneSound(rune.frequency);
-      setActiveRune(rune.id);
 
-      window.setTimeout(() => {
-        setActiveRune((current) => (current === rune.id ? null : current));
+      setActiveRune(runeId);
+
+      if (activeTimeoutRef.current !== null) {
+        window.clearTimeout(activeTimeoutRef.current);
+      }
+
+      activeTimeoutRef.current = window.setTimeout(() => {
+        if (mountedRef.current) {
+          setActiveRune((current) => (current === runeId ? null : current));
+        }
       }, 250);
     },
     [runes],
   );
 
+  /*
+   * Replay the current melody.
+   */
+  const replay = useCallback(() => {
+    if (!mountedRef.current) {
+      return;
+    }
+
+    setActiveRune(null);
+    setIsPlaying(true);
+    setReplayKey((key) => key + 1);
+  }, []);
+
+  /*
+   * Automatically play the current melody.
+   */
   useEffect(() => {
     let cancelled = false;
-    const timers: number[] = [];
+
+    timersRef.current.forEach((timer) => {
+      window.clearTimeout(timer);
+    });
+
+    timersRef.current = [];
+
+    if (activeTimeoutRef.current !== null) {
+      window.clearTimeout(activeTimeoutRef.current);
+      activeTimeoutRef.current = null;
+    }
 
     const wait = (duration: number) =>
       new Promise<void>((resolve) => {
         const timer = window.setTimeout(resolve, duration);
-        timers.push(timer);
+
+        timersRef.current.push(timer);
       });
 
     const playSequence = async () => {
       await wait(startDelay);
 
-      if (cancelled) {
+      if (cancelled || !mountedRef.current) {
         return;
       }
 
-      for (const runeId of sequence) {
-        if (cancelled) {
+      for (const note of sequence) {
+        if (cancelled || !mountedRef.current) {
           return;
         }
 
-        const rune = runes.find((item) => item.id === runeId);
+        const rune = runes.find((item) => item.id === note.runeId);
 
         if (!rune) {
           continue;
         }
 
-        setActiveRune(rune.id);
+        /*
+         * Highlight rune.
+         */
+        setActiveRune(note.runeId);
 
+        /*
+         * Play note.
+         */
         playRuneSound(rune.frequency);
 
-        await wait(noteDuration);
+        /*
+         * Keep rune highlighted while the note plays.
+         */
+        await wait(note.duration);
 
-        if (cancelled) {
+        if (cancelled || !mountedRef.current) {
           return;
         }
 
         setActiveRune(null);
 
-        await wait(noteGap);
+        /*
+         * Pause before the next note.
+         */
+        await wait(note.gap);
       }
 
-      if (!cancelled) {
+      if (!cancelled && mountedRef.current) {
         setActiveRune(null);
         setIsPlaying(false);
       }
@@ -165,19 +219,13 @@ export function useRunePlayback({
     return () => {
       cancelled = true;
 
-      timers.forEach((timer) => {
+      timersRef.current.forEach((timer) => {
         window.clearTimeout(timer);
       });
+
+      timersRef.current = [];
     };
-  }, [
-    runes,
-    sequence,
-    replayKey,
-    replayVersion,
-    noteDuration,
-    noteGap,
-    startDelay,
-  ]);
+  }, [runes, sequence, replayKey, startDelay]);
 
   return {
     isPlaying,

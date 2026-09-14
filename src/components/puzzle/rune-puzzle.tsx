@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useGameStore } from "@/store/game-store";
 
-import { useRunePlayback } from "@/hooks/use-rune-playback";
+import { useRunePlayback, type RuneNote } from "@/hooks/use-rune-playback";
 
 interface Rune {
   id: string;
@@ -10,6 +10,12 @@ interface Rune {
   symbol: string;
   frequency: number;
 }
+
+// interface RuneNote {
+//   runeId: string;
+//   duration: number;
+//   gap: number;
+// }
 
 interface RunePuzzleProps {
   puzzleId: string;
@@ -21,51 +27,174 @@ const RUNES: Rune[] = [
     id: "quen",
     label: "QUEN",
     symbol: "ᛩ",
-    frequency: 493.88,
+    frequency: 493.88, // B4
   },
   {
     id: "igni",
     label: "IGNI",
     symbol: "ᛁ",
-    frequency: 659.25,
+    frequency: 659.25, // E5
   },
   {
     id: "aard",
     label: "AARD",
     symbol: "ᚨ",
-    frequency: 739.99,
+    frequency: 739.99, // F#5
   },
   {
     id: "axii",
     label: "AXII",
-    symbol: "ᚨ",
-    frequency: 587.33,
+    symbol: "◈",
+    frequency: 587.33, // D5
   },
   {
     id: "yrden",
     label: "YRDEN",
     symbol: "ᛦ",
-    frequency: 783.99,
+    frequency: 783.99, // G5
   },
 ];
 
-const PUZZLE_ROUNDS = [
-  ["quen", "igni", "aard", "axii"],
-
-  ["quen", "igni", "aard", "axii", "quen", "igni", "aard", "axii"],
+/*
+ * The melody is based on the recognizable BG3 Main Theme motif:
+ *
+ * B → G → E → F# → D
+ *
+ * The later rounds extend the same musical idea.
+ */
+const PUZZLE_ROUNDS: RuneNote[][] = [
+  [
+    {
+      runeId: "quen",
+      duration: 650,
+      gap: 120,
+    },
+    {
+      runeId: "yrden",
+      duration: 650,
+      gap: 120,
+    },
+    {
+      runeId: "igni",
+      duration: 300,
+      gap: 80,
+    },
+    {
+      runeId: "aard",
+      duration: 300,
+      gap: 80,
+    },
+    {
+      runeId: "axii",
+      duration: 650,
+      gap: 160,
+    },
+  ],
 
   [
-    "quen",
-    "igni",
-    "aard",
-    "axii",
-    "quen",
-    "igni",
-    "aard",
-    "axii",
-    "quen",
-    "yrden",
-    "aard",
+    {
+      runeId: "quen",
+      duration: 650,
+      gap: 120,
+    },
+    {
+      runeId: "yrden",
+      duration: 650,
+      gap: 120,
+    },
+    {
+      runeId: "igni",
+      duration: 300,
+      gap: 80,
+    },
+    {
+      runeId: "aard",
+      duration: 300,
+      gap: 80,
+    },
+    {
+      runeId: "axii",
+      duration: 650,
+      gap: 120,
+    },
+    {
+      runeId: "yrden",
+      duration: 500,
+      gap: 100,
+    },
+    {
+      runeId: "aard",
+      duration: 300,
+      gap: 80,
+    },
+    {
+      runeId: "igni",
+      duration: 500,
+      gap: 100,
+    },
+    {
+      runeId: "axii",
+      duration: 650,
+      gap: 160,
+    },
+  ],
+
+  [
+    {
+      runeId: "quen",
+      duration: 650,
+      gap: 120,
+    },
+    {
+      runeId: "yrden",
+      duration: 650,
+      gap: 120,
+    },
+    {
+      runeId: "igni",
+      duration: 300,
+      gap: 80,
+    },
+    {
+      runeId: "aard",
+      duration: 300,
+      gap: 80,
+    },
+    {
+      runeId: "axii",
+      duration: 650,
+      gap: 120,
+    },
+    {
+      runeId: "yrden",
+      duration: 500,
+      gap: 100,
+    },
+    {
+      runeId: "aard",
+      duration: 300,
+      gap: 80,
+    },
+    {
+      runeId: "igni",
+      duration: 500,
+      gap: 100,
+    },
+    {
+      runeId: "axii",
+      duration: 500,
+      gap: 100,
+    },
+    {
+      runeId: "aard",
+      duration: 300,
+      gap: 80,
+    },
+    {
+      runeId: "igni",
+      duration: 650,
+      gap: 160,
+    },
   ],
 ];
 
@@ -78,6 +207,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
   const [sequence, setSequence] = useState<string[]>([]);
   const [isSolved, setIsSolved] = useState(false);
   const [isMistake, setIsMistake] = useState(false);
+  const [mistakeRune, setMistakeRune] = useState<string | null>(null);
 
   const currentSequence = PUZZLE_ROUNDS[round];
 
@@ -91,20 +221,24 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
       return;
     }
 
-    // Play the note when the player presses a rune.
+    /*
+     * Play the note selected by the player.
+     */
     playRune(rune.id);
 
-    const expectedRune = currentSequence[sequence.length];
+    const expectedRune = currentSequence[sequence.length]?.runeId;
 
     /*
      * Wrong rune.
      */
     if (rune.id !== expectedRune) {
+      setMistakeRune(rune.id);
       setIsMistake(true);
       setSequence([]);
 
       window.setTimeout(() => {
         setIsMistake(false);
+        setMistakeRune(null);
       }, 500);
 
       return;
@@ -118,14 +252,14 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     setSequence(nextSequence);
 
     /*
-     * Round is not complete yet.
+     * Current round is not complete.
      */
     if (nextSequence.length < currentSequence.length) {
       return;
     }
 
     /*
-     * Round completed.
+     * Move to the next round.
      */
     if (round < PUZZLE_ROUNDS.length - 1) {
       setSequence([]);
@@ -148,6 +282,18 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     }, 1800);
   };
 
+  const handleReplay = () => {
+    if (isPlaying || isSolved) {
+      return;
+    }
+
+    setSequence([]);
+    setIsMistake(false);
+    setMistakeRune(null);
+
+    replay();
+  };
+
   return (
     <div className="mt-10 flex w-full max-w-2xl flex-col items-center">
       {/* Message */}
@@ -157,7 +303,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
           : isPlaying
             ? "Вслушайся в мелодию..."
             : isMistake
-              ? "Солнышко давай, я тебя люблю давай..."
+              ? "Мелодия нарушена."
               : "Теперь повтори её."}
       </p>
 
@@ -170,6 +316,8 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
       <div className="grid grid-cols-5 gap-4">
         {RUNES.map((rune) => {
           const isActive = activeRune === rune.id;
+
+          const isMistakeRune = isMistake && mistakeRune === rune.id;
 
           return (
             <button
@@ -187,9 +335,17 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
                 transition-all duration-200
 
                 ${
-                  isMistake && isActive
-                    ? "border-red-500 bg-red-500/10 text-red-400 shadow-[0_0_25px_rgba(239,68,68,0.4)]"
-                    : "border-[#ff9b00]/40 text-[#ff9b00]"
+                  isMistakeRune
+                    ? `
+                      border-red-500
+                      bg-red-500/10
+                      text-red-400
+                      shadow-[0_0_25px_rgba(239,68,68,0.45)]
+                    `
+                    : `
+                      border-[#ff9b00]/40
+                      text-[#ff9b00]
+                    `
                 }
 
                 hover:border-[#ff9b00]
@@ -201,8 +357,13 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
                 disabled:cursor-default
 
                 ${
-                  isActive && !isMistake
-                    ? "scale-105 border-[#ff9b00] bg-[#ff9b00]/20 shadow-[0_0_30px_rgba(255,155,0,0.55)]"
+                  isActive && !isMistakeRune
+                    ? `
+                      scale-105
+                      border-[#ff9b00]
+                      bg-[#ff9b00]/20
+                      shadow-[0_0_30px_rgba(255,155,0,0.55)]
+                    `
                     : ""
                 }
               `}
@@ -241,10 +402,12 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
               className={`
                 h-1.5 w-8
                 transition-all duration-300
-
                 ${
                   isCompleted
-                    ? "bg-[#ff9b00] shadow-[0_0_8px_rgba(255,155,0,0.6)]"
+                    ? `
+                      bg-[#ff9b00]
+                      shadow-[0_0_8px_rgba(255,155,0,0.6)]
+                    `
                     : "bg-white/10"
                 }
               `}
@@ -253,16 +416,12 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
         })}
       </div>
 
-      {/* Replay button */}
+      {/* Replay */}
       {!isSolved && (
         <button
           type="button"
           disabled={isPlaying}
-          onClick={() => {
-            setSequence([]);
-            setIsMistake(false);
-            replay();
-          }}
+          onClick={handleReplay}
           className="
             mt-8 cursor-pointer
             text-xs uppercase tracking-[0.2em]
