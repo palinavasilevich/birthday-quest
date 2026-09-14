@@ -3,6 +3,7 @@ import { Scene } from "@/components/scene/scene";
 
 import { firstChapter } from "@/data/story/first-chapter";
 import { useGameStore } from "@/store/game-store";
+import { DragonFight } from "./puzzle/dragon-fight/ui/dragon-fight";
 
 const CHAPTER1_MUSIC = "/audio/chapter1/background.mp3";
 const RUNE_PUZZLE_MUSIC = "/audio/chapter1/rune-puzzle.mp3";
@@ -28,7 +29,9 @@ export function Game() {
         puzzleSrc={RUNE_PUZZLE_MUSIC}
       />
 
-      <Scene scene={scene} />
+      <DragonFight />
+
+      {/* <Scene scene={scene} /> */}
     </>
   );
 }

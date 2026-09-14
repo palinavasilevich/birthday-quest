@@ -1,0 +1,46 @@
+export const WORLD = {
+  width: 960,
+  height: 600,
+  padding: 40,
+} as const;
+
+export const PLAYER = {
+  speed: 275,
+  maxHp: 6,
+  iframes: 900,
+  dashSpeed: 720,
+  dashTime: 165,
+  dashCooldown: 850,
+  attackCooldown: 360,
+  attackRange: 96,
+  attackDamage: 9,
+  attackArc: 1.2,
+} as const;
+
+export const DRAGON = {
+  maxHp: 340,
+  poiseMax: 46,
+  staggerTime: 1700,
+  weakMultiplier: 1.7,
+} as const;
+
+export const OWLBEAR = {
+  maxHp: 3,
+  rescueDistance: 70,
+  followDistance: 54,
+  followSpeed: 125,
+} as const;
+
+export const TEXTURES = {
+  knight: "knight",
+  sword: "sword",
+  dragon: "dragon",
+  owlbear: "owlbear",
+  fire: "fire",
+  spark: "spark",
+  pool: "pool",
+} as const;
+
+export const SCENE_KEYS = {
+  arena: "arena",
+} as const;

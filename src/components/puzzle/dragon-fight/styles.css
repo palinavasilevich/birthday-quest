@@ -1,0 +1,380 @@
+:root {
+  --ash: #12131a;
+  --slate: #21243a;
+  --edge: #4a3a62;
+  --ember: #c94b3e;
+  --gold: #e8c27a;
+  --steel: #8fa7c9;
+  --muted: #6b7694;
+
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 0%, #262a3d 0%, var(--ash) 60%);
+  color: var(--steel);
+  font-family: var(--serif);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(20px, 3.4vw, 30px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--gold);
+  text-shadow: 0 0 24px rgba(224, 86, 44, 0.35);
+}
+
+/* ---------------------------------------------------------------- HUD */
+
+.hud-row,
+.boss-bar {
+  width: min(100%, 960px);
+}
+
+.hud-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hearts {
+  display: flex;
+  gap: 3px;
+}
+
+.dash-track {
+  width: 90px;
+  height: 5px;
+  background: #2a2e42;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.dash-fill {
+  height: 100%;
+  background: var(--steel);
+  transform-origin: left;
+  animation-name: dash-refill;
+  animation-timing-function: linear;
+}
+
+@keyframes dash-refill {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.hud-label {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.hud-phase {
+  margin-left: auto;
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 13px;
+  color: #b07a6a;
+}
+
+/* Dragon poise */
+
+.poise-track {
+  height: 3px;
+  margin-bottom: 3px;
+  background: #2a2e42;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.poise-fill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 2px;
+  transition: width 120ms linear;
+}
+
+/* Dragon HP */
+
+.hp-track {
+  position: relative;
+  height: 14px;
+  background: #0d0e16;
+  border: 1px solid var(--edge);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.hp-fill {
+  height: 100%;
+  background: var(--ember);
+  border-top: 3px solid rgba(255, 166, 61, 0.5);
+  transition: width 180ms ease-out;
+}
+
+.hp-tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--edge);
+}
+
+/* ---------------------------------------------------------------- Медвесыч */
+
+.owlbear-status {
+  width: min(100%, 960px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: -4px;
+  padding: 6px 10px;
+
+  border: 1px solid rgba(201, 75, 62, 0.35);
+  border-radius: 4px;
+
+  background: rgba(18, 19, 26, 0.5);
+
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--muted);
+
+  transition:
+    border-color 180ms ease,
+    color 180ms ease,
+    background 180ms ease;
+}
+
+.owlbear-status.is-safe {
+  border-color: rgba(232, 194, 122, 0.45);
+  color: var(--gold);
+  background: rgba(232, 194, 122, 0.06);
+}
+
+.owlbear-status span:last-child {
+  font-family: ui-monospace, "SF Mono", monospace;
+}
+
+/* ---------------------------------------------------------------- сцена */
+
+.stage {
+  position: relative;
+  width: min(100%, 960px);
+  aspect-ratio: 960 / 600;
+}
+
+.canvas-host {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  line-height: 0;
+
+  border: 1px solid #3a3050;
+  border-radius: 6px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.canvas-host canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.announce {
+  position: absolute;
+  top: 16%;
+  left: 0;
+  right: 0;
+
+  margin: 0;
+
+  text-align: center;
+  font-size: 28px;
+  color: var(--gold);
+
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+
+  pointer-events: none;
+
+  animation: announce-in 1400ms ease-out forwards;
+}
+
+@keyframes announce-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0;
+
+  color: var(--muted);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- overlay */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 18px;
+
+  border-radius: 6px;
+
+  background: rgba(11, 13, 21, 0.72);
+}
+
+.overlay-title {
+  margin: 0;
+  font-size: clamp(28px, 5vw, 42px);
+  color: var(--ember);
+}
+
+.overlay-title--won {
+  color: var(--gold);
+}
+
+.overlay-button {
+  padding: 9px 24px;
+
+  border: none;
+  border-radius: 4px;
+
+  background: var(--gold);
+  color: var(--ash);
+
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 150ms ease,
+    transform 150ms ease;
+}
+
+.overlay-button:hover {
+  background: #f0d095;
+  transform: translateY(-1px);
+}
+
+.overlay-button:active {
+  transform: translateY(0);
+}
+
+.overlay-button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------ подсказки */
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  gap: 4px 20px;
+
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.controls b {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------ responsive */
+
+@media (max-width: 640px) {
+  .app {
+    padding: 14px 10px;
+  }
+
+  .hud-row {
+    gap: 8px;
+  }
+
+  .dash-track {
+    width: 65px;
+  }
+
+  .hud-phase {
+    font-size: 11px;
+  }
+
+  .announce {
+    top: 12%;
+    font-size: 21px;
+  }
+
+  .controls {
+    gap: 5px 12px;
+    font-size: 11px;
+  }
+}
+
+/* ------------------------------------------------------------ accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .announce,
+  .dash-fill {
+    animation: none;
+  }
+
+  .hp-fill,
+  .poise-fill,
+  .owlbear-status,
+  .overlay-button {
+    transition: none;
+  }
+}
