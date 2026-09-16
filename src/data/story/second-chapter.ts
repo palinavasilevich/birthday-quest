@@ -1,6 +1,5 @@
 import type { ChapterData } from "@/types/game";
 import { images } from "@/data/images/chapter1";
-// TODO: заменить images.forest в сценах chapter2-night-city … chapter2-workshop
 
 export const secondChapter: ChapterData = {
   id: "chapter2",
@@ -47,7 +46,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Ты открываешь глаза.\n\nПеред тобой — город.",
@@ -57,7 +56,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city-2",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Неон отражается в мокром асфальте.\n\nВысотные здания уходят куда-то вверх.",
@@ -67,7 +66,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city-3",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Рекламные вывески мигают сквозь дождь.\n\nГде-то далеко гудят двигатели.",
@@ -77,7 +76,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city-4",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "NIGHT CITY",
@@ -87,7 +86,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city-5",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Ты пытаешься понять, куда исчез след.\n\nНо среди тысяч людей, машин и огней его уже не найти.",
@@ -97,7 +96,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city-6",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "И тут ты замечаешь странный зелёный свет.\n\nОн мерцает в глубине переулка.",
@@ -118,7 +117,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city-7",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Дождь, реклама, чужие лица.\n\nИ ни одного следа на мокром асфальте — кроме твоих собственных.",
@@ -134,7 +133,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city-8",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Ты подходишь ближе.\n\nСвет идёт от небольшой панели в стене.",
@@ -144,7 +143,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city-9",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "На ней едва различима надпись:\n\nPRIVATE WORKSHOP",
@@ -158,7 +157,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-terminal",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Под панелью — старый терминал.\n\nЭкран всё ещё работает.",
@@ -171,84 +170,45 @@ export const secondChapter: ChapterData = {
         },
       ],
     },
-
     {
       id: "chapter2-terminal-2",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
-        text: `> WORKSHOP CONTROL SYSTEM
-
-> ACCESS DENIED
-
-> AUTHORIZATION REQUIRED`,
+        text: "Экран вспыхивает зелёным светом.\n\nНесколько секунд — только помехи.\n\nЗатем появляется сообщение: «PRIVATE WORKSHOP // ACCESS DENIED».",
       },
-      nextScene: "chapter2-terminal-3",
+      actions: [
+        {
+          id: "inspect-terminal",
+          label: "Осмотреть терминал",
+          nextScene: "chapter2-terminal-3",
+        },
+      ],
     },
-
     {
       id: "chapter2-terminal-3",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
-        text: `> SOURCE FOUND: keygen.cpp`,
+        text: "Ниже появляется ещё одна строка: «RECOVERY PROTOCOL AVAILABLE».\n\nПохоже, система повреждена.\n\nЕсли удастся восстановить её, возможно, откроется вход в мастерскую.",
       },
-      nextScene: "chapter2-terminal-4",
+      actions: [
+        {
+          id: "start-recovery",
+          label: "Запустить восстановление",
+          nextScene: "chapter2-system-repair",
+        },
+      ],
     },
-
     {
-      id: "chapter2-terminal-4",
-      background: images.forest,
+      id: "chapter2-system-repair",
+      background: images.cyberpunk,
       content: {
         type: "text",
-        text: "Кода доступа нет нигде.\n\nЕсть только программа, которая его печатает.",
-      },
-      nextScene: "chapter2-code",
-    },
-
-    // ─────────────────────────────
-    // SCENE 04 — CODE
-    // ─────────────────────────────
-
-    {
-      id: "chapter2-code",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Ты пробуешь её запустить.",
-      },
-      nextScene: "chapter2-code-2",
-    },
-
-    {
-      id: "chapter2-code-2",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: `> COMPILER NOT FOUND`,
-      },
-      nextScene: "chapter2-code-3",
-    },
-
-    {
-      id: "chapter2-code-3",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Выполнить её здесь некому.\n\nПридётся стать компилятором самому.",
-      },
-      nextScene: "chapter2-code-puzzle",
-    },
-
-    {
-      id: "chapter2-code-puzzle",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "",
+        text: "Экран меняется.\n\nВместо привычного интерфейса появляются строки кода.\n\nRECOVERY MODE",
       },
       puzzle: {
-        id: "chapter2-cpp",
+        id: "workshop-system-repair",
         type: "cyberpunk",
         nextScene: "chapter2-workshop",
       },
@@ -260,7 +220,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-workshop",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Где-то за стеной раздаётся механический звук.\n\nЩёлк.\n\nПауза.\n\nЩёлк.",
@@ -270,7 +230,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-workshop-2",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Затем включается свет.\n\nПеред тобой открывается небольшая мастерская.",
@@ -280,7 +240,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-workshop-3",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Инструменты, детали, разобранные механизмы.\n\nВсё покрыто пылью.\n\nПохоже, здесь давно никто не работал.",
@@ -290,7 +250,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-workshop-4",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "В центре комнаты — длинный рабочий стол.\n\nА в углу до сих пор горит одинокий монитор.",
@@ -314,7 +274,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-log",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "На экране открыт лог.\n\nОн всё ещё пишется.",
@@ -324,7 +284,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-log-2",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: `08:19  subject entered the forest
@@ -337,7 +297,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-log-3",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: `Курсор мигает в последней строке.
@@ -349,7 +309,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-log-4",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "За тобой следят с самой первой минуты.\n\nИ всё это время тебя вели именно сюда.",
@@ -361,7 +321,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-table",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Стол завален чертежами.",
@@ -371,7 +331,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-table-2",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Один и тот же рисунок — снова и снова.\n\nЖёсткие надкрылья, шесть ног, ни одного лишнего винта.",
@@ -381,7 +341,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-table-3",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Десятки листов, и почти все перечёркнуты.\n\nНа верхнем — ни одной поправки.",
@@ -391,7 +351,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-table-4",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "А под чертежами лежит ещё один лист.\n\nЭто не чертёж.",
@@ -401,7 +361,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-table-5",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Схема вязания.\n\nМаленькая фигура. Круглые уши. Пять пальцев.",
@@ -411,7 +371,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-table-6",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Тот же почерк, что и на чертежах.",
@@ -421,7 +381,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-table-7",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "А рядом со схемой лежит клубок.\n\nТого же тёплого рыжеватого цвета, что и нитка у тебя в кармане.",
@@ -431,7 +391,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-table-8",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "В самом углу стола, отдельно от всего, стоит небольшая коробка.\n\nНа ней одна надпись:\n\nMI-01",
@@ -451,7 +411,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-open",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Коробка не запечатана.\n\nТы снимаешь крышку.",
@@ -464,7 +424,7 @@ export const secondChapter: ChapterData = {
     // content: { type: "image", src: "/images/items/mi-01.webp", alt: "MI-01" }
     {
       id: "chapter2-open-2",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Внутри — детали.\n\nЛатунные пластины, шестерни, винты в отдельном пакетике.",
@@ -474,7 +434,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-open-3",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "На дне коробки ты видишь инструкцию.",
@@ -484,7 +444,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-open-4",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "РЕЛИКВИЯ II — ПОЛУЧЕНА\n\nMI-01 — CYBERPUNK BEETLE",
@@ -494,7 +454,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-open-5",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Тип: Механизм. В разобранном виде.\n\nРедкость: ★★★★★",
@@ -504,7 +464,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-open-6",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "А рядом с коробкой, в пыли на столе, — маленький след.\n\nПять пальцев.",
@@ -527,7 +487,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-wait",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Ты садишься прямо на пол и ждёшь.\n\nМинуту. Две.",
@@ -537,7 +497,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-wait-2",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: "Никто не приходит.\n\nПотом в углу коротко щёлкает монитор.\n\nТы оборачиваешься.",
@@ -547,7 +507,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-wait-3",
-      background: images.forest,
+      background: images.cyberpunk,
       content: {
         type: "text",
         text: `> HE IS ALREADY OUTSIDE`,
@@ -601,7 +561,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Ты делаешь несколько шагов вперёд.\n\nИ вдруг слышишь хруст ветки. Совсем рядом.",
+        text: "Ты делаешь несколько шагов вперёд.\n\nИ вдруг слышишь хруст ветки.\n\nСовсем рядом.",
       },
       actions: [
         {

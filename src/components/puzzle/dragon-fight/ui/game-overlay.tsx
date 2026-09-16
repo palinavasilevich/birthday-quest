@@ -7,6 +7,7 @@ interface GameOverlayProps {
 
 export function GameOverlay({ status, onRestart }: GameOverlayProps) {
   if (status === "playing") return null;
+
   const won = status === "won";
 
   return (
@@ -14,10 +15,15 @@ export function GameOverlay({ status, onRestart }: GameOverlayProps) {
       <p className={won ? "overlay-title overlay-title--won" : "overlay-title"}>
         {won ? "Дракон повержен" : "Вы пали"}
       </p>
-      <button type="button" className="overlay-button" onClick={onRestart}>
-        Сразиться снова
-      </button>
-      <span className="hud-label">или нажмите R</span>
+
+      {!won && (
+        <>
+          <button type="button" className="overlay-button" onClick={onRestart}>
+            Сразиться снова
+          </button>
+          {/* <span className="hud-label">или нажмите R</span> */}
+        </>
+      )}
     </div>
   );
 }

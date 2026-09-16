@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export interface RuneNote {
   runeId: string;
@@ -24,8 +24,27 @@ interface UseRunePlaybackResult {
   replay: () => void;
 }
 
-function playRuneSound(frequency: number) {
-  const AudioContext =
+/* ============================================================
+ * AUDIO
+ * ============================================================ */
+
+/*
+ * Один контекст на всё приложение.
+ *
+ * Раньше контекст создавался на каждую ноту: Safari разрешает
+ * около шести одновременно, и длинная мелодия его роняла.
+ */
+let audioContext: AudioContext | null = null;
+let reverb: ConvolverNode | null = null;
+let dryBus: GainNode | null = null;
+let wetBus: GainNode | null = null;
+
+function getAudioContext(): AudioContext | null {
+  if (audioContext) {
+    return audioContext;
+  }
+
+  const Ctor =
     window.AudioContext ||
     (
       window as typeof window & {
@@ -33,44 +52,159 @@ function playRuneSound(frequency: number) {
       }
     ).webkitAudioContext;
 
-  if (!AudioContext) {
+  if (!Ctor) {
+    return null;
+  }
+
+  audioContext = new Ctor();
+
+  /*
+   * Каменный зал: сгенерированный импульс с экспоненциальным хвостом.
+   * Именно он даёт ощущение объёма, а не сами ноты.
+   */
+  const seconds = 2.6;
+  const decay = 2.2;
+  const length = Math.floor(audioContext.sampleRate * seconds);
+  const impulse = audioContext.createBuffer(2, length, audioContext.sampleRate);
+
+  for (let channel = 0; channel < 2; channel += 1) {
+    const data = impulse.getChannelData(channel);
+
+    for (let i = 0; i < length; i += 1) {
+      const progress = i / length;
+
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - progress, decay);
+    }
+  }
+
+  reverb = audioContext.createConvolver();
+  reverb.buffer = impulse;
+
+  dryBus = audioContext.createGain();
+  dryBus.gain.value = 0.75;
+
+  wetBus = audioContext.createGain();
+  wetBus.gain.value = 0.55;
+
+  dryBus.connect(audioContext.destination);
+  wetBus.connect(reverb);
+  reverb.connect(audioContext.destination);
+
+  return audioContext;
+}
+
+/*
+ * Голос руны: основной тон, расстроенный дубль и октава снизу.
+ */
+function playRuneSound(frequency: number, duration = 900) {
+  const context = getAudioContext();
+
+  if (!context || !dryBus || !wetBus) {
     return;
   }
 
-  const context = new AudioContext();
+  /*
+   * Браузер мог приглушить контекст до жеста пользователя.
+   */
+  if (context.state === "suspended") {
+    void context.resume();
+  }
 
-  const oscillator = context.createOscillator();
-  const gain = context.createGain();
+  const now = context.currentTime;
+  const seconds = duration / 1000;
 
-  oscillator.type = "sine";
+  const attack = 0.12;
+  const release = Math.max(seconds, 0.4) + 1.1;
 
-  oscillator.frequency.setValueAtTime(frequency, context.currentTime);
+  const voice = context.createGain();
 
-  gain.gain.setValueAtTime(0, context.currentTime);
+  voice.gain.setValueAtTime(0, now);
+  voice.gain.linearRampToValueAtTime(0.16, now + attack);
+  voice.gain.exponentialRampToValueAtTime(0.0001, now + release);
 
-  gain.gain.linearRampToValueAtTime(0.18, context.currentTime + 0.03);
+  /*
+   * Снимаем стерильную верхушку — ближе к колоколу, чем к тест-тону.
+   */
+  const filter = context.createBiquadFilter();
 
-  gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.55);
+  filter.type = "lowpass";
+  filter.frequency.setValueAtTime(frequency * 6, now);
+  filter.Q.value = 0.6;
 
-  oscillator.connect(gain);
-  gain.connect(context.destination);
+  const layers: Array<{
+    type: OscillatorType;
+    ratio: number;
+    detune: number;
+    gain: number;
+  }> = [
+    { type: "sine", ratio: 1, detune: 0, gain: 1 },
+    { type: "sine", ratio: 1, detune: 7, gain: 0.55 },
+    { type: "triangle", ratio: 0.5, detune: 0, gain: 0.4 },
+  ];
 
-  oscillator.start();
-  oscillator.stop(context.currentTime + 0.6);
+  const oscillators = layers.map((layer) => {
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
 
-  window.setTimeout(() => {
-    void context.close();
-  }, 1000);
+    oscillator.type = layer.type;
+    oscillator.frequency.setValueAtTime(frequency * layer.ratio, now);
+    oscillator.detune.setValueAtTime(layer.detune, now);
+
+    gain.gain.value = layer.gain;
+
+    oscillator.connect(gain);
+    gain.connect(filter);
+
+    oscillator.start(now);
+    oscillator.stop(now + release + 0.1);
+
+    return oscillator;
+  });
+
+  filter.connect(voice);
+  voice.connect(dryBus);
+  voice.connect(wetBus);
+
+  const last = oscillators[oscillators.length - 1];
+
+  last.onended = () => {
+    voice.disconnect();
+    filter.disconnect();
+  };
 }
+
+/* ============================================================
+ * HOOK
+ * ============================================================ */
 
 export function useRunePlayback({
   runes,
   sequence,
   startDelay = 800,
 }: UseRunePlaybackOptions): UseRunePlaybackResult {
-  const [isPlaying, setIsPlaying] = useState(true);
   const [activeRune, setActiveRune] = useState<string | null>(null);
   const [replayKey, setReplayKey] = useState(0);
+
+  /*
+   * Токен текущего проигрывания: новая ссылка на каждый запуск мелодии.
+   */
+  const playbackToken = useMemo(
+    () => ({}),
+    [runes, sequence, replayKey, startDelay],
+  );
+
+  /*
+   * Токен последнего доигравшего проигрывания.
+   */
+  const [finishedToken, setFinishedToken] = useState<object | null>(null);
+
+  /*
+   * isPlaying — производная величина, а не состояние.
+   *
+   * Так флаг сам поднимается для каждой новой мелодии,
+   * и его не нужно сбрасывать вручную в теле эффекта.
+   */
+  const isPlaying = finishedToken !== playbackToken;
 
   const mountedRef = useRef(true);
   const timersRef = useRef<number[]>([]);
@@ -95,7 +229,7 @@ export function useRunePlayback({
   }, []);
 
   /*
-   * Play one rune when the player clicks it.
+   * Нота, которую нажал игрок.
    */
   const playRune = useCallback(
     (runeId: string) => {
@@ -109,7 +243,7 @@ export function useRunePlayback({
         return;
       }
 
-      playRuneSound(rune.frequency);
+      playRuneSound(rune.frequency, 520);
 
       setActiveRune(runeId);
 
@@ -127,7 +261,7 @@ export function useRunePlayback({
   );
 
   /*
-   * Replay the current melody.
+   * Проиграть мелодию заново.
    */
   const replay = useCallback(() => {
     if (!mountedRef.current) {
@@ -135,12 +269,11 @@ export function useRunePlayback({
     }
 
     setActiveRune(null);
-    setIsPlaying(true);
     setReplayKey((key) => key + 1);
   }, []);
 
   /*
-   * Automatically play the current melody.
+   * Автоматическое проигрывание текущей мелодии.
    */
   useEffect(() => {
     let cancelled = false;
@@ -181,19 +314,10 @@ export function useRunePlayback({
           continue;
         }
 
-        /*
-         * Highlight rune.
-         */
         setActiveRune(note.runeId);
 
-        /*
-         * Play note.
-         */
-        playRuneSound(rune.frequency);
+        playRuneSound(rune.frequency, note.duration);
 
-        /*
-         * Keep rune highlighted while the note plays.
-         */
         await wait(note.duration);
 
         if (cancelled || !mountedRef.current) {
@@ -202,15 +326,16 @@ export function useRunePlayback({
 
         setActiveRune(null);
 
-        /*
-         * Pause before the next note.
-         */
         await wait(note.gap);
       }
 
       if (!cancelled && mountedRef.current) {
         setActiveRune(null);
-        setIsPlaying(false);
+
+        /*
+         * Мелодия доиграла — отмечаем именно этот запуск.
+         */
+        setFinishedToken(playbackToken);
       }
     };
 
@@ -225,7 +350,7 @@ export function useRunePlayback({
 
       timersRef.current = [];
     };
-  }, [runes, sequence, replayKey, startDelay]);
+  }, [runes, sequence, startDelay, playbackToken]);
 
   return {
     isPlaying,
