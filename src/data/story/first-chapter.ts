@@ -27,6 +27,16 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Впереди виднеется узкая тропа.",
       },
+      nextScene: "chapter1-forest-3",
+    },
+
+    {
+      id: "chapter1-forest-3",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Ты бывал здесь много раз.\n\nНо этой тропы раньше не было.",
+      },
       actions: [
         {
           id: "follow-trail",
@@ -45,9 +55,15 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Тропа почти полностью скрыта под опавшими листьями.",
+        text: "Тропа почти полностью скрыта под опавшими листьями.\n\nВдруг что-то привлекает твоё внимание.",
       },
-      nextScene: "chapter1-footprints-2",
+      actions: [
+        {
+          id: "look-closer",
+          label: "Посмотреть внимательнее",
+          nextScene: "chapter1-footprints-2",
+        },
+      ],
     },
 
     {
@@ -55,15 +71,9 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Вдруг что-то привлекает твоё внимание.",
+        text: "Это след.\n\nНебольшой, глубокий, с пятью пальцами.\n\nОпределённо не человеческий.",
       },
-      actions: [
-        {
-          id: "look-closer",
-          label: "Посмотреть внимательнее",
-          nextScene: "chapter1-footprints-3",
-        },
-      ],
+      nextScene: "chapter1-footprints-3",
     },
 
     {
@@ -71,7 +81,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Это след какого-то существа. Определённо не человека.\n\nОн небольшой. Кажется, что существо прошло совсем недавно.",
+        text: "Ты поднимаешь взгляд.\n\nВ нескольких метрах впереди — ещё один.\n\n🐾",
       },
       nextScene: "chapter1-footprints-4",
     },
@@ -81,17 +91,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Ты поднимаешь взгляд.\n\nВ нескольких метрах впереди — ещё один след.\n\n🐾",
-      },
-      nextScene: "chapter1-footprints-5",
-    },
-
-    {
-      id: "chapter1-footprints-5",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "И ещё один.\n\n🐾",
+        text: "И ещё один.\n\nКто-то прошёл здесь совсем недавно.\n\n🐾",
       },
       actions: [
         {
@@ -111,7 +111,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Следы приводят тебя к древней каменной стене, покрытой мхом и корнями.",
+        text: "Следы приводят тебя к древней каменной стене, покрытой мхом.",
       },
       actions: [
         {
@@ -127,7 +127,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Сначала в ней не видно ничего необычного.\n\nНо затем ты замечаешь какие-то странные символы.",
+        text: "Сначала в ней не видно ничего необычного.\n\nНо затем ты замечаешь странные символы.",
       },
       nextScene: "chapter1-stone-3",
     },
@@ -137,15 +137,9 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Пять древних знаков высечены прямо в камне.",
+        text: "Пять древних знаков высечены прямо в камне.\n\nТы разбираешь надпись:\n\nQUEN · IGNI · AARD · AXII · YRDEN",
       },
-      actions: [
-        {
-          id: "examine-runes",
-          label: "Изучить символы",
-          nextScene: "chapter1-stone-4",
-        },
-      ],
+      nextScene: "chapter1-stone-4",
     },
 
     {
@@ -153,17 +147,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Ты разбираешь надпись:\n\nQUEN · IGNI · AARD · AXII · YRDEN",
-      },
-      nextScene: "chapter1-stone-5",
-    },
-
-    {
-      id: "chapter1-stone-5",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Ты замечаешь тот же след, что привёл тебя сюда, возле одной из рун.",
+        text: "А у подножия стены, в сырой земле, — тот самый след.\n\nЗдесь он обрывается. Прямо у камня.",
       },
       actions: [
         {
@@ -171,25 +155,62 @@ export const firstChapter: ChapterData = {
           label: "Дотронуться до руны",
           nextScene: "chapter1-signs",
         },
+        {
+          id: "clear-moss",
+          label: "Счистить мох у подножия",
+          nextScene: "chapter1-moss",
+        },
       ],
     },
 
+    // ── Ветка: счистить мох ──
+
     {
-      id: "chapter1-stone-6",
+      id: "chapter1-moss",
       background: images.forest,
       content: {
         type: "text",
-        text: "КОНЕЦ ИГРЫ!!! НЕЛЬЗЯ НАЖИМАТЬ НА НЕЗНАКОМЫЕ РУНЫ",
+        text: "Ты счищаешь мох у самого низа стены.",
       },
-      nextScene: "chapter1-stone-7",
+      nextScene: "chapter1-moss-2",
     },
 
     {
-      id: "chapter1-stone-7",
+      id: "chapter1-moss-2",
       background: images.forest,
       content: {
         type: "text",
-        text: "ШУТКА. МОЖЕШЬ ПРОДОЛЖИТЬ :)",
+        text: "Под ним — ещё знаки.\n\nНе высеченные. Процарапанные.",
+      },
+      nextScene: "chapter1-moss-3",
+    },
+
+    {
+      id: "chapter1-moss-3",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Те же пять символов, только в столбик.\n\nВерхний обведён дважды.",
+      },
+      nextScene: "chapter1-moss-4",
+    },
+
+    {
+      id: "chapter1-moss-4",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Царапины свежие и совсем низко над землёй.\n\nТот, кто их оставил, был невысокого роста.",
+      },
+      nextScene: "chapter1-moss-5",
+    },
+
+    {
+      id: "chapter1-moss-5",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "QUEN.\n\nТеперь ты знаешь, с чего всё начинается.",
       },
       nextScene: "chapter1-signs",
     },
@@ -213,7 +234,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "♪\n\nОдна загадочная нота эхом разносится по каменному залу.",
+        text: "♪\n\nОдна чистая нота уходит в лес и возвращается эхом.",
       },
       nextScene: "chapter1-signs-3",
     },
@@ -233,7 +254,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "♪\n\nДругая нота.",
+        text: "♪\n\nПять знаков. Пять разных звуков.",
       },
       nextScene: "chapter1-signs-5",
     },
@@ -243,7 +264,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Ты пробуешь ещё один.",
+        text: "Ты убираешь руку.\n\nИ стена отвечает сама.",
       },
       nextScene: "chapter1-signs-6",
     },
@@ -253,7 +274,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "♪\n\nПять знаков. Пять разных звуков.",
+        text: "♪ ♪ ♪ ♪ ♪\n\nМелодия обрывается на середине — будто ждёт продолжения.",
       },
       nextScene: "chapter1-signs-7",
     },
@@ -263,7 +284,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Кажется, каждый из них — часть одной мелодии.",
+        text: "Руны гаснут.\n\nТеперь твоя очередь.",
       },
       nextScene: "chapter1-melody",
     },
@@ -315,19 +336,15 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Раздаётся глубокий гул.\n\nКамень начинает двигаться.",
+        text: "Раздаётся глубокий гул.\n\nКамень начинает двигаться.\n\nДревняя дверь медленно открывается.",
       },
-      nextScene: "chapter1-door-4",
-    },
-
-    {
-      id: "chapter1-door-4",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Древняя дверь медленно открывается.",
-      },
-      nextScene: "chapter1-chamber",
+      actions: [
+        {
+          id: "enter-chamber",
+          label: "Зайти внутрь",
+          nextScene: "chapter1-chamber",
+        },
+      ],
     },
 
     // ============================================================
@@ -339,7 +356,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "За дверью находится небольшая тёмная комната.\n\nВ центре стоит каменный пьедестал.",
+        text: "За дверью — небольшая тёмная комната.\n\nВ центре стоит каменный пьедестал.",
       },
       nextScene: "chapter1-chamber-2",
     },
@@ -349,32 +366,92 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "На нём лежит книга.",
+        text: "На нём лежит книга.\n\nКажется, что этому месту сотни лет — а книга новая. Без единой пылинки.",
       },
-      nextScene: "chapter1-book",
+      nextScene: "chapter1-chamber-3",
     },
-
-    // ============================================================
-    // THE BOOK
-    // ============================================================
 
     {
-      id: "chapter1-book",
+      id: "chapter1-chamber-3",
       background: images.forest,
       content: {
-        type: "image",
-        src: "/images/items/art-of-john-harris.webp",
-        alt: "The Art of John Harris: Beyond the Horizon",
+        type: "text",
+        text: "В пыли у пьедестала ты видишь тот же маленький след.",
       },
-      nextScene: "chapter1-relic",
+      actions: [
+        {
+          id: "take-book",
+          label: "Взять книгу",
+          nextScene: "chapter1-relic",
+        },
+        {
+          id: "leave-book",
+          label: "Не трогать",
+          nextScene: "chapter1-leave",
+        },
+      ],
     },
+
+    // ── Ветка: не трогать чужое ──
+
+    {
+      id: "chapter1-leave",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Ты не трогаешь её.\n\nЧужие вещи в чужих комнатах лучше оставлять на месте.",
+      },
+      nextScene: "chapter1-leave-2",
+    },
+
+    {
+      id: "chapter1-leave-2",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Ты делаешь шаг к двери.\n\nИ слышишь за спиной короткий шорох.",
+      },
+      nextScene: "chapter1-leave-3",
+    },
+
+    {
+      id: "chapter1-leave-3",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Книга лежит на полу.\n\nЕё столкнули с пьедестала. Прямо тебе под ноги.",
+      },
+      actions: [
+        {
+          id: "pick-book",
+          label: "Поднять книгу",
+          nextScene: "chapter1-relic",
+        },
+      ],
+    },
+
+    // ============================================================
+    // THE RELIC
+    // ============================================================
+
+    // Если появится картинка книги — вставить сцену перед chapter1-relic:
+    // {
+    //   id: "chapter1-book",
+    //   background: images.forest,
+    //   content: {
+    //     type: "image",
+    //     src: "/images/items/art-of-john-harris.webp",
+    //     alt: "The Art of John Harris: Beyond the Horizon",
+    //   },
+    //   nextScene: "chapter1-relic",
+    // },
 
     {
       id: "chapter1-relic",
       background: images.forest,
       content: {
         type: "text",
-        text: "The Art of John Harris: Beyond the Horizon.\n\nТы берёшь книгу с пьедестала.",
+        text: "Книга у тебя в руках.\n\nНа мгновение в комнате становится совершенно тихо.",
       },
       nextScene: "chapter1-relic-2",
     },
@@ -384,7 +461,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "На мгновение в комнате становится совершенно тихо.\n\nНа первой странице появляется надпись.",
+        text: "На первой странице проступает надпись.",
       },
       nextScene: "chapter1-relic-3",
     },
@@ -404,7 +481,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "РЕЛИКВИЯ I — ПОЛУЧЕНА\n\nTHE ART OF JOHN HARRIS — Beyond the Horizon.",
+        text: "РЕЛИКВИЯ I — ПОЛУЧЕНА\n\nTHE ART OF JOHN HARRIS — Beyond the Horizon",
       },
       nextScene: "chapter1-relic-5",
     },
@@ -428,7 +505,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Ты собираешься выйти из комнаты.",
+        text: "Ты собираешься выйти из комнаты.\n\nИ вдруг — шорох за спиной.",
       },
       nextScene: "chapter1-sound-2",
     },
@@ -438,76 +515,150 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "И вдруг — шорох.\n\nТы замираешь.",
+        text: "Ты медленно оборачиваешься.\n\nВ тёмном дверном проёме — тень. Маленькая.",
       },
-      nextScene: "chapter1-sound-3",
+      actions: [
+        {
+          id: "chase",
+          label: "Броситься следом",
+          nextScene: "chapter1-chase",
+        },
+        {
+          id: "wait",
+          label: "Замереть и ждать",
+          nextScene: "chapter1-wait",
+        },
+      ],
     },
 
+    // ── Ветка: погоня ──
+    // Нитку он тоже получит, но вырванную, а не оставленную.
+
     {
-      id: "chapter1-sound-3",
+      id: "chapter1-chase",
       background: images.forest,
       content: {
         type: "text",
-        text: "Тишина.\n\nЗатем ещё один звук.",
+        text: "Ты бросаешься вперёд.\n\nТень исчезает мгновенно.",
       },
-      nextScene: "chapter1-sound-4",
+      nextScene: "chapter1-chase-2",
     },
 
     {
-      id: "chapter1-sound-4",
+      id: "chapter1-chase-2",
       background: images.forest,
       content: {
         type: "text",
-        text: "На этот раз — прямо позади тебя.",
+        text: "Ты выбегаешь наружу. Никого.\n\nТолько небольшой след в пыли у входа.",
       },
-      nextScene: "chapter1-sound-5",
+      nextScene: "chapter1-chase-3",
     },
 
     {
-      id: "chapter1-sound-5",
+      id: "chapter1-chase-3",
       background: images.forest,
       content: {
         type: "text",
-        text: "Ты медленно оборачиваешься.\n\nНичего.",
+        text: "А на дверном косяке, на щепке, что-то зацепилось.",
       },
-      nextScene: "chapter1-sound-6",
+      nextScene: "chapter1-chase-4",
     },
 
     {
-      id: "chapter1-sound-6",
+      id: "chapter1-chase-4",
       background: images.forest,
       content: {
         type: "text",
-        text: "Только тёмный дверной проём.",
+        text: "Обрывок пряжи.\n\nТёплого рыжеватого цвета.",
       },
-      nextScene: "chapter1-sound-7",
+      actions: [
+        {
+          id: "take-thread-torn",
+          label: "Снять нитку",
+          nextScene: "chapter1-ending",
+        },
+      ],
+    },
+
+    // ── Ветка: терпение ──
+    // Здесь нитку кладут специально.
+
+    {
+      id: "chapter1-wait",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Ты не двигаешься.\n\nПроходит секунда. Другая.",
+      },
+      nextScene: "chapter1-wait-2",
     },
 
     {
-      id: "chapter1-sound-7",
+      id: "chapter1-wait-2",
       background: images.forest,
       content: {
         type: "text",
-        text: "И вдруг — ты видишь тень.",
+        text: "Тень в проёме тоже не двигается.\n\nА потом делает шаг вперёд.",
       },
-      nextScene: "chapter1-sound-8",
+      nextScene: "chapter1-wait-3",
     },
 
     {
-      id: "chapter1-sound-8",
+      id: "chapter1-wait-3",
       background: images.forest,
       content: {
         type: "text",
-        text: "Ты бросаешься следом.",
+        text: "Маленький пушистый силуэт.\n\nОн смотрит на тебя несколько секунд — спокойно, без страха.",
       },
-      nextScene: "chapter1-ending",
+      nextScene: "chapter1-wait-4",
     },
+
+    {
+      id: "chapter1-wait-4",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Потом наклоняется и кладёт что-то на пол.",
+      },
+      nextScene: "chapter1-wait-5",
+    },
+
+    {
+      id: "chapter1-wait-5",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "А потом разворачивается и убегает.",
+      },
+      nextScene: "chapter1-wait-6",
+    },
+
+    {
+      id: "chapter1-wait-6",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "На полу лежит обрывок пряжи.\n\nТёплого рыжеватого цвета.",
+      },
+      actions: [
+        {
+          id: "take-thread-given",
+          label: "Взять нитку",
+          nextScene: "chapter1-ending",
+        },
+      ],
+    },
+
+    // ============================================================
+    // THE ENDING
+    // ============================================================
+
     {
       id: "chapter1-ending",
       background: images.forest,
       content: {
         type: "text",
-        text: "Вы выходите наружу.\n\nУ входа, прямо в пыли, вы замечаете небольшой след.",
+        text: "Ты выходишь наружу.\n\nВ лесу снова тихо. Слишком тихо.",
       },
       nextScene: "chapter1-ending-2",
     },
@@ -517,7 +668,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "В лесу снова тихо.\n\nСлишком тихо.",
+        text: "Ты видишь следы.\n\n🐾",
       },
       nextScene: "chapter1-ending-3",
     },
@@ -527,59 +678,15 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Вдруг между деревьями что-то движется.",
-      },
-      nextScene: "chapter1-ending-4",
-    },
-
-    {
-      id: "chapter1-ending-4",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Вы мельком видите маленький пушистый силуэт.\n\nЧто-то наблюдает за вами.",
-      },
-      nextScene: "chapter1-ending-5",
-    },
-
-    {
-      id: "chapter1-ending-5",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Он исчезает прежде, чем вы успеваете понять, что это было.",
-      },
-      nextScene: "chapter1-ending-6",
-    },
-
-    {
-      id: "chapter1-ending-6",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Пауза.",
-      },
-      nextScene: "chapter1-ending-7",
-    },
-
-    {
-      id: "chapter1-ending-7",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Вы подходите ближе к тому месту, где он исчез.\n\nВидны ещё следы.",
-      },
-      nextScene: "chapter1-ending-8",
-    },
-
-    {
-      id: "chapter1-ending-8",
-      background: images.forest,
-      content: {
-        type: "text",
         text: "Они ведут вглубь леса.",
       },
-      nextScene: "chapter2-workshop",
+      actions: [
+        {
+          id: "follow-deeper",
+          label: "Идти по следам",
+          nextScene: "chapter2-transition",
+        },
+      ],
     },
   ],
 };
