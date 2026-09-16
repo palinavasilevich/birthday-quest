@@ -16,7 +16,11 @@ export function Scene({ scene }: SceneProps) {
   const setScene = useGameStore((state) => state.setScene);
 
   return (
-    <GameLayout backgroundImg={scene.background} sceneKey={scene.id}>
+    <GameLayout
+      backgroundImg={scene.background}
+      sceneKey={scene.id}
+      isPuzzle={Boolean(scene.puzzle)}
+    >
       <SceneContent content={scene.content} />
 
       {scene.puzzle ? (

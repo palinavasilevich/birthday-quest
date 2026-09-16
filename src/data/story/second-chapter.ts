@@ -196,16 +196,27 @@ export const secondChapter: ChapterData = {
         {
           id: "start-recovery",
           label: "Запустить восстановление",
-          nextScene: "chapter2-system-repair",
+          nextScene: "chapter2-system-repair-1",
         },
       ],
     },
     {
-      id: "chapter2-system-repair",
+      id: "chapter2-system-repair-1",
       background: images.cyberpunk,
       content: {
         type: "text",
-        text: "Экран меняется.\n\nВместо привычного интерфейса появляются строки кода.\n\nRECOVERY MODE",
+        text: "Экран меняется.\n\nВместо привычного интерфейса появляются строки кода.",
+      },
+      nextScene: "chapter2-system-repair-2",
+    },
+
+    {
+      id: "chapter2-system-repair-2",
+      background: images.cyberpunk,
+      content: {
+        type: "text",
+        text: "",
+        // text: "RECOVERY MODE",
       },
       puzzle: {
         id: "workshop-system-repair",

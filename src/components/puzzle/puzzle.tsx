@@ -1,6 +1,6 @@
 import type { PuzzleData } from "@/types/game";
 import { RunePuzzle } from "./rune-puzzle";
-import CyberpunkPuzzle from "./cyberpunk-puzzle";
+import { CyberpunkPuzzle } from "./cyberpunk-puzzle";
 
 interface PuzzleProps {
   puzzle: PuzzleData;

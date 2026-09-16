@@ -277,7 +277,7 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Твой ход.",
+        text: "",
       },
       puzzle: {
         id: "final-battle-puzzle",

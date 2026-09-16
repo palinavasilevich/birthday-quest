@@ -339,7 +339,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
   };
 
   return (
-    <div className="mt-10 flex w-full max-w-2xl flex-col items-center">
+    <div className="mt-10 w-full max-w-2xl flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-12 shadow-2xl backdrop-blur-md">
       {/* Message */}
       <p className="mb-3 min-h-8 text-center font-story text-xl italic text-white/70">
         {message()}

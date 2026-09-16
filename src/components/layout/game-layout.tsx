@@ -63,9 +63,7 @@ export function GameLayout({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.8 }}
-            className={`flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-12 shadow-2xl backdrop-blur-md ${
-              isPuzzle ? "px-2" : ""
-            }`}
+            className={`${!isPuzzle && "flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-12 shadow-2xl backdrop-blur-md"}`}
           >
             {children}
           </motion.div>
