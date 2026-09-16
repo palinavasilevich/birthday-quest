@@ -1,5 +1,6 @@
 import type { ChapterData } from "@/types/game";
 import { images } from "@/data/images/chapter1";
+// TODO: заменить images.forest в сценах chapter2-night-city … chapter2-workshop
 
 export const secondChapter: ChapterData = {
   id: "chapter2",
@@ -7,7 +8,7 @@ export const secondChapter: ChapterData = {
 
   scenes: [
     // ─────────────────────────────
-    // SCENE 01 — ARRIVAL
+    // SCENE 01 — TRANSITION
     // ─────────────────────────────
 
     {
@@ -15,7 +16,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Следы внезапно обрываются.",
+        text: "Ты идёшь по следам.\n\nОни уводят всё дальше от тропы — а потом внезапно обрываются.",
       },
       nextScene: "chapter2-transition-2",
     },
@@ -25,7 +26,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Вы оглядываетесь.",
+        text: "Ты оглядываешься.\n\nЛес вокруг кажется совершенно неподвижным.",
       },
       nextScene: "chapter2-transition-3",
     },
@@ -35,37 +36,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Лес вокруг вас кажется совершенно неподвижным.",
-      },
-      nextScene: "chapter2-transition-4",
-    },
-
-    {
-      id: "chapter2-transition-4",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "И вдруг мир перед вами начинает дрожать.",
-      },
-      nextScene: "chapter2-transition-5",
-    },
-
-    {
-      id: "chapter2-transition-5",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Свет вспыхивает прямо перед глазами.",
-      },
-      nextScene: "chapter2-transition-6",
-    },
-
-    {
-      id: "chapter2-transition-6",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "На мгновение всё исчезает.",
+        text: "И вдруг мир перед тобой начинает дрожать.\n\nСвет вспыхивает прямо перед глазами.",
       },
       nextScene: "chapter2-night-city",
     },
@@ -79,7 +50,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Вы открываете глаза.",
+        text: "Ты открываешь глаза.\n\nПеред тобой — город.",
       },
       nextScene: "chapter2-night-city-2",
     },
@@ -89,7 +60,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Перед вами — город.",
+        text: "Неон отражается в мокром асфальте.\n\nВысотные здания уходят куда-то вверх.",
       },
       nextScene: "chapter2-night-city-3",
     },
@@ -99,7 +70,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Неон отражается в мокром асфальте.",
+        text: "Рекламные вывески мигают сквозь дождь.\n\nГде-то далеко гудят двигатели.",
       },
       nextScene: "chapter2-night-city-4",
     },
@@ -109,7 +80,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Высотные здания уходят куда-то вверх.",
+        text: "NIGHT CITY",
       },
       nextScene: "chapter2-night-city-5",
     },
@@ -119,7 +90,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Рекламные вывески мигают сквозь дождь.",
+        text: "Ты пытаешься понять, куда исчез след.\n\nНо среди тысяч людей, машин и огней его уже не найти.",
       },
       nextScene: "chapter2-night-city-6",
     },
@@ -129,9 +100,20 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Где-то далеко слышен гул двигателей.",
+        text: "И тут ты замечаешь странный зелёный свет.\n\nОн мерцает в глубине переулка.",
       },
-      nextScene: "chapter2-night-city-7",
+      actions: [
+        {
+          id: "approach-light",
+          label: "Подойти к свету",
+          nextScene: "chapter2-night-city-8",
+        },
+        {
+          id: "look-around",
+          label: "Сначала осмотреться",
+          nextScene: "chapter2-night-city-7",
+        },
+      ],
     },
 
     {
@@ -139,9 +121,15 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "NIGHT CITY",
+        text: "Дождь, реклама, чужие лица.\n\nИ ни одного следа на мокром асфальте — кроме твоих собственных.",
       },
-      nextScene: "chapter2-night-city-8",
+      actions: [
+        {
+          id: "approach-light-after",
+          label: "Подойти к свету",
+          nextScene: "chapter2-night-city-8",
+        },
+      ],
     },
 
     {
@@ -149,7 +137,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Вы пытаетесь понять, куда исчез тот странный след.",
+        text: "Ты подходишь ближе.\n\nСвет идёт от небольшой панели в стене.",
       },
       nextScene: "chapter2-night-city-9",
     },
@@ -159,77 +147,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Но среди тысяч людей, машин и огней его уже невозможно найти.",
-      },
-      nextScene: "chapter2-night-city-10",
-    },
-
-    {
-      id: "chapter2-night-city-10",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Вы уже собираетесь идти дальше.",
-      },
-      nextScene: "chapter2-night-city-11",
-    },
-
-    {
-      id: "chapter2-night-city-11",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Но замечаете странный зелёный свет.",
-      },
-      nextScene: "chapter2-night-city-12",
-    },
-
-    {
-      id: "chapter2-night-city-12",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Он мерцает в глубине переулка.",
-      },
-      nextScene: "chapter2-night-city-13",
-    },
-
-    {
-      id: "chapter2-night-city-13",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Вы подходите ближе.",
-      },
-      nextScene: "chapter2-night-city-14",
-    },
-
-    {
-      id: "chapter2-night-city-14",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Свет идёт от небольшой панели в стене.",
-      },
-      nextScene: "chapter2-night-city-15",
-    },
-
-    {
-      id: "chapter2-night-city-15",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "На ней едва различима надпись:",
-      },
-      nextScene: "chapter2-night-city-16",
-    },
-
-    {
-      id: "chapter2-night-city-16",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "PRIVATE WORKSHOP",
+        text: "На ней едва различима надпись:\n\nPRIVATE WORKSHOP",
       },
       nextScene: "chapter2-terminal",
     },
@@ -243,9 +161,15 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Под панелью находится старый терминал.",
+        text: "Под панелью — старый терминал.\n\nЭкран всё ещё работает.",
       },
-      nextScene: "chapter2-terminal-2",
+      actions: [
+        {
+          id: "touch-screen",
+          label: "Коснуться экрана",
+          nextScene: "chapter2-terminal-2",
+        },
+      ],
     },
 
     {
@@ -253,7 +177,11 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Экран всё ещё работает.",
+        text: `> WORKSHOP CONTROL SYSTEM
+
+> ACCESS DENIED
+
+> AUTHORIZATION REQUIRED`,
       },
       nextScene: "chapter2-terminal-3",
     },
@@ -263,7 +191,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Вы касаетесь экрана.",
+        text: `> SOURCE FOUND: keygen.cpp`,
       },
       nextScene: "chapter2-terminal-4",
     },
@@ -273,39 +201,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: `> WORKSHOP CONTROL SYSTEM
-
-> ACCESS DENIED`,
-      },
-      nextScene: "chapter2-terminal-5",
-    },
-
-    {
-      id: "chapter2-terminal-5",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: `> AUTHORIZATION REQUIRED`,
-      },
-      nextScene: "chapter2-terminal-6",
-    },
-
-    {
-      id: "chapter2-terminal-6",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "На экране появляется исходный код.",
-      },
-      nextScene: "chapter2-terminal-7",
-    },
-
-    {
-      id: "chapter2-terminal-7",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Кто-то оставил здесь незаконченный фрагмент программы.",
+        text: "Кода доступа нет нигде.\n\nЕсть только программа, которая его печатает.",
       },
       nextScene: "chapter2-code",
     },
@@ -319,18 +215,7 @@ export const secondChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: `int access = 0;
-int system = 1;
-
-if (system == 1)
-{
-    // your code
-}
-
-if (access == 1)
-{
-    unlock();
-}`,
+        text: "Ты пробуешь её запустить.",
       },
       nextScene: "chapter2-code-2",
     },
@@ -340,7 +225,7 @@ if (access == 1)
       background: images.forest,
       content: {
         type: "text",
-        text: "Вы внимательно изучаете код.",
+        text: `> COMPILER NOT FOUND`,
       },
       nextScene: "chapter2-code-3",
     },
@@ -350,27 +235,7 @@ if (access == 1)
       background: images.forest,
       content: {
         type: "text",
-        text: "Программа проверяет состояние переменной access.",
-      },
-      nextScene: "chapter2-code-4",
-    },
-
-    {
-      id: "chapter2-code-4",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Если access равен единице, система открывает доступ.",
-      },
-      nextScene: "chapter2-code-5",
-    },
-
-    {
-      id: "chapter2-code-5",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Осталось понять, где изменить её значение.",
+        text: "Выполнить её здесь некому.\n\nПридётся стать компилятором самому.",
       },
       nextScene: "chapter2-code-puzzle",
     },
@@ -380,55 +245,17 @@ if (access == 1)
       background: images.forest,
       content: {
         type: "text",
-        text: `> CODE EDITOR
-
-> ACCESS VARIABLE: access
-
-Измените код, чтобы открыть доступ.`,
+        text: "",
       },
       puzzle: {
         id: "chapter2-cpp",
         type: "cyberpunk",
-        nextScene: "chapter2-code-solved",
+        nextScene: "chapter2-workshop",
       },
     },
 
     // ─────────────────────────────
-    // SCENE 05 — ACCESS GRANTED
-    // ─────────────────────────────
-
-    {
-      id: "chapter2-code-solved",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: `> CODE ACCEPTED`,
-      },
-      nextScene: "chapter2-code-solved-2",
-    },
-
-    {
-      id: "chapter2-code-solved-2",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: `> ACCESS GRANTED`,
-      },
-      nextScene: "chapter2-code-solved-3",
-    },
-
-    {
-      id: "chapter2-code-solved-3",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: `> WORKSHOP SYSTEM ONLINE`,
-      },
-      nextScene: "chapter2-workshop",
-    },
-
-    // ─────────────────────────────
-    // SCENE 06 — WORKSHOP
+    // SCENE 05 — WORKSHOP
     // ─────────────────────────────
 
     {
@@ -436,7 +263,7 @@ if (access == 1)
       background: images.forest,
       content: {
         type: "text",
-        text: "Где-то за стеной раздаётся механический звук.",
+        text: "Где-то за стеной раздаётся механический звук.\n\nЩёлк.\n\nПауза.\n\nЩёлк.",
       },
       nextScene: "chapter2-workshop-2",
     },
@@ -446,7 +273,7 @@ if (access == 1)
       background: images.forest,
       content: {
         type: "text",
-        text: "Щёлк.",
+        text: "Затем включается свет.\n\nПеред тобой открывается небольшая мастерская.",
       },
       nextScene: "chapter2-workshop-3",
     },
@@ -456,7 +283,7 @@ if (access == 1)
       background: images.forest,
       content: {
         type: "text",
-        text: "Пауза.",
+        text: "Инструменты, детали, разобранные механизмы.\n\nВсё покрыто пылью.\n\nПохоже, здесь давно никто не работал.",
       },
       nextScene: "chapter2-workshop-4",
     },
@@ -466,138 +293,277 @@ if (access == 1)
       background: images.forest,
       content: {
         type: "text",
-        text: "Щёлк.",
+        text: "В центре комнаты — длинный рабочий стол.\n\nА в углу до сих пор горит одинокий монитор.",
       },
-      nextScene: "chapter2-workshop-5",
+      actions: [
+        {
+          id: "check-table",
+          label: "Осмотреть стол",
+          nextScene: "chapter2-table",
+        },
+        {
+          id: "check-log",
+          label: "Посмотреть, что на экране",
+          nextScene: "chapter2-log",
+        },
+      ],
     },
 
+    // ── Ветка: экран ──
+    // Тот, кто пойдёт к столу сразу, лога не увидит.
+
     {
-      id: "chapter2-workshop-5",
+      id: "chapter2-log",
       background: images.forest,
       content: {
         type: "text",
-        text: "Затем включается свет.",
+        text: "На экране открыт лог.\n\nОн всё ещё пишется.",
       },
-      nextScene: "chapter2-workshop-6",
+      nextScene: "chapter2-log-2",
     },
 
     {
-      id: "chapter2-workshop-6",
+      id: "chapter2-log-2",
       background: images.forest,
       content: {
         type: "text",
-        text: "Перед вами открывается небольшая мастерская.",
+        text: `08:19  subject entered the forest
+08:31  subject found the trail
+09:04  subject touched the rune
+09:12  subject opened the door`,
       },
-      nextScene: "chapter2-workshop-7",
+      nextScene: "chapter2-log-3",
     },
 
     {
-      id: "chapter2-workshop-7",
+      id: "chapter2-log-3",
       background: images.forest,
       content: {
         type: "text",
-        text: "На столах лежат инструменты, детали и разобранные механизмы.",
+        text: `Курсор мигает в последней строке.
+
+09:48  subject entered the workshop`,
       },
-      nextScene: "chapter2-workshop-8",
+      nextScene: "chapter2-log-4",
     },
 
     {
-      id: "chapter2-workshop-8",
+      id: "chapter2-log-4",
       background: images.forest,
       content: {
         type: "text",
-        text: "Похоже, здесь давно никто не работал.",
+        text: "За тобой следят с самой первой минуты.\n\nИ всё это время тебя вели именно сюда.",
       },
-      nextScene: "chapter2-workshop-9",
+      nextScene: "chapter2-table",
+    },
+
+    // ── Стол ──
+
+    {
+      id: "chapter2-table",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Стол завален чертежами.",
+      },
+      nextScene: "chapter2-table-2",
     },
 
     {
-      id: "chapter2-workshop-9",
+      id: "chapter2-table-2",
       background: images.forest,
       content: {
         type: "text",
-        text: "Но один предмет лежит отдельно.",
+        text: "Один и тот же рисунок — снова и снова.\n\nЖёсткие надкрылья, шесть ног, ни одного лишнего винта.",
       },
-      nextScene: "chapter2-workshop-10",
+      nextScene: "chapter2-table-3",
     },
 
     {
-      id: "chapter2-workshop-10",
+      id: "chapter2-table-3",
       background: images.forest,
       content: {
         type: "text",
-        text: "Будто его оставили специально для вас.",
+        text: "Десятки листов, и почти все перечёркнуты.\n\nНа верхнем — ни одной поправки.",
       },
-      nextScene: "chapter2-workshop-11",
+      nextScene: "chapter2-table-4",
+    },
+
+    {
+      id: "chapter2-table-4",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "А под чертежами лежит ещё один лист.\n\nЭто не чертёж.",
+      },
+      nextScene: "chapter2-table-5",
+    },
+
+    {
+      id: "chapter2-table-5",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Схема вязания.\n\nМаленькая фигура. Круглые уши. Пять пальцев.",
+      },
+      nextScene: "chapter2-table-6",
+    },
+
+    {
+      id: "chapter2-table-6",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Тот же почерк, что и на чертежах.",
+      },
+      nextScene: "chapter2-table-7",
+    },
+
+    {
+      id: "chapter2-table-7",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "А рядом со схемой лежит клубок.\n\nТого же тёплого рыжеватого цвета, что и нитка у тебя в кармане.",
+      },
+      nextScene: "chapter2-table-8",
+    },
+
+    {
+      id: "chapter2-table-8",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "В самом углу стола, отдельно от всего, стоит небольшая коробка.\n\nНа ней одна надпись:\n\nMI-01",
+      },
+      actions: [
+        {
+          id: "open-box",
+          label: "Открыть коробку",
+          nextScene: "chapter2-open",
+        },
+      ],
     },
 
     // ─────────────────────────────
-    // SCENE 07 — THE GIFT
+    // SCENE 06 — THE GIFT
     // ─────────────────────────────
 
     {
-      id: "chapter2-workshop-11",
+      id: "chapter2-open",
       background: images.forest,
       content: {
         type: "text",
-        text: "На столе стоит небольшая коробка.",
+        text: "Коробка не запечатана.\n\nТы снимаешь крышку.",
       },
-      nextScene: "chapter2-workshop-12",
+      nextScene: "chapter2-open-2",
+    },
+
+    // Здесь можно показать картинку настоящего подарка —
+    // так же, как сделано с книгой в первой главе:
+    // content: { type: "image", src: "/images/items/mi-01.webp", alt: "MI-01" }
+    {
+      id: "chapter2-open-2",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Внутри — детали.\n\nЛатунные пластины, шестерни, винты в отдельном пакетике.",
+      },
+      nextScene: "chapter2-open-3",
     },
 
     {
-      id: "chapter2-workshop-12",
+      id: "chapter2-open-3",
       background: images.forest,
       content: {
         type: "text",
-        text: "На ней всего одна надпись.",
+        text: "На дне коробки ты видишь инструкцию.",
       },
-      nextScene: "chapter2-workshop-13",
+      nextScene: "chapter2-open-4",
     },
 
     {
-      id: "chapter2-workshop-13",
+      id: "chapter2-open-4",
       background: images.forest,
       content: {
         type: "text",
-        text: "MI-01",
+        text: "РЕЛИКВИЯ II — ПОЛУЧЕНА\n\nMI-01 — CYBERPUNK BEETLE",
       },
-      nextScene: "chapter2-workshop-14",
-    },
-    {
-      id: "chapter2-workshop-16",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Похоже, кто-то действительно оставил его здесь для вас.",
-      },
-      nextScene: "chapter2-workshop-17",
+      nextScene: "chapter2-open-5",
     },
 
     {
-      id: "chapter2-workshop-17",
+      id: "chapter2-open-5",
       background: images.forest,
       content: {
         type: "text",
-        text: `На экране терминала появляется сообщение:
-
-> OBJECT ACQUIRED`,
+        text: "Тип: Механизм. В разобранном виде.\n\nРедкость: ★★★★★",
       },
-      nextScene: "chapter2-workshop-18",
+      nextScene: "chapter2-open-6",
     },
 
     {
-      id: "chapter2-workshop-18",
+      id: "chapter2-open-6",
       background: images.forest,
       content: {
         type: "text",
-        text: `> WELL DONE`,
+        text: "А рядом с коробкой, в пыли на столе, — маленький след.\n\nПять пальцев.",
       },
-      nextScene: "chapter2-transition-back",
+      actions: [
+        {
+          id: "leave-now",
+          label: "Забрать и уходить",
+          nextScene: "chapter2-transition-back",
+        },
+        {
+          id: "wait-here",
+          label: "Подождать",
+          nextScene: "chapter2-wait",
+        },
+      ],
+    },
+
+    // ── Ветка: подождать ──
+
+    {
+      id: "chapter2-wait",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Ты садишься прямо на пол и ждёшь.\n\nМинуту. Две.",
+      },
+      nextScene: "chapter2-wait-2",
+    },
+
+    {
+      id: "chapter2-wait-2",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Никто не приходит.\n\nПотом в углу коротко щёлкает монитор.\n\nТы оборачиваешься.",
+      },
+      nextScene: "chapter2-wait-3",
+    },
+
+    {
+      id: "chapter2-wait-3",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: `> HE IS ALREADY OUTSIDE`,
+      },
+
+      actions: [
+        {
+          id: "leave",
+          label: "Выйти на улицу",
+          nextScene: "chapter2-transition-back",
+        },
+      ],
     },
 
     // ─────────────────────────────
-    // SCENE 08 — RETURN
+    // SCENE 07 — RETURN
     // ─────────────────────────────
 
     {
@@ -605,7 +571,7 @@ if (access == 1)
       background: images.forest,
       content: {
         type: "text",
-        text: "Свет мастерской гаснет.",
+        text: "Ты выходишь обратно в переулок.\n\nСвет мастерской гаснет за спиной.",
       },
       nextScene: "chapter2-transition-back-2",
     },
@@ -615,7 +581,7 @@ if (access == 1)
       background: images.forest,
       content: {
         type: "text",
-        text: "За спиной остаётся шум города.",
+        text: "Шум города становится всё тише.\n\nНеон исчезает.",
       },
       nextScene: "chapter2-transition-back-3",
     },
@@ -625,7 +591,7 @@ if (access == 1)
       background: images.forest,
       content: {
         type: "text",
-        text: "Неон исчезает.",
+        text: "Асфальт снова сменяется землёй.\n\nВпереди снова лес.",
       },
       nextScene: "chapter2-transition-back-4",
     },
@@ -635,53 +601,15 @@ if (access == 1)
       background: images.forest,
       content: {
         type: "text",
-        text: "Асфальт снова сменяется землёй.",
+        text: "Ты делаешь несколько шагов вперёд.\n\nИ вдруг слышишь хруст ветки. Совсем рядом.",
       },
-      nextScene: "chapter2-transition-back-5",
-    },
-
-    {
-      id: "chapter2-transition-back-5",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Впереди снова лес.",
-      },
-      nextScene: "chapter2-transition-back-6",
-    },
-
-    {
-      id: "chapter2-transition-back-6",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Вы делаете несколько шагов вперёд.",
-      },
-      nextScene: "chapter2-transition-back-7",
-    },
-
-    {
-      id: "chapter2-transition-back-7",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "И вдруг слышите хруст ветки.",
-      },
-      nextScene: "chapter2-complete",
-    },
-
-    // ─────────────────────────────
-    // CHAPTER II COMPLETE
-    // ─────────────────────────────
-
-    {
-      id: "chapter2-complete",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Совсем рядом.",
-      },
-      nextScene: "final-start",
+      actions: [
+        {
+          id: "go-on",
+          label: "Идти дальше",
+          nextScene: "final-start",
+        },
+      ],
     },
   ],
 };
