@@ -17,8 +17,16 @@ export function DragonFight({ puzzleId, nextScene }: DragonFightProps) {
   const setScene = useGameStore((state) => state.setScene);
   const completePuzzle = useGameStore((state) => state.completePuzzle);
 
-  const { hostRef, stats, status, announcement, dashRun, booted, restart } =
-    usePhaserGame();
+  const {
+    hostRef,
+    stats,
+    status,
+    endReason,
+    announcement,
+    dashRun,
+    booted,
+    restart,
+  } = usePhaserGame();
 
   // Рестарт по R доступен только на экране конца боя,
   // чтобы клавиша не срабатывала во время боя.
@@ -57,7 +65,7 @@ export function DragonFight({ puzzleId, nextScene }: DragonFightProps) {
   }, [status, puzzleId, nextScene, completePuzzle, setScene]);
 
   return (
-    <div className="app">
+    <div className="dragon-fight">
       <h1 className="title">Fight with the Dragon</h1>
 
       <PlayerHud stats={stats} dashRun={dashRun} />
@@ -73,7 +81,11 @@ export function DragonFight({ puzzleId, nextScene }: DragonFightProps) {
 
         {!booted && <p className="loading">Загружаем арену...</p>}
 
-        <GameOverlay status={status} onRestart={restart} />
+        <GameOverlay
+          status={status}
+          endReason={endReason}
+          onRestart={restart}
+        />
       </div>
 
       <DragonHud stats={stats} />

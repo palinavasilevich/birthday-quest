@@ -58,11 +58,13 @@ export class ArenaScene extends Phaser.Scene {
 
   // Состояние дракона
   private dragonHp: number = DRAGON.maxHp;
-  private poise: number = 0;
+  private poise = 0;
 
   // Медвесыч
-  private owlbearHp: number = OWLBEAR.maxHp;
+  private owlbearHp: number = OWLBEAR.initialMaxHp;
+  private owlbearMaxHp: number = OWLBEAR.initialMaxHp;
   private owlbearSafe = false;
+  private owlbearInvulnerableUntil = 0;
   private owlbearNextAttackAt = 0;
   private phase: 1 | 2 | 3 = 1;
   private aiState: AiState = "intro";
@@ -87,8 +89,10 @@ export class ArenaScene extends Phaser.Scene {
     this.physics.world.setBounds(PAD, PAD, W - PAD * 2, H - PAD * 2);
     this.drawFloor();
 
-    this.player = this.physics.add.sprite(W * 0.5, H * 0.78, TEXTURES.knight);
-    this.player.setCircle(12, 5, 5).setCollideWorldBounds(true).setDepth(10);
+    this.player = this.physics.add
+      .sprite(W * 0.5, H * 0.78, TEXTURES.knight)
+      .setScale(PLAYER.scale);
+    this.player.setCircle(14, 6, 6).setCollideWorldBounds(true).setDepth(10);
 
     this.sword = this.add
       .sprite(0, 0, TEXTURES.sword)
@@ -98,18 +102,18 @@ export class ArenaScene extends Phaser.Scene {
 
     this.dragon = this.physics.add
       .sprite(W * 0.5, H * 0.26, TEXTURES.dragon)
-      .setScale(0.8)
+      .setScale(DRAGON.scale)
       .setDepth(8);
     this.dragon.setCircle(48, 58, 27).setCollideWorldBounds(true);
 
     this.owlbear = this.physics.add
       .sprite(W * 0.78, H * 0.68, TEXTURES.owlbear)
       .setDepth(9)
-      .setScale(0.82);
-    this.owlbear.setCircle(22, 8, 8);
+      .setScale(OWLBEAR.scale);
+    this.owlbear.setCircle(18, 10, 10);
 
     this.owlbearDangerZone = this.add
-      .circle(this.owlbear.x, this.owlbear.y, 42)
+      .circle(this.owlbear.x, this.owlbear.y, 34)
       .setStrokeStyle(2, 0xff6b4a, 0.75)
       .setFillStyle(0xff4d2f, 0.08)
       .setDepth(1);
@@ -129,10 +133,17 @@ export class ArenaScene extends Phaser.Scene {
     });
 
     this.physics.add.overlap(this.owlbear, this.fires, (_owlbear, fire) => {
-      if (this.owlbearSafe || this.gameOver) return;
+      if (this.gameOver) return;
+
       const ball = fire as Fireball;
+      this.spawnBurst(ball.x, ball.y, 0xffa63d, 6);
       ball.destroy();
-      this.damageOwlbear(1);
+
+      if (this.owlbearSafe) {
+        this.damageOwlbear(1);
+      } else {
+        this.damageOwlbearBeforeRescue(1);
+      }
     });
 
     this.bindInput();
@@ -154,8 +165,10 @@ export class ArenaScene extends Phaser.Scene {
     this.dragonHp = DRAGON.maxHp;
     this.poise = 0;
     this.phase = 1;
-    this.owlbearHp = OWLBEAR.maxHp;
+    this.owlbearHp = OWLBEAR.initialMaxHp;
+    this.owlbearMaxHp = OWLBEAR.initialMaxHp;
     this.owlbearSafe = false;
+    this.owlbearInvulnerableUntil = 0;
     this.owlbearNextAttackAt = 0;
     this.aiState = "intro";
     this.aiTimer = 1400;
@@ -191,7 +204,7 @@ export class ArenaScene extends Phaser.Scene {
       phase: this.phase,
       poise: this.poise,
       owlbearHp: this.owlbearHp,
-      owlbearMaxHp: OWLBEAR.maxHp,
+      owlbearMaxHp: this.owlbearMaxHp,
       owlbearSafe: this.owlbearSafe,
     };
     const prev = this.lastStats;
@@ -396,7 +409,7 @@ export class ArenaScene extends Phaser.Scene {
     );
 
     this.pushStats();
-    if (this.playerHp <= 0) this.finish(false);
+    if (this.playerHp <= 0) this.finish(false, "player");
   }
 
   // ---------------------------------------------------------------- дракон
@@ -535,8 +548,9 @@ export class ArenaScene extends Phaser.Scene {
         this.shotTimer -= delta;
         if (this.shotTimer <= 0 && this.shotsLeft > 0) {
           const spread = Phaser.Math.FloatBetween(-0.09, 0.09);
+          const target = this.getAttackTarget();
           const angle =
-            Phaser.Math.Angle.Between(dragon.x, dragon.y, player.x, player.y) +
+            Phaser.Math.Angle.Between(dragon.x, dragon.y, target.x, target.y) +
             spread;
           const mouth = this.mouthPosition();
           this.spawnFire(mouth.x, mouth.y, angle, 300 + this.phase * 45, 1);
@@ -612,6 +626,14 @@ export class ArenaScene extends Phaser.Scene {
     }
   }
 
+  private getAttackTarget(): Phaser.Math.Vector2 {
+    if (this.owlbearSafe && Math.random() < 0.35) {
+      return new Phaser.Math.Vector2(this.owlbear.x, this.owlbear.y);
+    }
+
+    return new Phaser.Math.Vector2(this.player.x, this.player.y);
+  }
+
   private chooseAttack(): void {
     const pool: AttackName[] = ["volley", "ring", "charge"];
     if (this.phase >= 2) pool.push("breath", "volley", "charge");
@@ -642,47 +664,62 @@ export class ArenaScene extends Phaser.Scene {
         this.setAi("ring", 500 + this.shotsLeft * 420);
         break;
 
-      case "breath":
+      case "breath": {
+        const target = this.getAttackTarget();
+
         this.breathBase = Phaser.Math.Angle.Between(
           dragon.x,
           dragon.y,
-          player.x,
-          player.y,
+          target.x,
+          target.y,
         );
-        this.setAi("breath", 1500);
-        break;
 
-      case "charge": {
-        const angle = Phaser.Math.Angle.Between(
-          dragon.x,
-          dragon.y,
-          player.x,
-          player.y,
-        );
-        const speed = 620 + this.phase * 50;
-        this.setAi("charge", 1100);
-        dragon.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+        this.setAi("breath", 1500);
         break;
       }
 
-      case "rain":
+      case "charge": {
+        const target = this.getAttackTarget();
+        const angle = Phaser.Math.Angle.Between(
+          dragon.x,
+          dragon.y,
+          target.x,
+          target.y,
+        );
+
+        const speed = 620 + this.phase * 50;
+
+        this.setAi("charge", 1100);
+
+        dragon.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
+
+        break;
+      }
+
+      case "rain": {
         this.setAi("rain", 1300);
+
         for (let i = 0; i < 7; i += 1) {
+          const target =
+            this.owlbearSafe && Math.random() < 0.35 ? this.owlbear : player;
+
           this.spawnWarning(
             Phaser.Math.Clamp(
-              player.x + Phaser.Math.Between(-260, 260),
+              target.x + Phaser.Math.Between(-260, 260),
               PAD + 40,
               W - PAD - 40,
             ),
             Phaser.Math.Clamp(
-              player.y + Phaser.Math.Between(-200, 200),
+              target.y + Phaser.Math.Between(-200, 200),
               PAD + 40,
               H - PAD - 40,
             ),
             800 + i * 40,
           );
         }
+
         break;
+      }
     }
   }
 
@@ -698,7 +735,7 @@ export class ArenaScene extends Phaser.Scene {
   // --------------------------------------------------------------- Медвесыч
 
   private updateOwlbear(time: number, delta: number): void {
-    if (!this.owlbear.active) return;
+    if (!this.owlbear.active || this.gameOver) return;
 
     this.owlbearDangerZone.setPosition(this.owlbear.x, this.owlbear.y);
     this.owlbearDangerZone.setVisible(!this.owlbearSafe);
@@ -714,6 +751,8 @@ export class ArenaScene extends Phaser.Scene {
       if (distance <= OWLBEAR.rescueDistance) {
         this.rescueOwlbear();
       }
+
+      this.owlbear.setVelocity(0, 0);
       return;
     }
 
@@ -745,7 +784,8 @@ export class ArenaScene extends Phaser.Scene {
       this.owlbear.setVelocity(0, 0);
     }
 
-    // После спасения Медвесыч иногда помогает оглушать дракона.
+    // Медвесыч остаётся полноценной целью до конца боя.
+    // Иногда он помогает оглушить дракона, если находится рядом.
     if (
       time >= this.owlbearNextAttackAt &&
       Phaser.Math.Distance.Between(
@@ -775,45 +815,85 @@ export class ArenaScene extends Phaser.Scene {
     if (this.owlbearSafe) return;
 
     this.owlbearSafe = true;
+    this.owlbearMaxHp = OWLBEAR.rescuedMaxHp;
+    this.owlbearHp = this.owlbearMaxHp;
+    this.owlbearInvulnerableUntil = this.time.now + OWLBEAR.damageCooldown;
+
     this.owlbearDangerZone.setVisible(false);
     this.owlbear.setTint(0xffd59a);
-    this.owlbear.setScale(0.9);
 
     this.tweens.add({
       targets: this.owlbear,
-      scale: 1,
-      duration: 260,
-      ease: "Back.Out",
+      scale: OWLBEAR.scale * 1.18,
+      duration: 140,
+      yoyo: true,
+      ease: "Quad.Out",
     });
 
-    this.spawnBurst(this.owlbear.x, this.owlbear.y, 0xe8c27a, 14);
-    this.hooks.onAnnounce("Медвесыч спасён!");
+    this.spawnBurst(this.owlbear.x, this.owlbear.y, 0xe8c27a, 16);
+    this.cameras.main.flash(180, 232, 194, 122);
+    this.hooks.onAnnounce(
+      `Медвесыч спасён! ${this.owlbearHp}/${this.owlbearMaxHp} HP`,
+    );
     this.pushStats(true);
   }
 
-  private damageOwlbear(amount: number): void {
+  private damageOwlbearBeforeRescue(amount: number): void {
     if (this.owlbearSafe || this.gameOver) return;
 
     this.owlbearHp = Math.max(0, this.owlbearHp - amount);
     this.owlbear.setTint(0xff6655);
-    this.time.delayedCall(140, () => {
-      if (this.owlbear.active && this.owlbearSafe === false) {
+
+    this.time.delayedCall(120, () => {
+      if (this.owlbear.active && !this.owlbearSafe) {
         this.owlbear.clearTint();
       }
     });
 
-    this.spawnBurst(this.owlbear.x, this.owlbear.y, 0xff6b4a, 8);
+    this.spawnBurst(this.owlbear.x, this.owlbear.y, 0xff6b4a, 7);
     this.hooks.onAnnounce(
       this.owlbearHp > 0
-        ? `Медвесыч ранен! ${this.owlbearHp}/${OWLBEAR.maxHp}`
+        ? `Медвесыч ранен! ${this.owlbearHp}/${this.owlbearMaxHp}`
         : "Медвесыч погиб…",
     );
 
     this.pushStats(true);
 
     if (this.owlbearHp <= 0) {
-      this.finish(false);
+      this.finish(false, "owlbear");
     }
+  }
+
+  private damageOwlbear(amount: number): void {
+    if (!this.owlbearSafe || this.gameOver) return;
+    if (this.time.now < this.owlbearInvulnerableUntil) return;
+
+    this.owlbearHp = Math.max(0, this.owlbearHp - amount);
+    this.owlbearInvulnerableUntil = this.time.now + OWLBEAR.damageCooldown;
+
+    this.owlbear.setTint(0xff6655);
+    this.time.delayedCall(120, () => {
+      if (!this.owlbear.active || this.gameOver) return;
+
+      this.owlbear.clearTint();
+      this.owlbear.setTint(0xffd59a);
+    });
+
+    this.spawnBurst(this.owlbear.x, this.owlbear.y, 0xff6b4a, 8);
+    this.cameras.main.shake(90, 0.004);
+
+    if (this.owlbearHp <= 0) {
+      this.owlbearHp = 0;
+      this.pushStats(true);
+      this.hooks.onAnnounce("Медвесыч погиб…");
+      this.finish(false, "owlbear");
+      return;
+    }
+
+    this.hooks.onAnnounce(
+      `Медвесыч ранен! ${this.owlbearHp}/${this.owlbearMaxHp}`,
+    );
+    this.pushStats(true);
   }
 
   // --------------------------------------------------------------- снаряды
@@ -848,6 +928,7 @@ export class ArenaScene extends Phaser.Scene {
     pool.setDepth(2).setScale(0.6).setAlpha(0);
     pool.life = life;
     pool.hitTimer = 0;
+    pool.owlbearHitTimer = 0;
     this.tweens.add({ targets: pool, alpha: 1, scale: 0.95, duration: 180 });
     this.pools.add(pool);
   }
@@ -870,13 +951,24 @@ export class ArenaScene extends Phaser.Scene {
         if (this.gameOver) return;
         this.spawnPool(x, y, 1800);
         this.spawnBurst(x, y, 0xffa63d, 12);
-        const dist = Phaser.Math.Distance.Between(
+        const playerDist = Phaser.Math.Distance.Between(
           x,
           y,
           this.player.x,
           this.player.y,
         );
-        if (dist < 48) this.hurtPlayer(1);
+
+        if (playerDist < 48) {
+          this.hurtPlayer(1);
+        }
+
+        if (
+          this.owlbearSafe &&
+          Phaser.Math.Distance.Between(x, y, this.owlbear.x, this.owlbear.y) <
+            48
+        ) {
+          this.damageOwlbear(1);
+        }
       },
     });
   }
@@ -904,10 +996,27 @@ export class ArenaScene extends Phaser.Scene {
         this.player.x,
         this.player.y,
       );
+
       if (!this.gameOver && pool.hitTimer <= 0 && dist < 40) {
         pool.hitTimer = 500;
         this.hurtPlayer(1, 120);
       }
+
+      if (
+        !this.gameOver &&
+        this.owlbearSafe &&
+        pool.owlbearHitTimer <= 0 &&
+        Phaser.Math.Distance.Between(
+          pool.x,
+          pool.y,
+          this.owlbear.x,
+          this.owlbear.y,
+        ) < 40
+      ) {
+        pool.owlbearHitTimer = 500;
+        this.damageOwlbear(1);
+      }
+
       if (pool.life <= 0) pool.destroy();
     });
   }
@@ -933,7 +1042,7 @@ export class ArenaScene extends Phaser.Scene {
     }
   }
 
-  private finish(won: boolean): void {
+  private finish(won: boolean, reason: "player" | "owlbear" = "player"): void {
     this.gameOver = true;
     this.player.setVelocity(0, 0);
     this.dragon.setVelocity(0, 0);
@@ -960,6 +1069,6 @@ export class ArenaScene extends Phaser.Scene {
       });
     }
 
-    this.hooks.onEnd(won);
+    this.hooks.onEnd(won, won ? undefined : reason);
   }
 }

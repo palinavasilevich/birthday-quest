@@ -1,4 +1,4 @@
-import { DRAGON, OWLBEAR, PLAYER } from "../constants";
+import { DRAGON, PLAYER } from "../constants";
 import type { GameStats } from "../types";
 
 function Heart({ filled }: { filled: boolean }) {
@@ -41,6 +41,7 @@ export function PlayerHud({ stats, dashRun }: HudProps) {
       </div>
 
       <span className="hud-label">рывок</span>
+
       <span className="hud-phase">
         Фаза {stats.phase} · {stats.dragonHp} HP
       </span>
@@ -51,6 +52,10 @@ export function PlayerHud({ stats, dashRun }: HudProps) {
 export function DragonHud({ stats }: { stats: GameStats }) {
   const hpPercent = Math.max(0, (stats.dragonHp / DRAGON.maxHp) * 100);
   const poisePercent = Math.min(100, (stats.poise / DRAGON.poiseMax) * 100);
+  const owlbearPercent = Math.max(
+    0,
+    (stats.owlbearHp / stats.owlbearMaxHp) * 100,
+  );
 
   return (
     <>
@@ -73,13 +78,28 @@ export function DragonHud({ stats }: { stats: GameStats }) {
         </div>
       </div>
 
-      <div className={`owlbear-status ${stats.owlbearSafe ? "is-safe" : ""}`}>
-        <span>Медвесыч</span>
-        <span>
-          {stats.owlbearSafe
-            ? "спасён"
-            : `${stats.owlbearHp}/${OWLBEAR.maxHp} HP`}
-        </span>
+      <div
+        className={`owlbear-status ${
+          stats.owlbearSafe ? "is-safe" : ""
+        } ${stats.owlbearHp <= 1 ? "is-critical" : ""}`}
+      >
+        <div className="owlbear-label">
+          <span>Медвесыч</span>
+          {stats.owlbearSafe && <small>спутник</small>}
+        </div>
+
+        <div className="owlbear-hp">
+          <div className="owlbear-hp-track">
+            <div
+              className="owlbear-hp-fill"
+              style={{ width: `${owlbearPercent}%` }}
+            />
+          </div>
+
+          <span>
+            {stats.owlbearHp}/{stats.owlbearMaxHp} HP
+          </span>
+        </div>
       </div>
     </>
   );

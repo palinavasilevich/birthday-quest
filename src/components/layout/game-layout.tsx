@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useEffect, useRef } from "react";
+
 import { AnimatePresence, motion } from "framer-motion";
 
 import { AmbientMusic } from "@/components/audio/ambient-music";
@@ -24,18 +24,21 @@ export function GameLayout({
   classNameContentBlock = "",
   music,
 }: GameLayoutProps) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    ref.current?.scrollIntoView({
-      behavior: "smooth",
-    });
-  }, [sceneKey]);
-
   return (
     <div
-      ref={ref}
-      className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-black font-story text-gray-100"
+      className={`
+        relative
+        flex
+        h-dvh
+        min-h-0
+        w-full
+        overflow-hidden
+        bg-black
+        font-story
+        text-gray-100
+        items-center
+        justify-center
+      `}
     >
       {music && <AmbientMusic src={music} />}
 
@@ -53,17 +56,31 @@ export function GameLayout({
 
       <AmbientParticles />
 
+      {/* Контейнер всей сцены */}
       <div
-        className={`z-10 w-full max-w-2xl px-6 py-8 text-shadow-lg ${classNameContentBlock}`}
+        className={`
+          z-10
+          w-full
+          px-4
+          text-shadow-lg
+          ${isPuzzle ? "max-w-250 py-2" : "max-w-2xl py-8"}
+          ${classNameContentBlock}
+        `}
       >
         <AnimatePresence mode="wait">
           <motion.div
             key={sceneKey}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.8 }}
-            className={`${!isPuzzle && "flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-12 shadow-2xl backdrop-blur-md"}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: isPuzzle ? 0.35 : 0.8,
+            }}
+            className={
+              !isPuzzle
+                ? "flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-12 shadow-2xl backdrop-blur-md"
+                : "w-full"
+            }
           >
             {children}
           </motion.div>

@@ -8,49 +8,76 @@
   --muted: #6b7694;
 
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+
   --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-* {
-  box-sizing: border-box;
-}
+/* ============================================================
+   DRAGON FIGHT
+   ============================================================ */
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: radial-gradient(circle at 50% 0%, #262a3d 0%, var(--ash) 60%);
-  color: var(--steel);
-  font-family: var(--serif);
-}
+.dragon-fight {
+  /*
+   * Максимальная ширина игры.
+   * На маленьком экране уменьшается автоматически.
+   */
+  width: min(960px, calc(100vw - 32px));
 
-.app {
+  /*
+   * Всё содержимое находится в одном стабильном блоке.
+   */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 20px 16px;
+
+  gap: 10px;
+
+  padding: 12px 14px;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+
+  background: rgba(0, 0, 0, 0.6);
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+
+  contain: layout;
 }
 
-.title {
+/* ============================================================
+   TITLE
+   ============================================================ */
+
+.dragon-title {
   margin: 0;
+
+  flex: 0 0 auto;
+
   font-size: clamp(20px, 3.4vw, 30px);
   font-weight: 600;
+
   letter-spacing: 0.04em;
+
   color: var(--gold);
+
   text-shadow: 0 0 24px rgba(224, 86, 44, 0.35);
 }
 
-/* ---------------------------------------------------------------- HUD */
-
-.hud-row,
-.boss-bar {
-  width: min(100%, 960px);
-}
+/* ============================================================
+   PLAYER HUD
+   ============================================================ */
 
 .hud-row {
+  width: 100%;
+
   display: flex;
   align-items: center;
+
   gap: 14px;
+
+  flex: 0 0 auto;
 }
 
 .hearts {
@@ -61,15 +88,22 @@ body {
 .dash-track {
   width: 90px;
   height: 5px;
+
+  flex: 0 0 auto;
+
   background: #2a2e42;
   border-radius: 3px;
+
   overflow: hidden;
 }
 
 .dash-fill {
   height: 100%;
+
   background: var(--steel);
+
   transform-origin: left;
+
   animation-name: dash-refill;
   animation-timing-function: linear;
 }
@@ -85,79 +119,115 @@ body {
 }
 
 .hud-label {
+  flex: 0 0 auto;
+
   font-family: var(--sans);
   font-size: 12px;
+
   color: var(--muted);
 }
 
 .hud-phase {
   margin-left: auto;
+
+  flex: 0 0 auto;
+
   font-family: ui-monospace, "SF Mono", monospace;
   font-size: 13px;
+
   color: #b07a6a;
 }
 
-/* Dragon poise */
+/* ============================================================
+   DRAGON HUD
+   ============================================================ */
+
+.boss-bar {
+  width: 100%;
+  flex: 0 0 auto;
+}
 
 .poise-track {
   height: 3px;
+
   margin-bottom: 3px;
+
   background: #2a2e42;
+
   border-radius: 2px;
+
   overflow: hidden;
 }
 
 .poise-fill {
   height: 100%;
+
   background: var(--gold);
+
   border-radius: 2px;
+
   transition: width 120ms linear;
 }
 
-/* Dragon HP */
-
 .hp-track {
   position: relative;
+
   height: 14px;
+
   background: #0d0e16;
+
   border: 1px solid var(--edge);
+
   border-radius: 3px;
+
   overflow: hidden;
 }
 
 .hp-fill {
   height: 100%;
+
   background: var(--ember);
+
   border-top: 3px solid rgba(255, 166, 61, 0.5);
+
   transition: width 180ms ease-out;
 }
 
 .hp-tick {
   position: absolute;
+
   top: 0;
   bottom: 0;
+
   width: 1px;
+
   background: var(--edge);
 }
 
-/* ---------------------------------------------------------------- Медвесыч */
+/* ============================================================
+   MEDVESYCH
+   ============================================================ */
 
 .owlbear-status {
-  width: min(100%, 960px);
+  width: 100%;
+
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 
   margin-top: -4px;
-  padding: 6px 10px;
+
+  padding: 7px 10px;
 
   border: 1px solid rgba(201, 75, 62, 0.35);
+
   border-radius: 4px;
 
   background: rgba(18, 19, 26, 0.5);
 
   font-family: var(--sans);
   font-size: 12px;
+
   color: var(--muted);
 
   transition:
@@ -168,50 +238,150 @@ body {
 
 .owlbear-status.is-safe {
   border-color: rgba(232, 194, 122, 0.45);
+
   color: var(--gold);
+
   background: rgba(232, 194, 122, 0.06);
 }
 
-.owlbear-status span:last-child {
-  font-family: ui-monospace, "SF Mono", monospace;
+.owlbear-status.is-critical {
+  border-color: rgba(201, 75, 62, 0.7);
+
+  color: #e98272;
 }
 
-/* ---------------------------------------------------------------- сцена */
+.owlbear-label {
+  display: flex;
+  align-items: baseline;
+
+  gap: 8px;
+}
+
+.owlbear-label small {
+  font-size: 9px;
+
+  color: var(--muted);
+}
+
+.owlbear-hp {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 11px;
+}
+
+.owlbear-hp-track {
+  width: 90px;
+  height: 4px;
+
+  background: #2a2e42;
+
+  border-radius: 2px;
+
+  overflow: hidden;
+}
+
+.owlbear-hp-fill {
+  height: 100%;
+
+  background: var(--gold);
+
+  transition: width 180ms ease-out;
+}
+
+.owlbear-status.is-critical .owlbear-hp-fill {
+  background: var(--ember);
+}
+
+/* ============================================================
+   BATTLE STAGE
+   ============================================================ */
 
 .stage {
   position: relative;
-  width: min(100%, 960px);
-  aspect-ratio: 960 / 600;
-}
 
-.canvas-host {
-  width: 100%;
-  height: 100%;
+  /*
+   * Максимум:
+   * 960 × 600
+   *
+   * Но высота viewport тоже учитывается.
+   *
+   * 190px = место для:
+   * title + player HUD + dragon HUD +
+   * owlbear HUD + controls + gaps/padding
+   */
+  width: min(960px, calc(100vw - 32px), calc((100dvh - 190px) * 1.6));
+
+  /*
+   * Сохраняем оригинальные пропорции Phaser.
+   */
+  aspect-ratio: 960 / 600;
+
+  flex: 0 1 auto;
+
   overflow: hidden;
-  line-height: 0;
+
+  box-sizing: border-box;
 
   border: 1px solid #3a3050;
+
   border-radius: 6px;
 
+  background: #12131a;
+
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+
+  contain: layout paint;
+}
+
+/* ============================================================
+   PHASER CANVAS
+   ============================================================ */
+
+.canvas-host {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  line-height: 0;
 }
 
 .canvas-host canvas {
   display: block;
-  width: 100%;
-  height: 100%;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  max-width: none;
+  max-height: none;
 }
+
+/* ============================================================
+   ANNOUNCEMENT
+   ============================================================ */
 
 .announce {
   position: absolute;
+
   top: 16%;
+
   left: 0;
   right: 0;
 
   margin: 0;
 
   text-align: center;
+
   font-size: 28px;
+
   color: var(--gold);
 
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
@@ -238,8 +408,13 @@ body {
   }
 }
 
+/* ============================================================
+   LOADING
+   ============================================================ */
+
 .loading {
   position: absolute;
+
   inset: 0;
 
   display: flex;
@@ -249,17 +424,22 @@ body {
   margin: 0;
 
   color: var(--muted);
+
   pointer-events: none;
 }
 
-/* ---------------------------------------------------------------- overlay */
+/* ============================================================
+   END OVERLAY
+   ============================================================ */
 
 .overlay {
   position: absolute;
+
   inset: 0;
 
   display: flex;
   flex-direction: column;
+
   align-items: center;
   justify-content: center;
 
@@ -272,7 +452,9 @@ body {
 
 .overlay-title {
   margin: 0;
+
   font-size: clamp(28px, 5vw, 42px);
+
   color: var(--ember);
 }
 
@@ -280,17 +462,37 @@ body {
   color: var(--gold);
 }
 
+.overlay-note {
+  margin: -8px 0 0;
+
+  max-width: 34ch;
+
+  text-align: center;
+
+  font-family: var(--sans);
+
+  font-size: 14px;
+
+  line-height: 1.5;
+
+  color: var(--muted);
+}
+
 .overlay-button {
   padding: 9px 24px;
 
   border: none;
+
   border-radius: 4px;
 
   background: var(--gold);
+
   color: var(--ash);
 
   font-family: var(--sans);
+
   font-size: 16px;
+
   font-weight: 600;
 
   cursor: pointer;
@@ -302,6 +504,7 @@ body {
 
 .overlay-button:hover {
   background: #f0d095;
+
   transform: translateY(-1px);
 }
 
@@ -311,33 +514,50 @@ body {
 
 .overlay-button:focus-visible {
   outline: 2px solid #fff;
+
   outline-offset: 3px;
 }
 
-/* ------------------------------------------------------------ подсказки */
+/* ============================================================
+   CONTROLS
+   ============================================================ */
 
 .controls {
   display: flex;
   flex-wrap: wrap;
+
   justify-content: center;
 
   gap: 4px 20px;
 
+  flex: 0 0 auto;
+
   font-family: var(--sans);
+
   font-size: 13px;
+
   color: var(--muted);
 }
 
 .controls b {
   color: var(--gold);
+
   font-weight: 600;
 }
 
-/* ------------------------------------------------------------ responsive */
+/* ============================================================
+   SMALL SCREENS
+   ============================================================ */
 
 @media (max-width: 640px) {
-  .app {
-    padding: 14px 10px;
+  .dragon-fight {
+    width: calc(100vw - 20px);
+
+    gap: 7px;
+
+    padding: 8px;
+
+    border-radius: 12px;
   }
 
   .hud-row {
@@ -354,16 +574,52 @@ body {
 
   .announce {
     top: 12%;
+
     font-size: 21px;
   }
 
   .controls {
     gap: 5px 12px;
+
+    font-size: 11px;
+  }
+
+  .owlbear-hp-track {
+    width: 65px;
+  }
+}
+
+/* ============================================================
+   VERY SHORT SCREENS
+   ============================================================ */
+
+@media (max-height: 700px) {
+  .dragon-fight {
+    gap: 6px;
+
+    padding: 8px 10px;
+  }
+
+  .dragon-title {
+    font-size: 20px;
+  }
+
+  .hud-row {
+    gap: 8px;
+  }
+
+  .owlbear-status {
+    padding: 5px 8px;
+  }
+
+  .controls {
     font-size: 11px;
   }
 }
 
-/* ------------------------------------------------------------ accessibility */
+/* ============================================================
+   ACCESSIBILITY
+   ============================================================ */
 
 @media (prefers-reduced-motion: reduce) {
   .announce,

@@ -15,6 +15,7 @@ export const PLAYER = {
   attackRange: 96,
   attackDamage: 9,
   attackArc: 1.2,
+  scale: 1.15,
 } as const;
 
 export const DRAGON = {
@@ -22,13 +23,17 @@ export const DRAGON = {
   poiseMax: 46,
   staggerTime: 1700,
   weakMultiplier: 1.7,
+  scale: 0.8,
 } as const;
 
 export const OWLBEAR = {
-  maxHp: 3,
+  initialMaxHp: 3,
+  rescuedMaxHp: 6,
   rescueDistance: 70,
   followDistance: 54,
   followSpeed: 125,
+  damageCooldown: 650,
+  scale: 0.62,
 } as const;
 
 export const TEXTURES = {

@@ -1,6 +1,7 @@
 import type { PuzzleData } from "@/types/game";
 import { RunePuzzle } from "./rune-puzzle";
 import { CyberpunkPuzzle } from "./cyberpunk-puzzle";
+import { DragonFight } from "./dragon-fight/ui/dragon-fight";
 
 interface PuzzleProps {
   puzzle: PuzzleData;
@@ -15,6 +16,9 @@ export function Puzzle({ puzzle }: PuzzleProps) {
       return (
         <CyberpunkPuzzle puzzleId={puzzle.id} nextScene={puzzle.nextScene} />
       );
+
+    case "final":
+      return <DragonFight puzzleId={puzzle.id} nextScene={puzzle.nextScene} />;
 
     default:
       return null;
