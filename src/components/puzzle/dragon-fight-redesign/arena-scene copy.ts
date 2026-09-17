@@ -81,12 +81,6 @@ export class ArenaScene extends Phaser.Scene {
   private owlbearInvulnerableUntil = 0;
   private owlbearNextAttackAt = 0;
 
-  // When Medвесыч is badly wounded, the player must stay near him
-  // long enough to help him recover.
-  private owlbearNeedsHelp = false;
-  private owlbearAidProgress = 0;
-  private owlbearAidAnnounced = false;
-
   // ---------------------------------------------------------------
   // AI
   // ---------------------------------------------------------------
@@ -98,16 +92,6 @@ export class ArenaScene extends Phaser.Scene {
   private orbitDir: 1 | -1 = 1;
   private pendingAttack: AttackName = "volley";
   private lastAttack: AttackName | null = null;
-
-  // Phase 3 can chain attacks without giving the player
-  // a completely safe reset between them.
-  private attackQueue: AttackName[] = [];
-
-  // After several clean hits the dragon briefly hardens.
-  // Stagger/counter breaks this protection.
-  private dragonGuardUntil = 0;
-  private dragonConsecutiveHits = 0;
-  private lastDragonHitAt = 0;
 
   private shotsLeft = 0;
   private shotTimer = 0;
@@ -317,14 +301,6 @@ export class ArenaScene extends Phaser.Scene {
     this.owlbearSafe = false;
     this.owlbearInvulnerableUntil = 0;
     this.owlbearNextAttackAt = 0;
-    this.owlbearNeedsHelp = false;
-    this.owlbearAidProgress = 0;
-    this.owlbearAidAnnounced = false;
-
-    this.attackQueue = [];
-    this.dragonGuardUntil = 0;
-    this.dragonConsecutiveHits = 0;
-    this.lastDragonHitAt = 0;
 
     this.aiState = "intro";
     this.aiTimer = 1400;
@@ -1020,42 +996,18 @@ export class ArenaScene extends Phaser.Scene {
   // ===============================================================
 
   private hitDragon(damage: number): void {
-    const now = this.time.now;
     const weak = this.aiState === "recover" || this.aiState === "stagger";
     const counter = this.aiState === "charge";
-
-    // A counter or stagger breaks the dragon's guard.
-    if (counter || weak) {
-      this.dragonGuardUntil = 0;
-      this.dragonConsecutiveHits = 0;
-    } else {
-      // A rapid string of ordinary hits is partially absorbed by the
-      // dragon's scales. This makes timing matter more than button spam.
-      if (now - this.lastDragonHitAt > 1400) {
-        this.dragonConsecutiveHits = 0;
-      }
-
-      this.dragonConsecutiveHits += 1;
-      this.lastDragonHitAt = now;
-
-      if (this.dragonConsecutiveHits >= 4) {
-        this.dragonGuardUntil = now + 900;
-      }
-    }
-
-    const guarded = now < this.dragonGuardUntil && !counter && !weak;
 
     // Hitting the dragon during charge is a risky counter:
     // it deals bonus damage, adds a large amount of poise and
     // immediately interrupts the charge.
     const multiplier =
-      (weak ? DRAGON.weakMultiplier : 1) *
-      (counter ? 1.35 : 1) *
-      (guarded ? 0.55 : 1);
+      (weak ? DRAGON.weakMultiplier : 1) * (counter ? 1.35 : 1);
 
     this.dragonHp -= damage * multiplier;
 
-    this.poise += counter ? 14 : guarded ? Math.ceil(damage * 0.5) : damage;
+    this.poise += counter ? 14 : damage;
 
     if (counter) {
       this.dragon.setVelocity(0, 0);
@@ -1063,10 +1015,6 @@ export class ArenaScene extends Phaser.Scene {
 
       this.hooks.onAnnounce("Контрудар! Дракон остановлен!");
       this.cameras.main.shake(180, 0.009);
-    } else if (guarded) {
-      this.hooks.onAnnounce("Чешуя дракона отражает удар!");
-    } else if (this.dragonConsecutiveHits === 4) {
-      this.hooks.onAnnounce("Дракон поднимает чешую!");
     }
 
     this.dragon.setTintFill();
@@ -1104,27 +1052,11 @@ export class ArenaScene extends Phaser.Scene {
     if (nextPhase !== this.phase) {
       this.phase = nextPhase;
 
-      this.dragonGuardUntil = 0;
-      this.dragonConsecutiveHits = 0;
-      this.poise = 0;
-
-      // A phase change starts a fresh attack pattern using the
-      // newly unlocked attacks immediately after the short stagger.
-      this.attackQueue =
-        this.phase === 3
-          ? (["rain", "breath", "charge"] as AttackName[])
-          : this.phase === 2
-            ? (["breath", "ring"] as AttackName[])
-            : [];
-
       this.hooks.onAnnounce(`Фаза ${this.phase}`);
 
       this.cameras.main.shake(260, 0.012);
 
-      this.setAi(
-        "stagger",
-        this.phase === 2 ? 950 : this.phase === 3 ? 750 : 900,
-      );
+      this.setAi("stagger", 900);
     }
 
     // -------------------------------------------------------------
@@ -1134,10 +1066,7 @@ export class ArenaScene extends Phaser.Scene {
     if (this.poise >= DRAGON.poiseMax && this.aiState !== "stagger") {
       this.poise = 0;
 
-      const staggerTime =
-        this.phase === 1 ? 1200 : this.phase === 2 ? 950 : 750;
-
-      this.setAi("stagger", staggerTime);
+      this.setAi("stagger", DRAGON.staggerTime);
 
       this.hooks.onAnnounce("Дракон оглушён!");
     }
@@ -1301,13 +1230,11 @@ export class ArenaScene extends Phaser.Scene {
         dragon.setVelocity(body.velocity.x * 0.9, body.velocity.y * 0.9);
 
         if (this.aiTimer <= 0) {
-          // Stagger is a damage window, not a safe reset.
-          // As soon as the dragon recovers it immediately starts
-          // a new phase-appropriate attack.
-          this.poise = 0;
-          this.dragon.setScale(DRAGON.scale);
+          // Recovery gets shorter as the fight progresses.
+          const repositionTime =
+            this.phase === 1 ? 620 : this.phase === 2 ? 470 : 340;
 
-          this.chooseAttack(true);
+          this.setAi("reposition", repositionTime);
         }
 
         break;
@@ -1510,7 +1437,7 @@ export class ArenaScene extends Phaser.Scene {
 
         if (this.shotTimer <= 0) {
           const poolLife =
-            this.phase === 1 ? 2800 : this.phase === 2 ? 3600 : 4600;
+            this.phase === 1 ? 2300 : this.phase === 2 ? 2700 : 3100;
 
           this.spawnPool(dragon.x, dragon.y, poolLife);
 
@@ -1557,15 +1484,7 @@ export class ArenaScene extends Phaser.Scene {
 
   private getAttackTarget(): Phaser.Math.Vector2 {
     if (this.owlbearSafe) {
-      const chance = this.owlbearNeedsHelp
-        ? this.phase === 3
-          ? 0.75
-          : 0.6
-        : this.phase === 1
-          ? 0.25
-          : this.phase === 2
-            ? 0.38
-            : 0.5;
+      const chance = this.phase === 1 ? 0.25 : this.phase === 2 ? 0.38 : 0.5;
 
       if (Math.random() < chance) {
         return new Phaser.Math.Vector2(this.owlbear.x, this.owlbear.y);
@@ -1579,50 +1498,32 @@ export class ArenaScene extends Phaser.Scene {
   // CHOOSE ATTACK
   // ===============================================================
 
-  private chooseAttack(immediate = false): void {
-    // Every phase immediately unlocks its new attacks.
-    //
-    // Phase 1: volley / ring / charge
-    // Phase 2: + breath
-    // Phase 3: + rain
-    //
-    // Phase 3 can also deliberately chain a combo.
-    let pick: AttackName;
+  private chooseAttack(): void {
+    // Weighted attack pools. Later phases deliberately favour
+    // combinations that force movement instead of allowing the
+    // player to stand at a safe distance and spam attacks.
+    const pool: AttackName[] =
+      this.phase === 1
+        ? ["volley", "volley", "ring", "charge"]
+        : this.phase === 2
+          ? ["volley", "ring", "breath", "breath", "charge", "charge"]
+          : [
+              "volley",
+              "ring",
+              "breath",
+              "breath",
+              "charge",
+              "charge",
+              "rain",
+              "rain",
+            ];
 
-    const queued = this.attackQueue.shift();
+    let pick = Phaser.Utils.Array.GetRandom(pool) as AttackName;
 
-    if (queued) {
-      pick = queued;
-    } else {
-      const pool: AttackName[] =
-        this.phase === 1
-          ? ["volley", "volley", "ring", "charge"]
-          : this.phase === 2
-            ? ["volley", "ring", "breath", "breath", "charge", "charge"]
-            : [
-                "volley",
-                "ring",
-                "breath",
-                "breath",
-                "charge",
-                "charge",
-                "rain",
-                "rain",
-                "ring",
-              ];
-
-      pick = Phaser.Utils.Array.GetRandom(pool) as AttackName;
-
-      // Never repeat the same attack when there is another option.
-      if (pick === this.lastAttack) {
-        const alternatives = pool.filter(
-          (attack) => attack !== this.lastAttack,
-        );
-
-        if (alternatives.length > 0) {
-          pick = Phaser.Utils.Array.GetRandom(alternatives) as AttackName;
-        }
-      }
+    // Do not repeat the same attack twice in a row.
+    if (pick === this.lastAttack) {
+      const alternatives = pool.filter((attack) => attack !== this.lastAttack);
+      pick = Phaser.Utils.Array.GetRandom(alternatives) as AttackName;
     }
 
     this.lastAttack = pick;
@@ -1630,15 +1531,9 @@ export class ArenaScene extends Phaser.Scene {
 
     this.orbitDir = Math.random() < 0.5 ? 1 : -1;
 
-    // After stagger the next attack starts very quickly.
-    // Normal attacks still get a readable telegraph.
-    const normalTelegraph =
-      this.phase === 1 ? 420 : this.phase === 2 ? 330 : 250;
+    const telegraph = this.phase === 1 ? 420 : this.phase === 2 ? 330 : 250;
 
-    const immediateTelegraph =
-      this.phase === 1 ? 180 : this.phase === 2 ? 140 : 110;
-
-    this.setAi("telegraph", immediate ? immediateTelegraph : normalTelegraph);
+    this.setAi("telegraph", telegraph);
   }
 
   // ===============================================================
@@ -1724,10 +1619,7 @@ export class ArenaScene extends Phaser.Scene {
 
         for (let i = 0; i < warningCount; i += 1) {
           const target =
-            this.owlbearSafe &&
-            Math.random() < (this.owlbearNeedsHelp ? 0.7 : 0.5)
-              ? this.owlbear
-              : player;
+            this.owlbearSafe && Math.random() < 0.5 ? this.owlbear : player;
 
           const spreadX = Phaser.Math.Between(-250, 250);
           const spreadY = Phaser.Math.Between(-190, 190);
@@ -1737,13 +1629,6 @@ export class ArenaScene extends Phaser.Scene {
             Phaser.Math.Clamp(target.y + spreadY, PAD + 48, H - PAD - 48),
             650 + i * 55,
           );
-        }
-
-        // In the final phase, rain is only the opening move.
-        // The player gets a short reposition window, then has to
-        // survive a volley followed by a charge.
-        if (this.phase === 3) {
-          this.attackQueue = ["volley", "charge"];
         }
 
         break;
@@ -1789,11 +1674,7 @@ export class ArenaScene extends Phaser.Scene {
 
     this.owlbearDangerZone.setPosition(this.owlbear.x, this.owlbear.y);
 
-    // The danger ring is also used as a visual warning when the
-    // companion needs the player's help.
-    this.owlbearDangerZone.setVisible(
-      !this.owlbearSafe || this.owlbearNeedsHelp,
-    );
+    this.owlbearDangerZone.setVisible(!this.owlbearSafe);
 
     // -------------------------------------------------------------
     // До спасения
@@ -1812,54 +1693,6 @@ export class ArenaScene extends Phaser.Scene {
       }
 
       this.owlbear.setVelocity(0, 0);
-      return;
-    }
-
-    // -------------------------------------------------------------
-    // Медвесыч сильно ранен: игрок должен помочь
-    // -------------------------------------------------------------
-
-    if (this.owlbearNeedsHelp) {
-      this.owlbear.setVelocity(0, 0);
-
-      const distance = Phaser.Math.Distance.Between(
-        this.player.x,
-        this.player.y,
-        this.owlbear.x,
-        this.owlbear.y,
-      );
-
-      if (distance <= 88) {
-        this.owlbearAidProgress += delta;
-
-        this.owlbear.setTint(0xffb36b);
-
-        if (this.owlbearAidProgress >= 900) {
-          this.owlbearNeedsHelp = false;
-          this.owlbearAidProgress = 0;
-          this.owlbearAidAnnounced = false;
-
-          this.owlbearHp = Math.min(this.owlbearMaxHp, this.owlbearHp + 2);
-
-          this.owlbearInvulnerableUntil =
-            this.time.now + OWLBEAR.damageCooldown + 350;
-
-          this.owlbear.clearTint();
-          this.owlbear.setTint(0xffd59a);
-
-          this.spawnBurst(this.owlbear.x, this.owlbear.y, 0xe8c27a, 14);
-
-          this.hooks.onAnnounce(
-            `Медвесыч снова в бою! ${this.owlbearHp}/${this.owlbearMaxHp}`,
-          );
-
-          this.pushStats(true);
-        }
-      } else {
-        this.owlbearAidProgress = 0;
-        this.owlbear.clearTint();
-        this.owlbear.setTint(0xffd59a);
-      }
 
       return;
     }
@@ -1925,6 +1758,8 @@ export class ArenaScene extends Phaser.Scene {
 
       this.pushStats();
     }
+
+    void delta;
   }
 
   // ===============================================================
@@ -2018,16 +1853,6 @@ export class ArenaScene extends Phaser.Scene {
 
     this.owlbearInvulnerableUntil = this.time.now + OWLBEAR.damageCooldown;
 
-    if (this.owlbearHp > 0 && this.owlbearHp <= 2) {
-      this.owlbearNeedsHelp = true;
-      this.owlbearAidProgress = 0;
-
-      if (!this.owlbearAidAnnounced) {
-        this.owlbearAidAnnounced = true;
-        this.hooks.onAnnounce("Медвесыч тяжело ранен! Подойдите к нему!");
-      }
-    }
-
     this.owlbear.setTint(0xff6655);
 
     this.time.delayedCall(120, () => {
@@ -2118,15 +1943,6 @@ export class ArenaScene extends Phaser.Scene {
       duration: 180,
     });
 
-    // Let the arena become progressively dangerous, but never fill it
-    // completely. Old pools are removed first when the cap is reached.
-    const MAX_POOLS = this.phase === 3 ? 11 : this.phase === 2 ? 9 : 7;
-    const activePools = this.getPools();
-
-    if (activePools.length >= MAX_POOLS) {
-      activePools[0]?.destroy();
-    }
-
     this.pools.add(pool);
   }
 
@@ -2159,10 +1975,7 @@ export class ArenaScene extends Phaser.Scene {
           return;
         }
 
-        const poolLife =
-          this.phase === 1 ? 2200 : this.phase === 2 ? 3300 : 4300;
-
-        this.spawnPool(x, y, poolLife);
+        this.spawnPool(x, y, 1800);
 
         this.spawnBurst(x, y, 0xffa63d, 12);
 
@@ -2305,9 +2118,6 @@ export class ArenaScene extends Phaser.Scene {
 
   private finish(won: boolean, reason: "player" | "owlbear" = "player"): void {
     this.gameOver = true;
-
-    this.attackQueue = [];
-    this.dragonGuardUntil = 0;
 
     this.player.setVelocity(0, 0);
 
