@@ -13,10 +13,7 @@ interface DragonFightProps {
   nextScene?: string;
 }
 
-export function DragonFight({
-  puzzleId,
-  nextScene,
-}: DragonFightProps) {
+export function DragonFight({ puzzleId, nextScene }: DragonFightProps) {
   const setScene = useGameStore((state) => state.setScene);
   const completePuzzle = useGameStore((state) => state.completePuzzle);
 
@@ -71,7 +68,7 @@ export function DragonFight({
           </p>
         )}
 
-        {!booted && <p className="loading">Загружаем арену...</p>}
+        {!booted && <p className="loading">Дракон готовится атаковать...</p>}
 
         <GameOverlay
           status={status}

@@ -37,7 +37,10 @@ export const OWLBEAR = {
 } as const;
 
 export const TEXTURES = {
-  knight: "knight",
+  playerDown: "player-down",
+  playerUp: "player-up",
+  playerRight: "player-right",
+
   sword: "sword",
   dragon: "dragon",
   owlbear: "owlbear",

@@ -120,6 +120,32 @@ export class ArenaScene extends Phaser.Scene {
       width: 520,
       height: 323,
     });
+
+    // -------------------------------------------------------------
+    // Player — fixed visual directions.
+    //
+    // The sprite itself is never rotated. We keep the exact
+    // `facing` angle separately for sword/attack calculations.
+    // -------------------------------------------------------------
+
+    const playerDownUrl = new URL("./player-down.svg", import.meta.url).href;
+    const playerUpUrl = new URL("./player-up.svg", import.meta.url).href;
+    const playerRightUrl = new URL("./player-right.svg", import.meta.url).href;
+
+    this.load.svg(TEXTURES.playerDown, playerDownUrl, {
+      width: 96,
+      height: 96,
+    });
+
+    this.load.svg(TEXTURES.playerUp, playerUpUrl, {
+      width: 96,
+      height: 96,
+    });
+
+    this.load.svg(TEXTURES.playerRight, playerRightUrl, {
+      width: 96,
+      height: 96,
+    });
   }
 
   // ===============================================================
@@ -140,7 +166,7 @@ export class ArenaScene extends Phaser.Scene {
     // -------------------------------------------------------------
 
     this.player = this.physics.add
-      .sprite(W * 0.5, H * 0.78, TEXTURES.knight)
+      .sprite(W * 0.5, H * 0.78, TEXTURES.playerDown)
       .setScale(PLAYER.scale);
 
     this.player.setCircle(13, 11, 18).setCollideWorldBounds(true).setDepth(10);
@@ -660,6 +686,7 @@ export class ArenaScene extends Phaser.Scene {
       this.updateDragonDirection();
 
       this.updateDragon(time, delta);
+      this.constrainDragonToArena();
 
       this.updateOwlbear(time, delta);
     }
@@ -761,7 +788,10 @@ export class ArenaScene extends Phaser.Scene {
       this.facing = this.moveAngle;
     }
 
-    player.setRotation(this.facing);
+    // The hero sprite has only fixed visual directions.
+    // `facing` remains the exact mathematical aiming angle for
+    // the sword and attack hit detection.
+    this.updatePlayerDirection();
 
     // -------------------------------------------------------------
     // Idle animation
@@ -787,6 +817,48 @@ export class ArenaScene extends Phaser.Scene {
     if (this.swingActive) {
       this.updateSwing(delta);
     }
+  }
+
+  /**
+   * Updates only the visual direction of the hero.
+   *
+   * The sprite never rotates:
+   *   up    -> playerUp
+   *   down  -> playerDown
+   *   right -> playerRight
+   *   left  -> playerRight + flipX
+   *
+   * The exact `facing` angle is still used by the sword and
+   * attack calculations.
+   */
+  private updatePlayerDirection(): void {
+    const { player } = this;
+
+    const dx = this.aimPointer
+      ? this.aimPointer.x - player.x
+      : Math.cos(this.facing);
+
+    const dy = this.aimPointer
+      ? this.aimPointer.y - player.y
+      : Math.sin(this.facing);
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      // Horizontal: use the right-facing sprite and mirror it for left.
+      player.setTexture(TEXTURES.playerRight);
+      player.setFlipX(dx < 0);
+      player.setFlipY(false);
+      return;
+    }
+
+    // Vertical: use dedicated up/down sprites.
+    if (dy < 0) {
+      player.setTexture(TEXTURES.playerUp);
+    } else {
+      player.setTexture(TEXTURES.playerDown);
+    }
+
+    player.setFlipX(false);
+    player.setFlipY(false);
   }
 
   private startSwing(time: number): void {
@@ -1045,23 +1117,85 @@ export class ArenaScene extends Phaser.Scene {
    *
    * Никакого rotation у sprite здесь нет.
    */
+  /**
+   * Dragon visual direction.
+   *
+   * The dragon SVG is drawn facing right, so we only mirror it
+   * horizontally. We deliberately do NOT use flipY and do NOT
+   * rotate the sprite: flipY would turn the dragon upside down.
+   *
+   * Attack angles remain fully independent and can still point
+   * anywhere around the dragon.
+   */
   private updateDragonDirection(): void {
     const dx = this.player.x - this.dragon.x;
 
-    const dy = this.player.y - this.dragon.y;
-
-    if (Math.abs(dx) > Math.abs(dy)) {
-      // → / ←
-
+    if (Math.abs(dx) > 4) {
+      // dragon.svg faces right by default.
+      // Mirror horizontally when the player is on the left.
       this.dragon.setFlipX(dx < 0);
+    }
+  }
 
-      this.dragon.setFlipY(false);
-    } else {
-      // ↓ / ↑
+  /**
+   * Keep the whole visual dragon inside the arena.
+   *
+   * The physics circle is intentionally much smaller than the
+   * dragon SVG, so setCollideWorldBounds() alone can still allow
+   * the wings/tail to visually cross the frame.
+   */
+  private constrainDragonToArena(): void {
+    if (!this.dragon.active) {
+      return;
+    }
 
-      this.dragon.setFlipX(false);
+    const halfWidth = (520 * DRAGON.scale) / 2;
+    const halfHeight = (323 * DRAGON.scale) / 2;
 
-      this.dragon.setFlipY(dy < 0);
+    const minX = PAD + halfWidth;
+    const maxX = W - PAD - halfWidth;
+    const minY = PAD + halfHeight;
+    const maxY = H - PAD - halfHeight;
+
+    let hitLeft = false;
+    let hitRight = false;
+    let hitTop = false;
+    let hitBottom = false;
+
+    if (this.dragon.x < minX) {
+      this.dragon.x = minX;
+      hitLeft = true;
+    } else if (this.dragon.x > maxX) {
+      this.dragon.x = maxX;
+      hitRight = true;
+    }
+
+    if (this.dragon.y < minY) {
+      this.dragon.y = minY;
+      hitTop = true;
+    } else if (this.dragon.y > maxY) {
+      this.dragon.y = maxY;
+      hitBottom = true;
+    }
+
+    if (hitLeft || hitRight || hitTop || hitBottom) {
+      const body = this.dragonBody;
+
+      if (hitLeft && body.velocity.x < 0) {
+        body.velocity.x = 0;
+      }
+
+      if (hitRight && body.velocity.x > 0) {
+        body.velocity.x = 0;
+      }
+
+      if (hitTop && body.velocity.y < 0) {
+        body.velocity.y = 0;
+      }
+
+      if (hitBottom && body.velocity.y > 0) {
+        body.velocity.y = 0;
+      }
     }
   }
 
