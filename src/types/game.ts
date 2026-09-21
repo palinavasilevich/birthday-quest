@@ -11,8 +11,9 @@ export type SceneContent =
 
 export type PuzzleData = {
   id: string;
-  type: "runes" | "cyberpunk" | "final";
+  type: "runes" | "assembly" | "cyberpunk" | "final";
   nextScene: string;
+  mode?: "discovery" | "puzzle";
 };
 
 export interface SceneAction {

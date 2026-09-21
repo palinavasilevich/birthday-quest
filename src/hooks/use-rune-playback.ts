@@ -15,12 +15,14 @@ interface UseRunePlaybackOptions {
   runes: Rune[];
   sequence: RuneNote[];
   startDelay?: number;
+  autoPlay?: boolean;
 }
 
 interface UseRunePlaybackResult {
   isPlaying: boolean;
   activeRune: string | null;
   playRune: (runeId: string) => void;
+  playNote: (runeId: string, duration?: number) => void;
   replay: () => void;
 }
 
@@ -28,12 +30,6 @@ interface UseRunePlaybackResult {
  * AUDIO
  * ============================================================ */
 
-/*
- * Один контекст на всё приложение.
- *
- * Раньше контекст создавался на каждую ноту: Safari разрешает
- * около шести одновременно, и длинная мелодия его роняла.
- */
 let audioContext: AudioContext | null = null;
 let reverb: ConvolverNode | null = null;
 let dryBus: GainNode | null = null;
@@ -58,13 +54,10 @@ function getAudioContext(): AudioContext | null {
 
   audioContext = new Ctor();
 
-  /*
-   * Каменный зал: сгенерированный импульс с экспоненциальным хвостом.
-   * Именно он даёт ощущение объёма, а не сами ноты.
-   */
   const seconds = 2.6;
   const decay = 2.2;
   const length = Math.floor(audioContext.sampleRate * seconds);
+
   const impulse = audioContext.createBuffer(2, length, audioContext.sampleRate);
 
   for (let channel = 0; channel < 2; channel += 1) {
@@ -93,9 +86,6 @@ function getAudioContext(): AudioContext | null {
   return audioContext;
 }
 
-/*
- * Голос руны: основной тон, расстроенный дубль и октава снизу.
- */
 function playRuneSound(frequency: number, duration = 900) {
   const context = getAudioContext();
 
@@ -103,9 +93,6 @@ function playRuneSound(frequency: number, duration = 900) {
     return;
   }
 
-  /*
-   * Браузер мог приглушить контекст до жеста пользователя.
-   */
   if (context.state === "suspended") {
     void context.resume();
   }
@@ -122,9 +109,6 @@ function playRuneSound(frequency: number, duration = 900) {
   voice.gain.linearRampToValueAtTime(0.16, now + attack);
   voice.gain.exponentialRampToValueAtTime(0.0001, now + release);
 
-  /*
-   * Снимаем стерильную верхушку — ближе к колоколу, чем к тест-тону.
-   */
   const filter = context.createBiquadFilter();
 
   filter.type = "lowpass";
@@ -137,9 +121,24 @@ function playRuneSound(frequency: number, duration = 900) {
     detune: number;
     gain: number;
   }> = [
-    { type: "sine", ratio: 1, detune: 0, gain: 1 },
-    { type: "sine", ratio: 1, detune: 7, gain: 0.55 },
-    { type: "triangle", ratio: 0.5, detune: 0, gain: 0.4 },
+    {
+      type: "sine",
+      ratio: 1,
+      detune: 0,
+      gain: 1,
+    },
+    {
+      type: "sine",
+      ratio: 1,
+      detune: 7,
+      gain: 0.55,
+    },
+    {
+      type: "triangle",
+      ratio: 0.5,
+      detune: 0,
+      gain: 0.4,
+    },
   ];
 
   const oscillators = layers.map((layer) => {
@@ -147,7 +146,9 @@ function playRuneSound(frequency: number, duration = 900) {
     const gain = context.createGain();
 
     oscillator.type = layer.type;
+
     oscillator.frequency.setValueAtTime(frequency * layer.ratio, now);
+
     oscillator.detune.setValueAtTime(layer.detune, now);
 
     gain.gain.value = layer.gain;
@@ -181,33 +182,31 @@ export function useRunePlayback({
   runes,
   sequence,
   startDelay = 800,
+  autoPlay = true,
 }: UseRunePlaybackOptions): UseRunePlaybackResult {
   const [activeRune, setActiveRune] = useState<string | null>(null);
+
   const [replayKey, setReplayKey] = useState(0);
 
-  /*
-   * Токен текущего проигрывания: новая ссылка на каждый запуск мелодии.
-   */
-  const playbackToken = useMemo(
-    () => ({}),
-    [runes, sequence, replayKey, startDelay],
-  );
+  const playbackToken = useMemo(() => ({}), []);
 
-  /*
-   * Токен последнего доигравшего проигрывания.
-   */
   const [finishedToken, setFinishedToken] = useState<object | null>(null);
 
   /*
-   * isPlaying — производная величина, а не состояние.
+   * If autoPlay is disabled, the initial render
+   * must not be considered a playback.
    *
-   * Так флаг сам поднимается для каждой новой мелодии,
-   * и его не нужно сбрасывать вручную в теле эффекта.
+   * After replay() increments replayKey,
+   * playback starts normally.
    */
-  const isPlaying = finishedToken !== playbackToken;
+  const hasPlaybackStarted = autoPlay || replayKey > 0;
+
+  const isPlaying = hasPlaybackStarted && finishedToken !== playbackToken;
 
   const mountedRef = useRef(true);
+
   const timersRef = useRef<number[]>([]);
+
   const activeTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -229,39 +228,38 @@ export function useRunePlayback({
   }, []);
 
   /*
-   * Нота, которую нажал игрок.
+   * Play one rune selected by the player.
    */
-  const playRune = useCallback(
-    (runeId: string) => {
-      if (!mountedRef.current) {
-        return;
-      }
-
+  const playNote = useCallback(
+    (runeId: string, duration = 520) => {
       const rune = runes.find((item) => item.id === runeId);
 
-      if (!rune) {
-        return;
-      }
+      if (!rune) return;
 
-      playRuneSound(rune.frequency, 520);
+      playRuneSound(rune.frequency, duration);
 
       setActiveRune(runeId);
 
-      if (activeTimeoutRef.current !== null) {
-        window.clearTimeout(activeTimeoutRef.current);
+      if (activeTimeoutRef.current) {
+        clearTimeout(activeTimeoutRef.current);
       }
 
-      activeTimeoutRef.current = window.setTimeout(() => {
-        if (mountedRef.current) {
-          setActiveRune((current) => (current === runeId ? null : current));
-        }
-      }, 250);
+      activeTimeoutRef.current = setTimeout(() => {
+        setActiveRune(null);
+      }, duration);
     },
     [runes],
   );
 
+  const playRune = useCallback(
+    (runeId: string) => {
+      playNote(runeId, 520);
+    },
+    [playNote],
+  );
+
   /*
-   * Проиграть мелодию заново.
+   * Replay the current sequence.
    */
   const replay = useCallback(() => {
     if (!mountedRef.current) {
@@ -273,9 +271,17 @@ export function useRunePlayback({
   }, []);
 
   /*
-   * Автоматическое проигрывание текущей мелодии.
+   * Automatically play the sequence.
+   *
+   * With autoPlay=false:
+   * - initial mount does nothing;
+   * - replay() starts the sequence.
    */
   useEffect(() => {
+    if (!autoPlay && replayKey === 0) {
+      return;
+    }
+
     let cancelled = false;
 
     timersRef.current.forEach((timer) => {
@@ -286,6 +292,7 @@ export function useRunePlayback({
 
     if (activeTimeoutRef.current !== null) {
       window.clearTimeout(activeTimeoutRef.current);
+
       activeTimeoutRef.current = null;
     }
 
@@ -331,10 +338,6 @@ export function useRunePlayback({
 
       if (!cancelled && mountedRef.current) {
         setActiveRune(null);
-
-        /*
-         * Мелодия доиграла — отмечаем именно этот запуск.
-         */
         setFinishedToken(playbackToken);
       }
     };
@@ -350,12 +353,13 @@ export function useRunePlayback({
 
       timersRef.current = [];
     };
-  }, [runes, sequence, startDelay, playbackToken]);
+  }, [autoPlay, replayKey, runes, sequence, startDelay, playbackToken]);
 
   return {
     isPlaying,
     activeRune,
     playRune,
+    playNote,
     replay,
   };
 }

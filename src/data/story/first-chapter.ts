@@ -254,95 +254,103 @@ export const firstChapter: ChapterData = {
       background: images.wallWithTrack,
       content: {
         type: "text",
-        text: "Руна едва заметно светится.",
+        text: "Руна откликается на прикосновение и начинает едва заметно светиться.",
       },
       audio: audio.forest,
-      nextScene: "chapter1-signs-3",
+      nextScene: "chapter1-runes-discovery",
     },
 
     {
-      id: "chapter1-signs-3",
-      background: images.wallWithTrack,
-      content: {
-        type: "text",
-        text: "♪\n\nТы слышишь одну ноту.\n\nОна разносится эхом по лесу.",
-      },
-      audio: audio.forest,
-      nextScene: "chapter1-signs-4",
-    },
-
-    {
-      id: "chapter1-signs-4",
-      background: images.wallWithTrack,
-      content: {
-        type: "text",
-        text: "Ты касаешься другой руны.\n\nДругой звук.",
-      },
-      audio: audio.forest,
-      nextScene: "chapter1-signs-5",
-    },
-
-    {
-      id: "chapter1-signs-5",
-      background: images.wallWithTrack,
-      content: {
-        type: "text",
-        text: "Пять знаков.\n\nПять разных звуков.",
-      },
-      audio: audio.forest,
-      nextScene: "chapter1-signs-6",
-    },
-
-    {
-      id: "chapter1-signs-6",
-      background: images.wallWithTrack,
-      content: {
-        type: "text",
-        text: "Ты убираешь руку.\n\nИ в тишине звучит короткая мелодия.",
-      },
-      audio: audio.forest,
-      nextScene: "chapter1-signs-7",
-    },
-
-    {
-      id: "chapter1-signs-7",
-      background: images.wallWithTrack,
-      content: {
-        type: "text",
-        text: "♪  ♪  ♪  ♪  ♪\n\nМелодия обрывается на середине.\n\nБудто ждёт продолжения.",
-      },
-      audio: audio.forest,
-      nextScene: "chapter1-melody",
-    },
-
-    {
-      id: "chapter1-signs-8",
-      background: images.wallWithTrack,
-      content: {
-        type: "text",
-        text: "Руны гаснут.\n\nТеперь твоя очередь.",
-      },
-      audio: audio.forest,
-      nextScene: "chapter1-melody",
-    },
-
-    // ============================================================
-    // THE MELODY — PUZZLE
-    // ============================================================
-
-    {
-      id: "chapter1-melody",
+      id: "chapter1-runes-discovery",
       background: images.wallWithTrack,
       content: {
         type: "text",
         text: "",
       },
       puzzle: {
-        id: "chapter1-runes",
+        id: "rune-discovery",
+        type: "runes",
+        mode: "discovery",
+        nextScene: "chapter1-rune-puzzle",
+      },
+    },
+
+    {
+      id: "chapter1-rune-puzzle",
+      background: images.wallWithTrack,
+      content: {
+        type: "text",
+        text: "",
+      },
+      puzzle: {
+        id: "rune-melody",
         type: "runes",
         nextScene: "chapter1-door",
       },
     },
+    // {
+    //   id: "chapter1-signs-3",
+    //   background: images.wallWithTrack,
+    //   content: {
+    //     type: "text",
+    //     text: "♪\n\nТы слышишь одну ноту.\n\nОна разносится эхом по лесу.",
+    //   },
+    //   audio: audio.forest,
+    //   nextScene: "chapter1-signs-4",
+    // },
+
+    // {
+    //   id: "chapter1-signs-4",
+    //   background: images.wallWithTrack,
+    //   content: {
+    //     type: "text",
+    //     text: "Ты касаешься другой руны.\n\nДругой звук.",
+    //   },
+    //   audio: audio.forest,
+    //   nextScene: "chapter1-signs-5",
+    // },
+
+    // {
+    //   id: "chapter1-signs-5",
+    //   background: images.wallWithTrack,
+    //   content: {
+    //     type: "text",
+    //     text: "Пять знаков.\n\nПять разных звуков.",
+    //   },
+    //   audio: audio.forest,
+    //   nextScene: "chapter1-signs-6",
+    // },
+
+    // {
+    //   id: "chapter1-signs-6",
+    //   background: images.wallWithTrack,
+    //   content: {
+    //     type: "text",
+    //     text: "Ты убираешь руку.\n\nИ в тишине звучит короткая мелодия.",
+    //   },
+    //   audio: audio.forest,
+    //   nextScene: "chapter1-signs-7",
+    // },
+
+    // {
+    //   id: "chapter1-runes-discovery",
+    //   background: images.wallWithTrack,
+    //   content: {
+    //     type: "text",
+    //     text: "Руны откликаются на прикосновение.",
+    //   },
+    //   audio: audio.forest,
+    //   puzzle: {
+    //     id: "rune-discovery",
+    //     type: "runes",
+    //     mode: "discovery",
+    //     nextScene: "chapter1-rune-puzzle",
+    //   },
+    // },
+
+    // ============================================================
+    // THE MELODY — PUZZLE
+    // ============================================================
 
     // ============================================================
     // THE DOOR
