@@ -4,12 +4,9 @@ import { useGameStore } from "@/store/game-store";
 
 import { useRunePlayback, type RuneNote } from "@/hooks/use-rune-playback";
 
-import { runes } from "@/data/images/puzzle/runes";
-
 interface Rune {
   id: string;
   label: string;
-  symbolImage: string;
   symbol: string;
   frequency: number;
 }
@@ -19,18 +16,20 @@ interface RunePuzzleProps {
   nextScene: string;
 }
 
+/*
+ * Си минор без второй ступени: B, D, E, F#, G.
+ * Любой порядок звучит осмысленно, поэтому ошибиться «фальшиво» нельзя.
+ */
 const RUNES: Rune[] = [
   {
     id: "quen",
     label: "QUEN",
-    symbolImage: runes.quen,
     symbol: "ᛩ",
     frequency: 493.88, // B4
   },
   {
     id: "igni",
     label: "IGNI",
-    symbolImage: runes.igni,
     symbol: "ᛁ",
     frequency: 659.25, // E5
   },
@@ -38,24 +37,19 @@ const RUNES: Rune[] = [
     id: "aard",
     label: "AARD",
     symbol: "ᚨ",
-    symbolImage: runes.aard,
     frequency: 739.99, // F#5
   },
-
-  {
-    id: "yrden",
-    label: "YRDEN",
-    symbol: "ᛦ",
-    symbolImage: runes.yrden,
-    frequency: 783.99, // G5
-  },
-
   {
     id: "axii",
     label: "AXII",
     symbol: "◈",
-    symbolImage: runes.axii,
     frequency: 587.33, // D5
+  },
+  {
+    id: "yrden",
+    label: "YRDEN",
+    symbol: "ᛦ",
+    frequency: 783.99, // G5
   },
 ];
 
@@ -228,6 +222,10 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
   const currentSequence = PUZZLE_ROUNDS[round];
 
+  /*
+   * useMemo обязателен: новый массив на каждый рендер
+   * перезапускал бы проигрывание бесконечно.
+   */
   const playbackSequence = useMemo(
     () => currentSequence.slice(replayFrom),
     [currentSequence, replayFrom],
@@ -267,8 +265,14 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
       );
 
       if (rollback === replayFrom) {
+        /*
+         * Мелодия та же самая — хук нужно дёрнуть вручную.
+         */
         replay();
       } else {
+        /*
+         * Новая точка старта: хук подхватит её сам.
+         */
         setReplayFrom(rollback);
       }
 
@@ -349,7 +353,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
   };
 
   return (
-    <div className="mt-10 m-auto w-full max-w-2xl flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-12 shadow-2xl backdrop-blur-md">
+    <div className="mt-10 flex w-full max-w-2xl flex-col items-center">
       {/* Message */}
       <p className="mb-3 min-h-8 text-center font-story text-xl italic text-white/70">
         {message()}
@@ -417,7 +421,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
                 }
               `}
             >
-              {/* <span
+              <span
                 className={`
                   font-serif text-3xl sm:text-4xl
                   transition-all duration-200
@@ -425,9 +429,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
                 `}
               >
                 {rune.symbol}
-              </span> */}
-
-              <img alt={rune.label} src={rune.symbolImage} className="w-12" />
+              </span>
 
               <span
                 className="

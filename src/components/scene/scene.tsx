@@ -20,6 +20,7 @@ export function Scene({ scene }: SceneProps) {
       backgroundImg={scene.background}
       sceneKey={scene.id}
       isPuzzle={Boolean(scene.puzzle)}
+      music={scene.audio}
     >
       <SceneContent content={scene.content} />
 

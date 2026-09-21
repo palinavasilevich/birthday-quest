@@ -16,7 +16,7 @@ interface GameState {
 }
 
 export const useGameStore = create<GameState>((set) => ({
-  currentSceneId: "final-battle-14",
+  currentSceneId: "chapter1-melody",
 
   inventory: [],
 

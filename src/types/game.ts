@@ -26,6 +26,7 @@ export interface SceneData {
   id: string;
   background?: string;
   content: SceneContent;
+  audio?: string;
   nextScene?: string;
   puzzle?: PuzzleData;
   actions?: SceneAction[];

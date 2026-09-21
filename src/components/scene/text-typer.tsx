@@ -34,7 +34,7 @@ export function TextTyper({ text, speed = 35, onComplete }: TextTyperProps) {
   }, [text, speed]);
 
   return (
-    <p className="mt-6 max-w-xl text-center text-lg leading-relaxed text-white/80">
+    <p className="mt-6 max-w-xl text-center text-2xl leading-relaxed text-white/80">
       {displayed}
     </p>
   );

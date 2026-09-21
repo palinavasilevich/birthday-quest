@@ -56,7 +56,6 @@ export function GameLayout({
 
       <AmbientParticles />
 
-      {/* Контейнер всей сцены */}
       <div
         className={`
           z-10
@@ -71,7 +70,7 @@ export function GameLayout({
           <motion.div
             key={sceneKey}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={{ opacity: isPuzzle ? 1 : 0.85 }}
             exit={{ opacity: 0 }}
             transition={{
               duration: isPuzzle ? 0.35 : 0.8,
@@ -79,7 +78,7 @@ export function GameLayout({
             className={
               !isPuzzle
                 ? "flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-12 shadow-2xl backdrop-blur-md"
-                : "w-full"
+                : "w-full m-auto"
             }
           >
             {children}

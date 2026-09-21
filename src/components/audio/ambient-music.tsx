@@ -1,15 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useGameStore } from "@/store/game-store";
 
 interface AmbientMusicProps {
   src?: string;
   volume?: number;
   fadeDuration?: number;
 }
-
-let currentAudio: HTMLAudioElement | null = null;
-let currentSrc: string | null = null;
-
-let interactionListenersAttached = false;
 
 const clamp = (value: number) => Math.min(Math.max(value, 0), 1);
 
@@ -43,36 +39,36 @@ export function AmbientMusic({
   volume = 0.35,
   fadeDuration = 1000,
 }: AmbientMusicProps) {
+  const soundEnabled = useGameStore((state) => state.isSoundEnabled);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const srcRef = useRef<string | undefined>(undefined);
+
+  /*
+   * Create / change music
+   */
   useEffect(() => {
     if (!src) return;
 
     const targetVolume = clamp(volume);
 
-    /*
-     * Same track:
-     * don't restart the music when React re-renders.
-     */
-    if (currentAudio && currentSrc === src && !currentAudio.paused) {
+    // Same track — don't restart it
+    if (audioRef.current && srcRef.current === src) {
       return;
     }
 
-    const oldAudio = currentAudio;
+    const oldAudio = audioRef.current;
 
-    /*
-     * Create the new track.
-     */
     const audio = new Audio(src);
 
     audio.loop = true;
     audio.preload = "auto";
     audio.volume = 0;
 
-    currentAudio = audio;
-    currentSrc = src;
+    audioRef.current = audio;
+    srcRef.current = src;
 
-    /*
-     * Fade out the previous track.
-     */
+    // Fade out previous track
     if (oldAudio && !oldAudio.paused) {
       fade(oldAudio, oldAudio.volume, 0, fadeDuration, () => {
         oldAudio.pause();
@@ -80,24 +76,20 @@ export function AmbientMusic({
       });
     }
 
-    let started = false;
+    let disposed = false;
 
     const startMusic = async () => {
-      if (started) return;
+      if (disposed || !soundEnabled) return;
 
       try {
         await audio.play();
 
-        started = true;
+        if (disposed) return;
 
-        fade(audio, 0, targetVolume, fadeDuration);
-
-        removeInteractionListeners();
+        fade(audio, audio.volume, targetVolume, fadeDuration);
       } catch {
-        /*
-         * Autoplay blocked.
-         * We'll wait for user interaction.
-         */
+        // Browser blocked autoplay.
+        // We'll start after user interaction.
       }
     };
 
@@ -105,46 +97,69 @@ export function AmbientMusic({
       void startMusic();
     };
 
-    const addInteractionListeners = () => {
-      if (interactionListenersAttached) return;
+    /*
+     * Browser autoplay workaround
+     */
+    window.addEventListener("pointerdown", handleInteraction);
+    window.addEventListener("keydown", handleInteraction);
+    window.addEventListener("touchstart", handleInteraction);
 
-      window.addEventListener("pointerdown", handleInteraction);
+    void startMusic();
 
-      window.addEventListener("keydown", handleInteraction);
+    return () => {
+      disposed = true;
 
-      window.addEventListener("touchstart", handleInteraction);
-
-      interactionListenersAttached = true;
-    };
-
-    const removeInteractionListeners = () => {
       window.removeEventListener("pointerdown", handleInteraction);
 
       window.removeEventListener("keydown", handleInteraction);
 
       window.removeEventListener("touchstart", handleInteraction);
-
-      interactionListenersAttached = false;
     };
+  }, [src, volume, fadeDuration, soundEnabled]);
 
-    addInteractionListeners();
+  /*
+   * Sound ON / OFF
+   */
+  useEffect(() => {
+    const audio = audioRef.current;
 
-    /*
-     * Try immediately.
-     */
-    void startMusic();
+    if (!audio) return;
 
+    const targetVolume = soundEnabled ? clamp(volume) : 0;
+
+    if (soundEnabled) {
+      audio
+        .play()
+        .then(() => {
+          fade(audio, audio.volume, targetVolume, fadeDuration);
+        })
+        .catch(() => {
+          // Autoplay may still be blocked.
+        });
+
+      return;
+    }
+
+    fade(audio, audio.volume, 0, fadeDuration, () => {
+      audio.pause();
+    });
+  }, [soundEnabled, volume, fadeDuration]);
+
+  /*
+   * Stop audio when the component is completely unmounted
+   */
+  useEffect(() => {
     return () => {
-      /*
-       * IMPORTANT:
-       * Don't stop `audio` here.
-       *
-       * React will unmount this component when the scene changes,
-       * but the music manager must keep the audio alive during
-       * the crossfade.
-       */
+      const audio = audioRef.current;
+
+      if (!audio) return;
+
+      audio.pause();
+      audio.currentTime = 0;
+      audioRef.current = null;
+      srcRef.current = undefined;
     };
-  }, [src, volume, fadeDuration]);
+  }, []);
 
   return null;
 }
