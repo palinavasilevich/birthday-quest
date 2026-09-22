@@ -275,20 +275,20 @@ export const firstChapter: ChapterData = {
       },
     },
 
-    {
-      id: "chapter1-rune-puzzle",
-      background: images.wallWithTrack,
-      content: {
-        type: "text",
-        text: "",
-      },
-      puzzle: {
-        id: "rune-melody",
-        type: "runes",
-        nextScene: "chapter1-door",
-      },
-    },
     // {
+    //   id: "chapter1-rickroll",
+    //   background: images.forest,
+    //   content: {
+    //     type: "text",
+    //     text: "Мелодия внезапно меняется...",
+    //   },
+    //   puzzle: {
+    //     id: "rickroll",
+    //     type: "youtube",
+    //     nextScene: "chapter1-door",
+    //   },
+    // },
+    // // {
     //   id: "chapter1-signs-3",
     //   background: images.wallWithTrack,
     //   content: {

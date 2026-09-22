@@ -10,9 +10,46 @@ interface RuneDiscoveryProps {
   nextScene: string;
 }
 
-type DiscoveryPhase = "explore" | "demo" | "complete";
+type DiscoveryPhase = "explore" | "demo" | "rickroll" | "complete";
 
-const AFTER_MELODY_DELAY = 1800;
+interface YouTubePlayer {
+  playVideo: () => void;
+  stopVideo: () => void;
+  destroy: () => void;
+}
+
+interface YouTubeNamespace {
+  Player: new (
+    element: HTMLElement,
+    options: {
+      videoId: string;
+      playerVars?: {
+        autoplay?: number;
+        controls?: number;
+        disablekb?: number;
+        fs?: number;
+        iv_load_policy?: number;
+        modestbranding?: number;
+        playsinline?: number;
+        rel?: number;
+      };
+    },
+  ) => YouTubePlayer;
+}
+
+declare global {
+  interface Window {
+    YT?: YouTubeNamespace;
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
+
+const RICKROLL_VIDEO_ID = "dQw4w9WgXcQ";
+const RICKROLL_DURATION = 10_000;
+
+const DISCOVERY_START_DELAY = 1_000;
+const AFTER_MELODY_DELAY = 100;
+const AFTER_RICKROLL_DELAY = 1_800;
 
 const MELODY_DURATION = DISCOVERY_MELODY.reduce(
   (total, note) => total + note.duration + note.gap,
@@ -23,14 +60,16 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
   const setScene = useGameStore((state) => state.setScene);
 
   const [discoveredRunes, setDiscoveredRunes] = useState<string[]>([]);
+
   const [introFinished, setIntroFinished] = useState(false);
+
   const [phase, setPhase] = useState<DiscoveryPhase>("explore");
 
-  /**
-   * Prevent the discovery melody from being
-   * scheduled more than once.
-   */
   const demoStartedRef = useRef(false);
+
+  const youtubePlayerRef = useRef<YouTubePlayer | null>(null);
+
+  const youtubeContainerRef = useRef<HTMLDivElement | null>(null);
 
   const { isPlaying, activeRune, playRune, playNote, replay } = useRunePlayback(
     {
@@ -41,13 +80,81 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
   );
 
   /**
+   * Prepare the YouTube player in advance.
+   *
+   * The player stays hidden until the discovery melody
+   * has finished.
+   */
+  useEffect(() => {
+    let cancelled = false;
+
+    const createPlayer = () => {
+      if (
+        cancelled ||
+        !window.YT ||
+        !youtubeContainerRef.current ||
+        youtubePlayerRef.current
+      ) {
+        return;
+      }
+
+      youtubePlayerRef.current = new window.YT.Player(
+        youtubeContainerRef.current,
+        {
+          videoId: RICKROLL_VIDEO_ID,
+          playerVars: {
+            autoplay: 0,
+            controls: 0,
+            disablekb: 1,
+            fs: 0,
+            iv_load_policy: 3,
+            modestbranding: 1,
+            playsinline: 1,
+            rel: 0,
+          },
+        },
+      );
+    };
+
+    if (window.YT) {
+      createPlayer();
+    } else {
+      const previousCallback = window.onYouTubeIframeAPIReady;
+
+      window.onYouTubeIframeAPIReady = () => {
+        previousCallback?.();
+        createPlayer();
+      };
+
+      const existingScript = document.querySelector(
+        'script[src="https://www.youtube.com/iframe_api"]',
+      );
+
+      if (!existingScript) {
+        const script = document.createElement("script");
+
+        script.src = "https://www.youtube.com/iframe_api";
+
+        script.async = true;
+
+        document.body.appendChild(script);
+      }
+    }
+
+    return () => {
+      cancelled = true;
+
+      youtubePlayerRef.current?.destroy();
+      youtubePlayerRef.current = null;
+    };
+  }, []);
+
+  /**
    * Intro:
    *
-   * The first rune reacts on its own.
-   * QUEN lights up and its first note plays.
+   * QUEN reacts on its own when the scene opens.
    *
-   * QUEN is NOT added to discoveredRunes.
-   * The player still has to discover it manually.
+   * The player still has to discover QUEN manually.
    */
   useEffect(() => {
     const startTimer = window.setTimeout(() => {
@@ -80,8 +187,10 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
   };
 
   /**
-   * Once all five runes have been discovered,
-   * wait a moment and play the complete melody.
+   * All five runes have been discovered.
+   *
+   * Wait a moment, then play the complete
+   * discovery melody.
    */
   useEffect(() => {
     if (
@@ -97,7 +206,7 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
     const timeout = window.setTimeout(() => {
       setPhase("demo");
       replay();
-    }, 1000);
+    }, DISCOVERY_START_DELAY);
 
     return () => {
       window.clearTimeout(timeout);
@@ -105,7 +214,9 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
   }, [discoveredRunes.length, phase, replay]);
 
   /**
-   * The melody has finished playing.
+   * Discovery melody has finished.
+   *
+   * Now start the Rickroll.
    */
   useEffect(() => {
     if (phase !== "demo") {
@@ -113,8 +224,29 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
     }
 
     const timeout = window.setTimeout(() => {
+      setPhase("rickroll");
+    }, MELODY_DURATION + AFTER_MELODY_DELAY);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [phase]);
+
+  /**
+   * Play Rickroll for 10 seconds.
+   */
+  useEffect(() => {
+    if (phase !== "rickroll") {
+      return;
+    }
+
+    youtubePlayerRef.current?.playVideo();
+
+    const timeout = window.setTimeout(() => {
+      youtubePlayerRef.current?.stopVideo();
+
       setPhase("complete");
-    }, MELODY_DURATION + 100);
+    }, RICKROLL_DURATION);
 
     return () => {
       window.clearTimeout(timeout);
@@ -132,7 +264,7 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
 
     const timeout = window.setTimeout(() => {
       setScene(nextScene);
-    }, AFTER_MELODY_DELAY);
+    }, AFTER_RICKROLL_DELAY);
 
     return () => {
       window.clearTimeout(timeout);
@@ -143,7 +275,9 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
     switch (phase) {
       case "explore":
         if (!introFinished) {
-          return "Первая руна отзывается. Звук эхом разносится по лесу...";
+          return (
+            "Первая руна отзывается.\n\n" + "Звук эхом разносится по лесу..."
+          );
         }
 
         return discoveredRunes.length === 0
@@ -153,6 +287,9 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
       case "demo":
         return "Вслушайся...";
 
+      case "rickroll":
+        return "Мелодия внезапно меняется...";
+
       case "complete":
         return "Ты убираешь руку. И в тишине звучит короткая мелодия.";
     }
@@ -161,6 +298,7 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
   return (
     <div
       className="
+        relative
         mt-10
         m-auto
         flex
@@ -177,6 +315,23 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
         backdrop-blur-md
       "
     >
+      {/* Hidden YouTube player */}
+
+      <div
+        ref={youtubeContainerRef}
+        className="
+          pointer-events-none
+          absolute
+          left-0
+          top-0
+          h-px
+          w-px
+          overflow-hidden
+          opacity-0
+        "
+        aria-hidden="true"
+      />
+
       {/* Message */}
 
       <p
@@ -199,13 +354,14 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
       <div className="grid grid-cols-5 gap-2 sm:gap-4">
         {RUNES.map((rune) => {
           const isActive = activeRune === rune.id;
+
           const isDiscovered = discoveredRunes.includes(rune.id);
 
           return (
             <button
               key={rune.id}
               type="button"
-              disabled={!introFinished || isPlaying}
+              disabled={!introFinished || isPlaying || phase !== "explore"}
               onClick={() => handleRuneClick(rune.id)}
               aria-label={`Руна ${rune.label}`}
               className={`
