@@ -147,7 +147,7 @@ export const firstChapter: ChapterData = {
       background: images.wallWithSymbols,
       content: {
         type: "text",
-        text: "Пять древних знаков высечены прямо в камне.\n\nТы разбираешь надпись:\n\nQUEN · IGNI · AARD · YRDEN · AXII",
+        text: "Пять древних знаков высечены прямо в камне.\n\nТы узнаешь их:\n\nQUEN · IGNI · AARD · YRDEN · AXII",
       },
       audio: audio.forest,
       nextScene: "chapter1-stone-4",
@@ -300,26 +300,31 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Последняя нота затихает.\n\nНесколько секунд — полная тишина.",
       },
+      audio: audio.room,
       nextScene: "chapter1-door-2",
     },
 
     {
       id: "chapter1-door-2",
-      background: images.wallWithTrack,
+      background: images.wallWithSymbolsFinal,
       content: {
         type: "text",
         text: "Затем руны вспыхивают одновременно.\n\nПо стене пробегает золотистая линия света.",
       },
+
+      audio: audio.room,
       nextScene: "chapter1-door-3",
     },
 
     {
       id: "chapter1-door-3",
-      background: images.wallWithTrack,
+
+      background: images.room,
       content: {
         type: "text",
         text: "Раздаётся глубокий гул.\n\nКамень начинает двигаться.\n\nДревняя дверь медленно открывается.",
       },
+      audio: audio.room,
       actions: [
         {
           id: "enter-chamber",
@@ -335,31 +340,34 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-chamber",
-      background: images.forest,
+      background: images.room,
       content: {
         type: "text",
-        text: "За дверью — небольшая тёмная комната.\n\nВ центре стоит каменный пьедестал.",
+        text: "За дверью — небольшая комната.\n\nВ центре стоит каменный пьедестал.",
       },
+      audio: audio.room,
       nextScene: "chapter1-chamber-2",
     },
 
     {
       id: "chapter1-chamber-2",
-      background: images.forest,
+      background: images.book,
       content: {
         type: "text",
         text: "На нём лежит книга.\n\nКажется, что этому месту сотни лет — а книга новая. Без единой пылинки.",
       },
+      audio: audio.room,
       nextScene: "chapter1-chamber-3",
     },
 
     {
       id: "chapter1-chamber-3",
-      background: images.forest,
+      background: images.roomTraces,
       content: {
         type: "text",
         text: "В пыли у пьедестала ты видишь тот же маленький след.",
       },
+      audio: audio.room,
       actions: [
         {
           id: "take-book",
@@ -378,21 +386,23 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-leave",
-      background: images.forest,
+      background: images.book,
       content: {
         type: "text",
         text: "Ты не трогаешь её.\n\nЧужие вещи в чужих комнатах лучше оставлять на месте.",
       },
+      audio: audio.room,
       nextScene: "chapter1-leave-2",
     },
 
     {
       id: "chapter1-leave-2",
-      background: images.forest,
+      background: images.book,
       content: {
         type: "text",
         text: "Ты делаешь шаг к двери.\n\nИ слышишь за спиной короткий шорох.",
       },
+      audio: audio.room,
       nextScene: "chapter1-leave-3",
     },
 
@@ -403,6 +413,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Книга лежит на полу.\n\nЕё столкнули с пьедестала. Прямо тебе под ноги.",
       },
+      audio: audio.room,
       actions: [
         {
           id: "pick-book",
@@ -435,6 +446,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Книга у тебя в руках.\n\nНа мгновение в комнате становится совершенно тихо.",
       },
+      audio: audio.room,
       nextScene: "chapter1-relic-2",
     },
 
@@ -445,6 +457,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "На первой странице проступает надпись.",
       },
+      audio: audio.room,
       nextScene: "chapter1-relic-3",
     },
 
@@ -455,28 +468,30 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "«Каждое великое приключение начинается с мира, который существует лишь в чьём-то воображении.»",
       },
-      nextScene: "chapter1-relic-4",
-    },
-
-    {
-      id: "chapter1-relic-4",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "РЕЛИКВИЯ I — ПОЛУЧЕНА\n\nTHE ART OF JOHN HARRIS — Beyond the Horizon",
-      },
-      nextScene: "chapter1-relic-5",
-    },
-
-    {
-      id: "chapter1-relic-5",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Тип: Вдохновение.\n\nРедкость: ★★★★☆",
-      },
+      audio: audio.room,
       nextScene: "chapter1-sound",
     },
+
+    // {
+    //   id: "chapter1-relic-4",
+    //   background: images.forest,
+    //   content: {
+    //     type: "text",
+    //     text: "РЕЛИКВИЯ I — ПОЛУЧЕНА\n\nTHE ART OF JOHN HARRIS — Beyond the Horizon",
+    //   },
+    //   audio: audio.forest,
+    //   nextScene: "chapter1-relic-5",
+    // },
+
+    // {
+    //   id: "chapter1-relic-5",
+    //   background: images.forest,
+    //   content: {
+    //     type: "text",
+    //     text: "Тип: Вдохновение.\n\nРедкость: ★★★★☆",
+    //   },
+    //   nextScene: "chapter1-sound",
+    // },
 
     // ============================================================
     // THE SOUND
@@ -489,6 +504,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты собираешься выйти из комнаты.\n\nИ вдруг — шорох за спиной.",
       },
+      audio: audio.room,
       nextScene: "chapter1-sound-2",
     },
 
@@ -499,6 +515,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты медленно оборачиваешься.\n\nВ тёмном дверном проёме — тень. Маленькая.",
       },
+      audio: audio.room,
       actions: [
         {
           id: "chase",
@@ -513,9 +530,6 @@ export const firstChapter: ChapterData = {
       ],
     },
 
-    // ── Ветка: погоня ──
-    // Нитку он тоже получит, но вырванную, а не оставленную.
-
     {
       id: "chapter1-chase",
       background: images.forest,
@@ -523,6 +537,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты бросаешься вперёд.\n\nТень исчезает мгновенно.",
       },
+      audio: audio.room,
       nextScene: "chapter1-chase-2",
     },
 
@@ -533,6 +548,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты выбегаешь наружу. Никого.\n\nТолько небольшой след в пыли у входа.",
       },
+      audio: audio.room,
       nextScene: "chapter1-chase-3",
     },
 
@@ -543,6 +559,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "А на дверном косяке, на щепке, что-то зацепилось.",
       },
+      audio: audio.room,
       nextScene: "chapter1-chase-4",
     },
 
@@ -553,6 +570,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Обрывок пряжи.\n\nТёплого рыжеватого цвета.",
       },
+      audio: audio.room,
       actions: [
         {
           id: "take-thread-torn",
@@ -562,9 +580,6 @@ export const firstChapter: ChapterData = {
       ],
     },
 
-    // ── Ветка: терпение ──
-    // Здесь нитку кладут специально.
-
     {
       id: "chapter1-wait",
       background: images.forest,
@@ -572,6 +587,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты не двигаешься.\n\nПроходит секунда. Другая.",
       },
+      audio: audio.room,
       nextScene: "chapter1-wait-2",
     },
 
@@ -582,6 +598,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Тень в проёме тоже не двигается.\n\nА потом делает шаг вперёд.",
       },
+      audio: audio.room,
       nextScene: "chapter1-wait-3",
     },
 
@@ -592,6 +609,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Маленький пушистый силуэт.\n\nОн смотрит на тебя несколько секунд — спокойно, без страха.",
       },
+      audio: audio.room,
       nextScene: "chapter1-wait-4",
     },
 
@@ -602,6 +620,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Потом наклоняется и кладёт что-то на пол.",
       },
+      audio: audio.room,
       nextScene: "chapter1-wait-5",
     },
 
@@ -612,6 +631,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "А потом разворачивается и убегает.",
       },
+      audio: audio.room,
       nextScene: "chapter1-wait-6",
     },
 
@@ -622,6 +642,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "На полу лежит обрывок пряжи.\n\nТёплого рыжеватого цвета.",
       },
+      audio: audio.room,
       actions: [
         {
           id: "take-thread-given",
@@ -642,6 +663,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты выходишь наружу.\n\nВ лесу снова тихо. Слишком тихо.",
       },
+      audio: audio.room,
       nextScene: "chapter1-ending-2",
     },
 
@@ -652,6 +674,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты видишь следы.\n\n🐾",
       },
+      audio: audio.room,
       nextScene: "chapter1-ending-3",
     },
 
@@ -662,6 +685,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Они ведут вглубь леса.",
       },
+      audio: audio.room,
       actions: [
         {
           id: "follow-deeper",

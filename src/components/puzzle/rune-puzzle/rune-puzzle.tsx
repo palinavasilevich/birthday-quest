@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useGameStore } from "@/store/game-store";
 import { useRunePlayback } from "@/hooks/use-rune-playback";
+import { preloadRuneInstrument } from "@/hooks/use-rune-playback";
 
 import { PUZZLE_ROUNDS, RUNES, type Rune } from "@/data/puzzle/rune-data";
+import { RuneMelodyReveal } from "./rune-melody-reveal";
 
 interface RunePuzzleProps {
   puzzleId: string;
@@ -23,6 +25,8 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
   const [isMistake, setIsMistake] = useState(false);
   const [mistakeRune, setMistakeRune] = useState<string | null>(null);
   const [replayFrom, setReplayFrom] = useState(0);
+
+  const [showMelodyReveal, setShowMelodyReveal] = useState(false);
 
   const currentSequence = PUZZLE_ROUNDS[round];
 
@@ -113,8 +117,8 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     completePuzzle(puzzleId);
 
     window.setTimeout(() => {
-      setScene(nextScene);
-    }, 1800);
+      setShowMelodyReveal(true);
+    }, 900);
   };
 
   const handleReplay = () => {
@@ -134,7 +138,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     }
 
     if (isMistake) {
-      return "Солнышко, давай... я тебя люблю... давай... ";
+      return "Ошибки случаются...";
     }
 
     if (isPlaying) {
@@ -144,9 +148,14 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     }
 
     return sequence.length > 0
-      ? "Продолжай."
+      ? // ? "Продолжай."
+        "Солнышко, давай... я тебя люблю... давай..."
       : "Мелодия всё ещё звучит в памяти.\n\nПовтори её.";
   };
+
+  useEffect(() => {
+    preloadRuneInstrument();
+  }, []);
 
   return (
     <div className="mt-10 m-auto w-full max-w-2xl flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-12 shadow-2xl backdrop-blur-md">
@@ -241,6 +250,17 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
           );
         })}
       </div>
+
+      {showMelodyReveal && (
+        <div className="mt-8 w-full max-w-xs">
+          <RuneMelodyReveal
+            videoId="Iog3XDY1krA"
+            startSeconds={5}
+            endSeconds={12}
+            onFinished={() => {}}
+          />
+        </div>
+      )}
 
       {/* Progress */}
       <div className="mt-8 flex flex-wrap justify-center gap-1.5 sm:gap-2">

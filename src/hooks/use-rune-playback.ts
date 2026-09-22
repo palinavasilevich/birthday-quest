@@ -1,9 +1,28 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Soundfont } from "smplr";
+
+/**
+ * A quiet repeat of a note, played a short while after the note
+ * itself starts — used on resolution/tonic notes so the melody
+ * feels like it "echoes in the stone" rather than simply stopping.
+ */
+export interface RuneEcho {
+  /** Delay in ms, from the start of the main note, before the echo fires. */
+  delay: number;
+  /** 0–127 MIDI velocity for the echo. Kept low so it reads as a resonance, not a repeat. */
+  velocity: number;
+  /** Duration in ms for the echo note. Defaults to a shorter tail than the main note. */
+  duration?: number;
+}
 
 export interface RuneNote {
   runeId: string;
   duration: number;
   gap: number;
+  /** 0–127 MIDI velocity for this note. Defaults to 85 if omitted. */
+  velocity?: number;
+  /** Optional quiet echo played after this note — used on resolution/tonic notes. */
+  echo?: RuneEcho;
 }
 
 interface Rune {
@@ -26,14 +45,28 @@ interface UseRunePlaybackResult {
   replay: () => void;
 }
 
-/* ============================================================
- * AUDIO
- * ============================================================ */
+/*
+ * The GM instrument used for rune notes.
+ *
+ * Any name from the FluidR3 General MIDI set works here — a few that
+ * fit the "bardic rune" character well:
+ *   "orchestral_harp"        — warm, plucked, clearly melodic (default)
+ *   "kalimba"                — soft, wooden, a bit more mysterious
+ *   "music_box"               — delicate, magical, slightly eerie
+ *   "tubular_bells"           — closer to the previous synth tone
+ *   "celesta"                 — bright, crystalline
+ */
+const RUNE_INSTRUMENT = "orchestral_harp";
 
 let audioContext: AudioContext | null = null;
+
 let reverb: ConvolverNode | null = null;
 let dryBus: GainNode | null = null;
 let wetBus: GainNode | null = null;
+let instrumentOutput: GainNode | null = null;
+
+let instrument: Soundfont | null = null;
+let instrumentPromise: Promise<Soundfont> | null = null;
 
 function getAudioContext(): AudioContext | null {
   if (audioContext) {
@@ -54,8 +87,15 @@ function getAudioContext(): AudioContext | null {
 
   audioContext = new Ctor();
 
-  const seconds = 2.6;
-  const decay = 2.2;
+  /*
+   * Large stone hall / ancient chamber reverb.
+   *
+   * Kept from the synth version — sampled notes still benefit from
+   * the same sense of space as the rest of the scene.
+   */
+  const seconds = 3;
+  const decay = 2.4;
+
   const length = Math.floor(audioContext.sampleRate * seconds);
 
   const impulse = audioContext.createBuffer(2, length, audioContext.sampleRate);
@@ -77,19 +117,111 @@ function getAudioContext(): AudioContext | null {
   dryBus.gain.value = 0.75;
 
   wetBus = audioContext.createGain();
-  wetBus.gain.value = 0.55;
+  wetBus.gain.value = 0.3;
 
   dryBus.connect(audioContext.destination);
+
   wetBus.connect(reverb);
   reverb.connect(audioContext.destination);
+
+  /*
+   * Single node the sampled instrument renders into, which then
+   * feeds both the dry signal and the reverb send.
+   */
+  instrumentOutput = audioContext.createGain();
+  instrumentOutput.gain.value = 1;
+
+  instrumentOutput.connect(dryBus);
+  instrumentOutput.connect(wetBus);
 
   return audioContext;
 }
 
-function playRuneSound(frequency: number, duration = 900) {
+/**
+ * Lazily loads the sampled instrument (once per AudioContext) and
+ * returns it. Loading happens over the network the first time it's
+ * called, so the very first note may have a short silent gap while
+ * the soundfont fetches — call `preloadRuneInstrument` earlier
+ * (e.g. when the puzzle screen mounts) to hide that gap.
+ */
+function getInstrument(context: AudioContext): Promise<Soundfont> {
+  if (instrument) {
+    return Promise.resolve(instrument);
+  }
+
+  if (!instrumentPromise) {
+    const player = new Soundfont(context, {
+      instrument: RUNE_INSTRUMENT,
+      destination: instrumentOutput ?? context.destination,
+    });
+
+    instrumentPromise = player.load.then(() => {
+      instrument = player;
+
+      return player;
+    });
+  }
+
+  return instrumentPromise;
+}
+
+/**
+ * Call this as early as convenient (e.g. on mount of the puzzle
+ * screen) to start fetching the soundfont before the player's first
+ * click, avoiding a delay on the very first note.
+ *
+ * Safe to call without a user gesture — it only warms the network
+ * fetch and decode; actual playback still waits for a real click,
+ * which is what resumes the (autoplay-restricted) AudioContext.
+ */
+export function preloadRuneInstrument(): void {
   const context = getAudioContext();
 
-  if (!context || !dryBus || !wetBus) {
+  if (!context) {
+    return;
+  }
+
+  void getInstrument(context);
+}
+
+/*
+ * Converts a frequency in Hz to a note name ("C4", "F#5", ...) using
+ * standard 12-TET / A4 = 440Hz tuning, since the rune data defines
+ * pitches as frequencies rather than note names.
+ */
+const NOTE_NAMES = [
+  "C",
+  "C#",
+  "D",
+  "D#",
+  "E",
+  "F",
+  "F#",
+  "G",
+  "G#",
+  "A",
+  "A#",
+  "B",
+];
+
+function frequencyToNoteName(frequency: number): string {
+  const midi = Math.round(69 + 12 * Math.log2(frequency / 440));
+  const name = NOTE_NAMES[((midi % 12) + 12) % 12];
+  const octave = Math.floor(midi / 12) - 1;
+
+  return `${name}${octave}`;
+}
+
+/**
+ * Plays a single rune note using the sampled instrument.
+ *
+ * Fire-and-forget, same as the previous oscillator-based version —
+ * callers don't need to await anything.
+ */
+function playRuneSound(frequency: number, duration = 900, velocity = 85): void {
+  const context = getAudioContext();
+
+  if (!context) {
     return;
   }
 
@@ -97,160 +229,72 @@ function playRuneSound(frequency: number, duration = 900) {
     void context.resume();
   }
 
-  const now = context.currentTime;
+  const note = frequencyToNoteName(frequency);
   const seconds = duration / 1000;
 
-  const attack = 0.12;
-  const release = Math.max(seconds, 0.4) + 1.1;
-
-  const voice = context.createGain();
-
-  voice.gain.setValueAtTime(0, now);
-  voice.gain.linearRampToValueAtTime(0.16, now + attack);
-  voice.gain.exponentialRampToValueAtTime(0.0001, now + release);
-
-  const filter = context.createBiquadFilter();
-
-  filter.type = "lowpass";
-  filter.frequency.setValueAtTime(frequency * 6, now);
-  filter.Q.value = 0.6;
-
-  const layers: Array<{
-    type: OscillatorType;
-    ratio: number;
-    detune: number;
-    gain: number;
-  }> = [
-    {
-      type: "sine",
-      ratio: 1,
-      detune: 0,
-      gain: 1,
-    },
-    {
-      type: "sine",
-      ratio: 1,
-      detune: 7,
-      gain: 0.55,
-    },
-    {
-      type: "triangle",
-      ratio: 0.5,
-      detune: 0,
-      gain: 0.4,
-    },
-  ];
-
-  const oscillators = layers.map((layer) => {
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-
-    oscillator.type = layer.type;
-
-    oscillator.frequency.setValueAtTime(frequency * layer.ratio, now);
-
-    oscillator.detune.setValueAtTime(layer.detune, now);
-
-    gain.gain.value = layer.gain;
-
-    oscillator.connect(gain);
-    gain.connect(filter);
-
-    oscillator.start(now);
-    oscillator.stop(now + release + 0.1);
-
-    return oscillator;
+  void getInstrument(context).then((player) => {
+    player.start({
+      note,
+      duration: seconds,
+      velocity,
+    });
   });
-
-  filter.connect(voice);
-  voice.connect(dryBus);
-  voice.connect(wetBus);
-
-  const last = oscillators[oscillators.length - 1];
-
-  last.onended = () => {
-    voice.disconnect();
-    filter.disconnect();
-  };
 }
-
-/* ============================================================
- * HOOK
- * ============================================================ */
 
 export function useRunePlayback({
   runes,
   sequence,
-  startDelay = 800,
+  startDelay = 0,
   autoPlay = true,
 }: UseRunePlaybackOptions): UseRunePlaybackResult {
   const [activeRune, setActiveRune] = useState<string | null>(null);
 
   const [replayKey, setReplayKey] = useState(0);
 
-  const playbackToken = useMemo(() => ({}), []);
-
   const [finishedToken, setFinishedToken] = useState<object | null>(null);
 
+  const activeTimeoutRef = useRef<number | null>(null);
+
   /*
-   * If autoPlay is disabled, the initial render
-   * must not be considered a playback.
+   * Every replay gets a new token.
    *
-   * After replay() increments replayKey,
-   * playback starts normally.
+   * This makes isPlaying correctly describe the current playback.
    */
+  const playbackToken = useMemo(() => ({}), [replayKey]);
+
   const hasPlaybackStarted = autoPlay || replayKey > 0;
 
   const isPlaying = hasPlaybackStarted && finishedToken !== playbackToken;
 
-  const mountedRef = useRef(true);
-
-  const timersRef = useRef<number[]>([]);
-
-  const activeTimeoutRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    mountedRef.current = true;
-
-    return () => {
-      mountedRef.current = false;
-
-      timersRef.current.forEach((timer) => {
-        window.clearTimeout(timer);
-      });
-
-      timersRef.current = [];
-
-      if (activeTimeoutRef.current !== null) {
-        window.clearTimeout(activeTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  /*
-   * Play one rune selected by the player.
+  /**
+   * Play one rune manually.
    */
   const playNote = useCallback(
     (runeId: string, duration = 520) => {
       const rune = runes.find((item) => item.id === runeId);
 
-      if (!rune) return;
+      if (!rune) {
+        return;
+      }
 
       playRuneSound(rune.frequency, duration);
 
       setActiveRune(runeId);
 
       if (activeTimeoutRef.current) {
-        clearTimeout(activeTimeoutRef.current);
+        window.clearTimeout(activeTimeoutRef.current);
       }
 
-      activeTimeoutRef.current = setTimeout(() => {
+      activeTimeoutRef.current = window.setTimeout(() => {
         setActiveRune(null);
       }, duration);
     },
     [runes],
   );
 
+  /**
+   * Normal player interaction.
+   */
   const playRune = useCallback(
     (runeId: string) => {
       playNote(runeId, 520);
@@ -258,24 +302,23 @@ export function useRunePlayback({
     [playNote],
   );
 
-  /*
-   * Replay the current sequence.
+  /**
+   * Replay the complete sequence.
    */
   const replay = useCallback(() => {
-    if (!mountedRef.current) {
-      return;
+    if (activeTimeoutRef.current) {
+      window.clearTimeout(activeTimeoutRef.current);
+      activeTimeoutRef.current = null;
     }
 
     setActiveRune(null);
+    setFinishedToken(null);
+
     setReplayKey((key) => key + 1);
   }, []);
 
-  /*
-   * Automatically play the sequence.
-   *
-   * With autoPlay=false:
-   * - initial mount does nothing;
-   * - replay() starts the sequence.
+  /**
+   * Automatic sequence playback.
    */
   useEffect(() => {
     if (!autoPlay && replayKey === 0) {
@@ -283,35 +326,32 @@ export function useRunePlayback({
     }
 
     let cancelled = false;
+    let timeoutId: number | null = null;
 
-    timersRef.current.forEach((timer) => {
-      window.clearTimeout(timer);
-    });
-
-    timersRef.current = [];
-
-    if (activeTimeoutRef.current !== null) {
-      window.clearTimeout(activeTimeoutRef.current);
-
-      activeTimeoutRef.current = null;
-    }
+    /*
+     * Echoes are scheduled independently of the main note/gap timing
+     * (they fire partway through a note's sustain, not between
+     * notes), so their timeouts are tracked separately and swept up
+     * on cleanup along with everything else.
+     */
+    const echoTimeoutIds: number[] = [];
 
     const wait = (duration: number) =>
       new Promise<void>((resolve) => {
-        const timer = window.setTimeout(resolve, duration);
-
-        timersRef.current.push(timer);
+        timeoutId = window.setTimeout(resolve, duration);
       });
 
     const playSequence = async () => {
-      await wait(startDelay);
+      if (startDelay > 0) {
+        await wait(startDelay);
 
-      if (cancelled || !mountedRef.current) {
-        return;
+        if (cancelled) {
+          return;
+        }
       }
 
       for (const note of sequence) {
-        if (cancelled || !mountedRef.current) {
+        if (cancelled) {
           return;
         }
 
@@ -323,20 +363,33 @@ export function useRunePlayback({
 
         setActiveRune(note.runeId);
 
-        playRuneSound(rune.frequency, note.duration);
+        playRuneSound(rune.frequency, note.duration, note.velocity);
+
+        if (note.echo) {
+          const echo = note.echo;
+          const frequency = rune.frequency;
+
+          const echoTimeoutId = window.setTimeout(() => {
+            playRuneSound(frequency, echo.duration ?? 700, echo.velocity);
+          }, echo.delay);
+
+          echoTimeoutIds.push(echoTimeoutId);
+        }
 
         await wait(note.duration);
 
-        if (cancelled || !mountedRef.current) {
+        if (cancelled) {
           return;
         }
 
         setActiveRune(null);
 
-        await wait(note.gap);
+        if (note.gap > 0) {
+          await wait(note.gap);
+        }
       }
 
-      if (!cancelled && mountedRef.current) {
+      if (!cancelled) {
         setActiveRune(null);
         setFinishedToken(playbackToken);
       }
@@ -347,13 +400,31 @@ export function useRunePlayback({
     return () => {
       cancelled = true;
 
-      timersRef.current.forEach((timer) => {
-        window.clearTimeout(timer);
-      });
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
 
-      timersRef.current = [];
+      echoTimeoutIds.forEach((id) => window.clearTimeout(id));
+
+      if (activeTimeoutRef.current) {
+        window.clearTimeout(activeTimeoutRef.current);
+        activeTimeoutRef.current = null;
+      }
+
+      setActiveRune(null);
     };
   }, [autoPlay, replayKey, runes, sequence, startDelay, playbackToken]);
+
+  /**
+   * Cleanup.
+   */
+  useEffect(() => {
+    return () => {
+      if (activeTimeoutRef.current) {
+        window.clearTimeout(activeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return {
     isPlaying,

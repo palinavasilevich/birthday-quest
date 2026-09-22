@@ -48,7 +48,7 @@ const RICKROLL_VIDEO_ID = "dQw4w9WgXcQ";
 const RICKROLL_DURATION = 10_000;
 
 const DISCOVERY_START_DELAY = 1_000;
-const AFTER_MELODY_DELAY = 100;
+const AFTER_MELODY_DELAY = 10;
 const AFTER_RICKROLL_DELAY = 1_800;
 
 const MELODY_DURATION = DISCOVERY_MELODY.reduce(
@@ -288,7 +288,7 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
         return "Вслушайся...";
 
       case "rickroll":
-        return "Мелодия внезапно меняется...";
+        return "Ты убираешь руку. И в тишине звучит короткая мелодия.";
 
       case "complete":
         return "Ты убираешь руку. И в тишине звучит короткая мелодия.";

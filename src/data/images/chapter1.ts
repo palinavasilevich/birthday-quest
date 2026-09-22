@@ -5,5 +5,10 @@ export const images = {
   wallWithSymbols: "/images/chapter1/wall-with-symbols.png",
   wallWithTrack: "/images/chapter1/wall-with-track.png",
   wallWithSymbolsHint: "/images/chapter1/wall-with-symbols-hint.png",
+  wallWithSymbolsFinal: "/images/chapter1/wall-with-symbols-final.png",
+  wallWithSymbolsDoor: "/images/chapter1/wall-with-symbols-door.png",
+  room: "/images/chapter1/room.png",
+  book: "/images/chapter1/book.png",
+  roomTraces: "/images/chapter1/room-traces.png",
   cyberpunk: "/images/chapter1/forest.jpg",
 };
