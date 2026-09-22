@@ -275,82 +275,19 @@ export const firstChapter: ChapterData = {
       },
     },
 
-    // {
-    //   id: "chapter1-rickroll",
-    //   background: images.forest,
-    //   content: {
-    //     type: "text",
-    //     text: "Мелодия внезапно меняется...",
-    //   },
-    //   puzzle: {
-    //     id: "rickroll",
-    //     type: "youtube",
-    //     nextScene: "chapter1-door",
-    //   },
-    // },
-    // // {
-    //   id: "chapter1-signs-3",
-    //   background: images.wallWithTrack,
-    //   content: {
-    //     type: "text",
-    //     text: "♪\n\nТы слышишь одну ноту.\n\nОна разносится эхом по лесу.",
-    //   },
-    //   audio: audio.forest,
-    //   nextScene: "chapter1-signs-4",
-    // },
-
-    // {
-    //   id: "chapter1-signs-4",
-    //   background: images.wallWithTrack,
-    //   content: {
-    //     type: "text",
-    //     text: "Ты касаешься другой руны.\n\nДругой звук.",
-    //   },
-    //   audio: audio.forest,
-    //   nextScene: "chapter1-signs-5",
-    // },
-
-    // {
-    //   id: "chapter1-signs-5",
-    //   background: images.wallWithTrack,
-    //   content: {
-    //     type: "text",
-    //     text: "Пять знаков.\n\nПять разных звуков.",
-    //   },
-    //   audio: audio.forest,
-    //   nextScene: "chapter1-signs-6",
-    // },
-
-    // {
-    //   id: "chapter1-signs-6",
-    //   background: images.wallWithTrack,
-    //   content: {
-    //     type: "text",
-    //     text: "Ты убираешь руку.\n\nИ в тишине звучит короткая мелодия.",
-    //   },
-    //   audio: audio.forest,
-    //   nextScene: "chapter1-signs-7",
-    // },
-
-    // {
-    //   id: "chapter1-runes-discovery",
-    //   background: images.wallWithTrack,
-    //   content: {
-    //     type: "text",
-    //     text: "Руны откликаются на прикосновение.",
-    //   },
-    //   audio: audio.forest,
-    //   puzzle: {
-    //     id: "rune-discovery",
-    //     type: "runes",
-    //     mode: "discovery",
-    //     nextScene: "chapter1-rune-puzzle",
-    //   },
-    // },
-
-    // ============================================================
-    // THE MELODY — PUZZLE
-    // ============================================================
+    {
+      id: "chapter1-rune-puzzle",
+      background: images.wallWithTrack,
+      content: {
+        type: "text",
+        text: "",
+      },
+      puzzle: {
+        id: "rune-discovery",
+        type: "runes",
+        nextScene: "chapter1-door",
+      },
+    },
 
     // ============================================================
     // THE DOOR
