@@ -46,23 +46,36 @@ declare global {
 
 const ROLLBACK = 2;
 
+const DISCOVERY_START_DELAY = 1200;
+
 const RICKROLL_VIDEO_ID = "dQw4w9WgXcQ";
 const RICKROLL_DURATION = 10_000;
 const AFTER_RICKROLL_DELAY = 1_800;
+
+type PuzzlePhase = "discovery" | "round";
 
 export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
   const setScene = useGameStore((state) => state.setScene);
   const completePuzzle = useGameStore((state) => state.completePuzzle);
 
+  const [phase, setPhase] = useState<PuzzlePhase>("discovery");
+
+  const [discoveredRunes, setDiscoveredRunes] = useState<string[]>([]);
+
   const [round, setRound] = useState(0);
   const [sequence, setSequence] = useState<string[]>([]);
+
   const [isSolved, setIsSolved] = useState(false);
+
   const [isMistake, setIsMistake] = useState(false);
   const [mistakeRune, setMistakeRune] = useState<string | null>(null);
+
   const [replayFrom, setReplayFrom] = useState(0);
 
   const youtubePlayerRef = useRef<YouTubePlayer | null>(null);
   const youtubeContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const discoveryStartedRef = useRef(false);
 
   const currentSequence = PUZZLE_ROUNDS[round];
 
@@ -71,16 +84,37 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     [currentSequence, replayFrom],
   );
 
-  const { isPlaying, activeRune, playRune, replay } = useRunePlayback({
-    runes: RUNES,
-    sequence: playbackSequence,
-  });
+  const { isPlaying, activeRune, playRune, playNote, replay } = useRunePlayback(
+    {
+      runes: RUNES,
+      sequence: playbackSequence,
+      autoPlay: phase === "round",
+    },
+  );
 
-  /**
-   * Prepare the YouTube player in advance.
-   *
-   * The player stays hidden until the puzzle is solved.
+  /*
+   * ------------------------------------------------------------
+   * YouTube / Rickroll
+   * ------------------------------------------------------------
    */
+
+  const [introFinished, setIntroFinished] = useState(false);
+
+  useEffect(() => {
+    const startTimer = window.setTimeout(() => {
+      playNote("quen", 1200);
+    }, 100);
+
+    const finishTimer = window.setTimeout(() => {
+      setIntroFinished(true);
+    }, 3500);
+
+    return () => {
+      window.clearTimeout(startTimer);
+      window.clearTimeout(finishTimer);
+    };
+  }, [playNote]);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -144,8 +178,76 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     };
   }, []);
 
+  /*
+   * ------------------------------------------------------------
+   * Discovery
+   * ------------------------------------------------------------
+   *
+   * Player can press every rune in any order.
+   * Each rune plays its own note.
+   */
+
+  const handleDiscoveryRune = (rune: Rune) => {
+    if (!introFinished || phase !== "discovery" || isPlaying || isSolved) {
+      return;
+    }
+
+    playRune(rune.id);
+
+    setDiscoveredRunes((current) => {
+      if (current.includes(rune.id)) {
+        return current;
+      }
+
+      return [...current, rune.id];
+    });
+  };
+
+  /*
+   * ------------------------------------------------------------
+   * Start first puzzle round
+   * ------------------------------------------------------------
+   *
+   * After all five runes have been discovered:
+   *
+   * discovery
+   *    ↓
+   * short pause
+   *    ↓
+   * Round 1 playback
+   */
+
+  useEffect(() => {
+    if (
+      phase !== "discovery" ||
+      discoveredRunes.length !== RUNES.length ||
+      discoveryStartedRef.current
+    ) {
+      return;
+    }
+
+    discoveryStartedRef.current = true;
+
+    const timeout = window.setTimeout(() => {
+      setPhase("round");
+      setRound(0);
+      setSequence([]);
+      setReplayFrom(0);
+    }, DISCOVERY_START_DELAY);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [discoveredRunes.length, phase]);
+
+  /*
+   * ------------------------------------------------------------
+   * Player interaction during puzzle
+   * ------------------------------------------------------------
+   */
+
   const handleRuneClick = (rune: Rune) => {
-    if (isPlaying || isSolved) {
+    if (phase !== "round" || isPlaying || isSolved) {
       return;
     }
 
@@ -157,8 +259,11 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     const expectedRune = currentSequence[sequence.length]?.runeId;
 
     /*
-     * Wrong rune.
+     * ----------------------------------------------------------
+     * Wrong rune
+     * ----------------------------------------------------------
      */
+
     if (rune.id !== expectedRune) {
       const rollback = Math.max(0, sequence.length - ROLLBACK);
 
@@ -187,8 +292,11 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     }
 
     /*
-     * Correct rune.
+     * ----------------------------------------------------------
+     * Correct rune
+     * ----------------------------------------------------------
      */
+
     const nextSequence = [...sequence, rune.id];
 
     setSequence(nextSequence);
@@ -201,8 +309,11 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     }
 
     /*
-     * Move to the next round.
+     * ----------------------------------------------------------
+     * Move to next round
+     * ----------------------------------------------------------
      */
+
     if (round < PUZZLE_ROUNDS.length - 1) {
       setSequence([]);
       setReplayFrom(0);
@@ -215,13 +326,17 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     }
 
     /*
-     * Puzzle completed.
+     * ----------------------------------------------------------
+     * Puzzle completed
+     * ----------------------------------------------------------
      */
+
     setIsSolved(true);
+
     completePuzzle(puzzleId);
 
     /*
-     * The final correct rune starts the Rickroll.
+     * Final reward.
      */
     youtubePlayerRef.current?.playVideo();
 
@@ -234,8 +349,14 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     }, RICKROLL_DURATION);
   };
 
+  /*
+   * ------------------------------------------------------------
+   * Replay current round
+   * ------------------------------------------------------------
+   */
+
   const handleReplay = () => {
-    if (isPlaying || isSolved) {
+    if (phase !== "round" || isPlaying || isSolved) {
       return;
     }
 
@@ -245,9 +366,47 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     replay();
   };
 
+  /*
+   * ------------------------------------------------------------
+   * Messages
+   * ------------------------------------------------------------
+   */
+
   const message = () => {
     if (isSolved) {
       return "Мелодия отозвалась в камне.";
+    }
+
+    if (phase === "discovery") {
+      if (!introFinished) {
+        return "Руна откликается на прикосновение и начинает едва заметно светиться. Звук эхом разносится по лесу...";
+      }
+
+      if (discoveredRunes.length === 0) {
+        return "Коснись рун и послушай, что они скажут.";
+      }
+
+      if (discoveredRunes.length === 2) {
+        return "ЛЯ...";
+      }
+
+      if (discoveredRunes.length === 3) {
+        return "ЛЯ...ЛЯ...";
+      }
+
+      if (discoveredRunes.length === 4) {
+        return "ЛЯ...ЛЯ...ЛЯ...";
+      }
+
+      if (discoveredRunes.length === 5) {
+        return "Брависсимо! Прекрасное «ЛЯ», прекрасное!";
+      }
+
+      if (discoveredRunes.length < RUNES.length) {
+        return "Другой звук...";
+      }
+
+      return "Вслушайся...";
     }
 
     if (isMistake) {
@@ -264,6 +423,12 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
       ? "Продолжай."
       : "Мелодия всё ещё звучит в памяти. Повтори её.";
   };
+
+  /*
+   * ------------------------------------------------------------
+   * Render
+   * ------------------------------------------------------------
+   */
 
   return (
     <div
@@ -306,7 +471,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
       <p
         className="
-          mb-3
+          mb-10
           min-h-8
           whitespace-pre-line
           text-center
@@ -321,24 +486,46 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
       {/* Round */}
 
-      <p
-        className="
-          mb-8
-          text-center
-          text-xs
-          uppercase
-          tracking-[0.3em]
-          text-[#ff9b00]/60
-        "
-      >
-        Фрагмент {round + 1} / {PUZZLE_ROUNDS.length}
-      </p>
+      {phase === "round" && (
+        <p
+          className="
+            mb-8
+            text-center
+            text-xs
+            uppercase
+            tracking-[0.3em]
+            text-[#ff9b00]/60
+          "
+        >
+          Фрагмент {round + 1} / {PUZZLE_ROUNDS.length}
+        </p>
+      )}
+
+      {/* Discovery hint */}
+
+      {/* {phase === "discovery" && (
+        <p
+          className="
+            mb-8
+            text-center
+            text-xs
+            uppercase
+            tracking-[0.25em]
+            text-white/30
+          "
+        >
+          Открыто {discoveredRunes.length} / {RUNES.length}
+        </p>
+      )} */}
 
       {/* Runes */}
 
       <div className="grid grid-cols-5 gap-2 sm:gap-4">
         {RUNES.map((rune) => {
           const isActive = activeRune === rune.id;
+
+          const isDiscovered = discoveredRunes.includes(rune.id);
+
           const isMistakeRune = isMistake && mistakeRune === rune.id;
 
           return (
@@ -346,7 +533,11 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
               key={rune.id}
               type="button"
               disabled={isPlaying || isSolved}
-              onClick={() => handleRuneClick(rune)}
+              onClick={() =>
+                phase === "discovery"
+                  ? handleDiscoveryRune(rune)
+                  : handleRuneClick(rune)
+              }
               aria-label={`Руна ${rune.label}`}
               className={`
                 group
@@ -374,10 +565,22 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
                       text-red-400
                       shadow-[0_0_25px_rgba(239,68,68,0.45)]
                     `
-                    : `
-                      border-[#ff9b00]/40
-                      text-[#ff9b00]
-                    `
+                    : isActive
+                      ? `
+                        scale-105
+                        border-[#ff9b00]
+                        bg-[#ff9b00]/20
+                        shadow-[0_0_30px_rgba(255,155,0,0.55)]
+                      `
+                      : isDiscovered && phase === "discovery"
+                        ? `
+                          border-[#ff9b00]/80
+                          bg-[#ff9b00]/10
+                        `
+                        : `
+                          border-[#ff9b00]/40
+                          text-[#ff9b00]
+                        `
                 }
 
                 hover:border-[#ff9b00]
@@ -387,20 +590,18 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
                 focus-visible:shadow-[0_0_20px_rgba(255,155,0,0.35)]
 
                 disabled:cursor-default
-
-                ${
-                  isActive && !isMistakeRune
-                    ? `
-                      scale-105
-                      border-[#ff9b00]
-                      bg-[#ff9b00]/20
-                      shadow-[0_0_30px_rgba(255,155,0,0.55)]
-                    `
-                    : ""
-                }
               `}
             >
-              <img alt={rune.label} src={rune.symbolImage} className="w-12" />
+              <img
+                alt={rune.label}
+                src={rune.symbolImage}
+                className={`
+                  w-12
+                  transition-transform
+                  duration-200
+                  ${isActive ? "scale-110" : ""}
+                `}
+              />
 
               <span
                 className="
@@ -420,55 +621,107 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
         })}
       </div>
 
-      {/* Progress */}
+      {/* Discovery progress */}
 
-      <div className="mt-8 flex flex-wrap justify-center gap-1.5 sm:gap-2">
-        {currentSequence.map((_, index) => {
-          const isCompleted = index < sequence.length;
+      {phase === "discovery" && (
+        <div
+          className="
+            mt-8
+            flex
+            flex-wrap
+            justify-center
+            gap-1.5
+            sm:gap-2
+          "
+        >
+          {RUNES.map((rune) => {
+            const isDiscovered = discoveredRunes.includes(rune.id);
 
-          return (
-            <span
-              key={index}
-              className={`
-                h-1.5
-                w-6
-                transition-all
-                duration-300
-                sm:w-8
+            return (
+              <span
+                key={rune.id}
+                className={`
+                  h-1.5
+                  w-6
+                  transition-all
+                  duration-300
+                  sm:w-8
 
-                ${
-                  isCompleted
-                    ? `
-                      bg-[#ff9b00]
-                      shadow-[0_0_8px_rgba(255,155,0,0.6)]
-                    `
-                    : "bg-white/10"
-                }
-              `}
-            />
-          );
-        })}
-      </div>
+                  ${
+                    isDiscovered
+                      ? `
+                        bg-[#ff9b00]
+                        shadow-[0_0_8px_rgba(255,155,0,0.6)]
+                      `
+                      : "bg-white/10"
+                  }
+                `}
+              />
+            );
+          })}
+        </div>
+      )}
+
+      {/* Puzzle progress */}
+
+      {phase === "round" && (
+        <div
+          className="
+            mt-8
+            flex
+            flex-wrap
+            justify-center
+            gap-1.5
+            sm:gap-2
+          "
+        >
+          {currentSequence.map((_, index) => {
+            const isCompleted = index < sequence.length;
+
+            return (
+              <span
+                key={index}
+                className={`
+                    h-1.5
+                    w-6
+                    transition-all
+                    duration-300
+                    sm:w-8
+
+                    ${
+                      isCompleted
+                        ? `
+                          bg-[#ff9b00]
+                          shadow-[0_0_8px_rgba(255,155,0,0.6)]
+                        `
+                        : "bg-white/10"
+                    }
+                  `}
+              />
+            );
+          })}
+        </div>
+      )}
 
       {/* Replay */}
 
-      {!isSolved && (
+      {phase === "round" && !isSolved && (
         <button
           type="button"
           disabled={isPlaying}
           onClick={handleReplay}
           className="
-            mt-8
-            cursor-pointer
-            text-xs
-            uppercase
-            tracking-[0.2em]
-            text-white/40
-            transition-colors
-            hover:text-[#ff9b00]
-            disabled:cursor-default
-            disabled:opacity-30
-          "
+              mt-8
+              cursor-pointer
+              text-xs
+              uppercase
+              tracking-[0.2em]
+              text-white/40
+              transition-colors
+              hover:text-[#ff9b00]
+              disabled:cursor-default
+              disabled:opacity-30
+            "
         >
           Послушать мелодию ещё раз
         </button>

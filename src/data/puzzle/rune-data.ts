@@ -42,30 +42,6 @@ export const RUNES: Rune[] = [
 ];
 
 /**
- * The first melody is used during Rune Discovery.
- *
- * It previews Motif A of the ballad theme (see PUZZLE_ROUNDS) in a
- * slower, more rubato phrasing — the player should recognize it when
- * the same motif returns, tightened up, in Round 1 of the puzzle.
- *
- * The final tonic carries a quiet echo — the melody audibly settling
- * into the stone after it finishes.
- *
- * Key: B minor (quen=B4, axii=D5, igni=E5, aard=F#5, yrden=G5)
- */
-export const DISCOVERY_MELODY: RuneNote[] = [
-  { runeId: "quen", duration: 900, gap: 260 }, // B4 — motif A start, unhurried
-  { runeId: "axii", duration: 850, gap: 240 }, // D5
-  { runeId: "igni", duration: 1200, gap: 320 }, // E5 — motif A peak, lingered on
-  {
-    runeId: "quen",
-    duration: 1300,
-    gap: 300,
-    echo: { delay: 550, velocity: 30, duration: 1100 },
-  }, // B4 — home, held, then echoes once, quietly
-];
-
-/**
  * Main Rune Puzzle melodies.
  *
  * Each round becomes progressively longer.

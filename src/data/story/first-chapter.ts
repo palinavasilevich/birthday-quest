@@ -233,7 +233,7 @@ export const firstChapter: ChapterData = {
         text: "Ты подходишь ближе и касаешься первого знака.",
       },
       audio: audio.forest,
-      nextScene: "chapter1-runes-discovery",
+      nextScene: "chapter1-rune-puzzle",
     },
 
     //TODO Добавить шутку :)
@@ -248,21 +248,6 @@ export const firstChapter: ChapterData = {
     //   audio: audio.forest,
     //   nextScene: "chapter1-runes-discovery",
     // },
-
-    {
-      id: "chapter1-runes-discovery",
-      background: images.wallWithTrack,
-      content: {
-        type: "text",
-        text: "",
-      },
-      puzzle: {
-        id: "rune-discovery",
-        type: "runes",
-        mode: "discovery",
-        nextScene: "chapter1-rune-puzzle",
-      },
-    },
 
     {
       id: "chapter1-rune-puzzle",

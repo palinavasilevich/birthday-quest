@@ -62,7 +62,8 @@ export function GameLayout({
           w-full
           px-4
           text-shadow-lg
-          ${isPuzzle ? "max-w-250 py-2" : "max-w-2xl py-8"}
+          max-w-2xl py-8
+          // ${isPuzzle ? "max-w-250 py-2" : "max-w-2xl py-8"}
           ${classNameContentBlock}
         `}
       >
@@ -78,7 +79,8 @@ export function GameLayout({
             className={
               !isPuzzle
                 ? "flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-12 shadow-2xl backdrop-blur-md"
-                : "w-full m-auto"
+                : ""
+              // : "w-full m-auto"
             }
           >
             {children}
