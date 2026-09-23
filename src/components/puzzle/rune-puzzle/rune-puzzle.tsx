@@ -1,22 +1,57 @@
-import { useEffect, useMemo, useState } from "react";
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useGameStore } from "@/store/game-store";
-import { useRunePlayback } from "@/hooks/use-rune-playback";
-import { preloadRuneInstrument } from "@/hooks/use-rune-playback";
+import { useRunePlayback } from "@/hooks/puzzle/use-rune-playback";
 
 import { PUZZLE_ROUNDS, RUNES, type Rune } from "@/data/puzzle/rune-data";
-import { RuneMelodyReveal } from "./rune-melody-reveal";
 
 interface RunePuzzleProps {
   puzzleId: string;
   nextScene: string;
 }
 
+interface YouTubePlayer {
+  playVideo: () => void;
+  stopVideo: () => void;
+  destroy: () => void;
+}
+
+interface YouTubeNamespace {
+  Player: new (
+    element: HTMLElement,
+    options: {
+      videoId: string;
+      playerVars?: {
+        autoplay?: number;
+        controls?: number;
+        disablekb?: number;
+        fs?: number;
+        iv_load_policy?: number;
+        modestbranding?: number;
+        playsinline?: number;
+        rel?: number;
+      };
+    },
+  ) => YouTubePlayer;
+}
+
+declare global {
+  interface Window {
+    YT?: YouTubeNamespace;
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
+
 const ROLLBACK = 2;
+
+const RICKROLL_VIDEO_ID = "dQw4w9WgXcQ";
+const RICKROLL_DURATION = 10_000;
+const AFTER_RICKROLL_DELAY = 1_800;
 
 export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
   const setScene = useGameStore((state) => state.setScene);
-
   const completePuzzle = useGameStore((state) => state.completePuzzle);
 
   const [round, setRound] = useState(0);
@@ -26,7 +61,8 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
   const [mistakeRune, setMistakeRune] = useState<string | null>(null);
   const [replayFrom, setReplayFrom] = useState(0);
 
-  const [showMelodyReveal, setShowMelodyReveal] = useState(false);
+  const youtubePlayerRef = useRef<YouTubePlayer | null>(null);
+  const youtubeContainerRef = useRef<HTMLDivElement | null>(null);
 
   const currentSequence = PUZZLE_ROUNDS[round];
 
@@ -39,6 +75,74 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     runes: RUNES,
     sequence: playbackSequence,
   });
+
+  /**
+   * Prepare the YouTube player in advance.
+   *
+   * The player stays hidden until the puzzle is solved.
+   */
+  useEffect(() => {
+    let cancelled = false;
+
+    const createPlayer = () => {
+      if (
+        cancelled ||
+        !window.YT ||
+        !youtubeContainerRef.current ||
+        youtubePlayerRef.current
+      ) {
+        return;
+      }
+
+      youtubePlayerRef.current = new window.YT.Player(
+        youtubeContainerRef.current,
+        {
+          videoId: RICKROLL_VIDEO_ID,
+          playerVars: {
+            autoplay: 0,
+            controls: 0,
+            disablekb: 1,
+            fs: 0,
+            iv_load_policy: 3,
+            modestbranding: 1,
+            playsinline: 1,
+            rel: 0,
+          },
+        },
+      );
+    };
+
+    if (window.YT) {
+      createPlayer();
+    } else {
+      const previousCallback = window.onYouTubeIframeAPIReady;
+
+      window.onYouTubeIframeAPIReady = () => {
+        previousCallback?.();
+        createPlayer();
+      };
+
+      const existingScript = document.querySelector(
+        'script[src="https://www.youtube.com/iframe_api"]',
+      );
+
+      if (!existingScript) {
+        const script = document.createElement("script");
+
+        script.src = "https://www.youtube.com/iframe_api";
+        script.async = true;
+
+        document.body.appendChild(script);
+      }
+    }
+
+    return () => {
+      cancelled = true;
+
+      youtubePlayerRef.current?.destroy();
+      youtubePlayerRef.current = null;
+    };
+  }, []);
 
   const handleRuneClick = (rune: Rune) => {
     if (isPlaying || isSolved) {
@@ -116,9 +220,18 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     setIsSolved(true);
     completePuzzle(puzzleId);
 
+    /*
+     * The final correct rune starts the Rickroll.
+     */
+    youtubePlayerRef.current?.playVideo();
+
     window.setTimeout(() => {
-      setShowMelodyReveal(true);
-    }, 900);
+      youtubePlayerRef.current?.stopVideo();
+
+      window.setTimeout(() => {
+        setScene(nextScene);
+      }, AFTER_RICKROLL_DELAY);
+    }, RICKROLL_DURATION);
   };
 
   const handleReplay = () => {
@@ -138,7 +251,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     }
 
     if (isMistake) {
-      return "Ошибки случаются...";
+      return "Солнышко, давай... я тебя люблю... давай... ";
     }
 
     if (isPlaying) {
@@ -148,32 +261,84 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     }
 
     return sequence.length > 0
-      ? // ? "Продолжай."
-        "Солнышко, давай... я тебя люблю... давай..."
-      : "Мелодия всё ещё звучит в памяти.\n\nПовтори её.";
+      ? "Продолжай."
+      : "Мелодия всё ещё звучит в памяти. Повтори её.";
   };
 
-  useEffect(() => {
-    preloadRuneInstrument();
-  }, []);
-
   return (
-    <div className="mt-10 m-auto w-full max-w-2xl flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-12 shadow-2xl backdrop-blur-md">
+    <div
+      className="
+        relative
+        mt-10
+        m-auto
+        flex
+        w-full
+        max-w-2xl
+        flex-col
+        items-center
+        rounded-2xl
+        border
+        border-white/10
+        bg-black/60
+        p-12
+        shadow-2xl
+        backdrop-blur-md
+      "
+    >
+      {/* Hidden YouTube player */}
+
+      <div
+        ref={youtubeContainerRef}
+        className="
+          pointer-events-none
+          absolute
+          left-0
+          top-0
+          h-px
+          w-px
+          overflow-hidden
+          opacity-0
+        "
+        aria-hidden="true"
+      />
+
       {/* Message */}
-      <p className="mb-3 min-h-8 text-center font-story text-2xl italic text-white/70">
+
+      <p
+        className="
+          mb-3
+          min-h-8
+          whitespace-pre-line
+          text-center
+          font-story
+          text-2xl
+          italic
+          text-white/70
+        "
+      >
         {message()}
       </p>
 
       {/* Round */}
-      <p className="mb-8 text-center text-xs uppercase tracking-[0.3em] text-[#ff9b00]/60">
+
+      <p
+        className="
+          mb-8
+          text-center
+          text-xs
+          uppercase
+          tracking-[0.3em]
+          text-[#ff9b00]/60
+        "
+      >
         Фрагмент {round + 1} / {PUZZLE_ROUNDS.length}
       </p>
 
       {/* Runes */}
+
       <div className="grid grid-cols-5 gap-2 sm:gap-4">
         {RUNES.map((rune) => {
           const isActive = activeRune === rune.id;
-
           const isMistakeRune = isMistake && mistakeRune === rune.id;
 
           return (
@@ -184,13 +349,22 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
               onClick={() => handleRuneClick(rune)}
               aria-label={`Руна ${rune.label}`}
               className={`
-                group relative flex
-                h-20 w-16 sm:h-24 sm:w-20
-                cursor-pointer flex-col items-center justify-center
+                group
+                relative
+                flex
+                h-20
+                w-16
+                cursor-pointer
+                flex-col
+                items-center
+                justify-center
                 border
                 bg-black/60
                 outline-none
-                transition-all duration-200
+                transition-all
+                duration-200
+                sm:h-24
+                sm:w-20
 
                 ${
                   isMistakeRune
@@ -226,22 +400,17 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
                 }
               `}
             >
-              {/* <span
-                className={`
-                  font-serif text-3xl sm:text-4xl
-                  transition-all duration-200
-                  ${isActive ? "scale-110 text-white" : ""}
-                `}
-              >
-                {rune.symbol}
-              </span> */}
-
               <img alt={rune.label} src={rune.symbolImage} className="w-12" />
 
               <span
                 className="
-                  mt-2 text-[9px] uppercase sm:text-[10px]
-                  tracking-[0.15em] text-[#ff9b00]/70 sm:tracking-[0.2em]
+                  mt-2
+                  text-[9px]
+                  uppercase
+                  tracking-[0.15em]
+                  text-[#ff9b00]/70
+                  sm:text-[10px]
+                  sm:tracking-[0.2em]
                 "
               >
                 {rune.label}
@@ -251,18 +420,8 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
         })}
       </div>
 
-      {showMelodyReveal && (
-        <div className="mt-8 w-full max-w-xs">
-          <RuneMelodyReveal
-            videoId="Iog3XDY1krA"
-            startSeconds={5}
-            endSeconds={12}
-            onFinished={() => {}}
-          />
-        </div>
-      )}
-
       {/* Progress */}
+
       <div className="mt-8 flex flex-wrap justify-center gap-1.5 sm:gap-2">
         {currentSequence.map((_, index) => {
           const isCompleted = index < sequence.length;
@@ -271,8 +430,12 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
             <span
               key={index}
               className={`
-                h-1.5 w-6 sm:w-8
-                transition-all duration-300
+                h-1.5
+                w-6
+                transition-all
+                duration-300
+                sm:w-8
+
                 ${
                   isCompleted
                     ? `
@@ -288,14 +451,18 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
       </div>
 
       {/* Replay */}
+
       {!isSolved && (
         <button
           type="button"
           disabled={isPlaying}
           onClick={handleReplay}
           className="
-            mt-8 cursor-pointer
-            text-xs uppercase tracking-[0.2em]
+            mt-8
+            cursor-pointer
+            text-xs
+            uppercase
+            tracking-[0.2em]
             text-white/40
             transition-colors
             hover:text-[#ff9b00]

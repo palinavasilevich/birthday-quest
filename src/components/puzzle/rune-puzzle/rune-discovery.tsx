@@ -1,8 +1,9 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 
 import { useGameStore } from "@/store/game-store";
-
-import { useRunePlayback } from "@/hooks/use-rune-playback";
+import { useRunePlayback } from "@/hooks/puzzle/use-rune-playback";
 
 import { DISCOVERY_MELODY, RUNES } from "@/data/puzzle/rune-data";
 
@@ -10,46 +11,10 @@ interface RuneDiscoveryProps {
   nextScene: string;
 }
 
-type DiscoveryPhase = "explore" | "demo" | "rickroll" | "complete";
-
-interface YouTubePlayer {
-  playVideo: () => void;
-  stopVideo: () => void;
-  destroy: () => void;
-}
-
-interface YouTubeNamespace {
-  Player: new (
-    element: HTMLElement,
-    options: {
-      videoId: string;
-      playerVars?: {
-        autoplay?: number;
-        controls?: number;
-        disablekb?: number;
-        fs?: number;
-        iv_load_policy?: number;
-        modestbranding?: number;
-        playsinline?: number;
-        rel?: number;
-      };
-    },
-  ) => YouTubePlayer;
-}
-
-declare global {
-  interface Window {
-    YT?: YouTubeNamespace;
-    onYouTubeIframeAPIReady?: () => void;
-  }
-}
-
-const RICKROLL_VIDEO_ID = "dQw4w9WgXcQ";
-const RICKROLL_DURATION = 10_000;
+type DiscoveryPhase = "explore" | "demo" | "complete";
 
 const DISCOVERY_START_DELAY = 1_000;
 const AFTER_MELODY_DELAY = 10;
-const AFTER_RICKROLL_DELAY = 1_800;
 
 const MELODY_DURATION = DISCOVERY_MELODY.reduce(
   (total, note) => total + note.duration + note.gap,
@@ -60,16 +25,10 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
   const setScene = useGameStore((state) => state.setScene);
 
   const [discoveredRunes, setDiscoveredRunes] = useState<string[]>([]);
-
   const [introFinished, setIntroFinished] = useState(false);
-
   const [phase, setPhase] = useState<DiscoveryPhase>("explore");
 
   const demoStartedRef = useRef(false);
-
-  const youtubePlayerRef = useRef<YouTubePlayer | null>(null);
-
-  const youtubeContainerRef = useRef<HTMLDivElement | null>(null);
 
   const { isPlaying, activeRune, playRune, playNote, replay } = useRunePlayback(
     {
@@ -78,76 +37,6 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
       autoPlay: false,
     },
   );
-
-  /**
-   * Prepare the YouTube player in advance.
-   *
-   * The player stays hidden until the discovery melody
-   * has finished.
-   */
-  useEffect(() => {
-    let cancelled = false;
-
-    const createPlayer = () => {
-      if (
-        cancelled ||
-        !window.YT ||
-        !youtubeContainerRef.current ||
-        youtubePlayerRef.current
-      ) {
-        return;
-      }
-
-      youtubePlayerRef.current = new window.YT.Player(
-        youtubeContainerRef.current,
-        {
-          videoId: RICKROLL_VIDEO_ID,
-          playerVars: {
-            autoplay: 0,
-            controls: 0,
-            disablekb: 1,
-            fs: 0,
-            iv_load_policy: 3,
-            modestbranding: 1,
-            playsinline: 1,
-            rel: 0,
-          },
-        },
-      );
-    };
-
-    if (window.YT) {
-      createPlayer();
-    } else {
-      const previousCallback = window.onYouTubeIframeAPIReady;
-
-      window.onYouTubeIframeAPIReady = () => {
-        previousCallback?.();
-        createPlayer();
-      };
-
-      const existingScript = document.querySelector(
-        'script[src="https://www.youtube.com/iframe_api"]',
-      );
-
-      if (!existingScript) {
-        const script = document.createElement("script");
-
-        script.src = "https://www.youtube.com/iframe_api";
-
-        script.async = true;
-
-        document.body.appendChild(script);
-      }
-    }
-
-    return () => {
-      cancelled = true;
-
-      youtubePlayerRef.current?.destroy();
-      youtubePlayerRef.current = null;
-    };
-  }, []);
 
   /**
    * Intro:
@@ -159,7 +48,7 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
   useEffect(() => {
     const startTimer = window.setTimeout(() => {
       playNote("quen", 1200);
-    }, 1500);
+    }, 1000);
 
     const finishTimer = window.setTimeout(() => {
       setIntroFinished(true);
@@ -216,7 +105,7 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
   /**
    * Discovery melody has finished.
    *
-   * Now start the Rickroll.
+   * Continue to the actual rune puzzle.
    */
   useEffect(() => {
     if (phase !== "demo") {
@@ -224,29 +113,8 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
     }
 
     const timeout = window.setTimeout(() => {
-      setPhase("rickroll");
-    }, MELODY_DURATION + AFTER_MELODY_DELAY);
-
-    return () => {
-      window.clearTimeout(timeout);
-    };
-  }, [phase]);
-
-  /**
-   * Play Rickroll for 10 seconds.
-   */
-  useEffect(() => {
-    if (phase !== "rickroll") {
-      return;
-    }
-
-    youtubePlayerRef.current?.playVideo();
-
-    const timeout = window.setTimeout(() => {
-      youtubePlayerRef.current?.stopVideo();
-
       setPhase("complete");
-    }, RICKROLL_DURATION);
+    }, MELODY_DURATION + AFTER_MELODY_DELAY);
 
     return () => {
       window.clearTimeout(timeout);
@@ -264,7 +132,7 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
 
     const timeout = window.setTimeout(() => {
       setScene(nextScene);
-    }, AFTER_RICKROLL_DELAY);
+    }, 1800);
 
     return () => {
       window.clearTimeout(timeout);
@@ -275,9 +143,7 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
     switch (phase) {
       case "explore":
         if (!introFinished) {
-          return (
-            "Первая руна отзывается.\n\n" + "Звук эхом разносится по лесу..."
-          );
+          return "Руна откликается на прикосновение и начинает едва заметно светиться. Звук эхом разносится по лесу...";
         }
 
         return discoveredRunes.length === 0
@@ -287,11 +153,8 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
       case "demo":
         return "Вслушайся...";
 
-      case "rickroll":
-        return "Ты убираешь руку. И в тишине звучит короткая мелодия.";
-
       case "complete":
-        return "Ты убираешь руку. И в тишине звучит короткая мелодия.";
+        return "Мелодия эхом разносится по лесу...";
     }
   })();
 
@@ -315,23 +178,6 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
         backdrop-blur-md
       "
     >
-      {/* Hidden YouTube player */}
-
-      <div
-        ref={youtubeContainerRef}
-        className="
-          pointer-events-none
-          absolute
-          left-0
-          top-0
-          h-px
-          w-px
-          overflow-hidden
-          opacity-0
-        "
-        aria-hidden="true"
-      />
-
       {/* Message */}
 
       <p
@@ -341,7 +187,7 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
           whitespace-pre-line
           text-center
           font-story
-          text-xl
+          text-2xl
           italic
           text-white/70
         "
@@ -354,7 +200,6 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
       <div className="grid grid-cols-5 gap-2 sm:gap-4">
         {RUNES.map((rune) => {
           const isActive = activeRune === rune.id;
-
           const isDiscovered = discoveredRunes.includes(rune.id);
 
           return (

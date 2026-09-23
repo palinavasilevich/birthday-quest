@@ -10,5 +10,8 @@ export const images = {
   room: "/images/chapter1/room.png",
   book: "/images/chapter1/book.png",
   roomTraces: "/images/chapter1/room-traces.png",
+  bookNearThePedestal: "/images/chapter1/book-near-the-pedestal.png",
+  bookInHands: "/images/chapter1/book-in-hands.png",
+  bookText: "/images/chapter1/book-text.png",
   cyberpunk: "/images/chapter1/forest.jpg",
 };

@@ -1,4 +1,4 @@
-import type { RuneNote } from "@/hooks/use-rune-playback";
+import type { RuneNote } from "@/hooks/puzzle/use-rune-playback";
 import { runes } from "@/data/images/puzzle/runes";
 
 export interface Rune {
