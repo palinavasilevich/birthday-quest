@@ -48,7 +48,7 @@ export function RuneDiscovery({ nextScene }: RuneDiscoveryProps) {
   useEffect(() => {
     const startTimer = window.setTimeout(() => {
       playNote("quen", 1200);
-    }, 1000);
+    }, 300);
 
     const finishTimer = window.setTimeout(() => {
       setIntroFinished(true);

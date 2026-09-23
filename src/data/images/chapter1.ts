@@ -13,5 +13,10 @@ export const images = {
   bookNearThePedestal: "/images/chapter1/book-near-the-pedestal.png",
   bookInHands: "/images/chapter1/book-in-hands.png",
   bookText: "/images/chapter1/book-text.png",
+  shadow: "/images/chapter1/shadow.png",
+  withoutShadow: "/images/chapter1/without-shadow.png",
+  shadowTraces: "/images/chapter1/shadow-traces.png",
+  yarn: "/images/chapter1/yarn.png",
+  forestTraces: "/images/chapter1/forest-traces.png",
   cyberpunk: "/images/chapter1/forest.jpg",
 };
