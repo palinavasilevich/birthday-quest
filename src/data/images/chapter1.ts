@@ -17,6 +17,7 @@ export const images = {
   withoutShadow: "/images/chapter1/without-shadow.png",
   shadowTraces: "/images/chapter1/shadow-traces.png",
   yarn: "/images/chapter1/yarn.png",
+  corridor: "/images/chapter1/corridor.png",
   forestTraces: "/images/chapter1/forest-traces.png",
   cyberpunk: "/images/chapter1/forest.jpg",
 };
