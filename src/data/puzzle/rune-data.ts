@@ -10,16 +10,16 @@ export interface Rune {
 
 export const RUNES: Rune[] = [
   {
+    id: "axii",
+    label: "AXII",
+    symbolImage: runes.axii,
+    frequency: 587.33, // D5
+  },
+  {
     id: "quen",
     label: "QUEN",
     symbolImage: runes.quen,
     frequency: 493.88,
-  },
-  {
-    id: "igni",
-    label: "IGNI",
-    symbolImage: runes.igni,
-    frequency: 659.25, // E5
   },
   {
     id: "aard",
@@ -27,17 +27,19 @@ export const RUNES: Rune[] = [
     symbolImage: runes.aard,
     frequency: 739.99, // F#5
   },
+
   {
     id: "yrden",
     label: "YRDEN",
     symbolImage: runes.yrden,
     frequency: 783.99, // G5
   },
+
   {
-    id: "axii",
-    label: "AXII",
-    symbolImage: runes.axii,
-    frequency: 587.33, // D5
+    id: "igni",
+    label: "IGNI",
+    symbolImage: runes.igni,
+    frequency: 659.25, // E5
   },
 ];
 

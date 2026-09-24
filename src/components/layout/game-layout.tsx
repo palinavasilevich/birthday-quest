@@ -74,7 +74,8 @@ export function GameLayout({
             animate={{ opacity: isPuzzle ? 1 : 0.85 }}
             exit={{ opacity: 0 }}
             transition={{
-              duration: isPuzzle ? 0.35 : 0.8,
+              // duration: isPuzzle ? 0.35 : 0.8,
+              duration: 0.8,
             }}
             className={
               !isPuzzle

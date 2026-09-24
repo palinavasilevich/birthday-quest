@@ -27,18 +27,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Впереди виднеется узкая тропа.",
-      },
-      audio: audio.forest,
-      nextScene: "chapter1-forest-3",
-    },
-
-    {
-      id: "chapter1-forest-3",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Ты бывал здесь много раз.\n\nНо этой тропы раньше не было.",
+        text: "Впереди виднеется узкая тропа.\n\nТы бывал здесь много раз.\n\nНо этой тропы раньше не было.",
       },
       audio: audio.forest,
       actions: [
@@ -87,18 +76,7 @@ export const firstChapter: ChapterData = {
       background: images.track,
       content: {
         type: "text",
-        text: "Ты поднимаешь взгляд.\n\nВ нескольких метрах впереди — ещё один.\n\n🐾",
-      },
-      audio: audio.forest,
-      nextScene: "chapter1-footprints-4",
-    },
-
-    {
-      id: "chapter1-footprints-4",
-      background: images.track,
-      content: {
-        type: "text",
-        text: "И ещё один.\n\nКто-то прошёл здесь совсем недавно.\n\n🐾",
+        text: "Ты поднимаешь взгляд.\n\nВ нескольких метрах впереди — ещё один.\n\nИ ещё один, чуть дальше.\n\nКто-то прошёл здесь совсем недавно.\n\n🐾",
       },
       audio: audio.forest,
       actions: [
@@ -147,7 +125,7 @@ export const firstChapter: ChapterData = {
       background: images.wallWithSymbols,
       content: {
         type: "text",
-        text: "Пять древних знаков высечены прямо в камне.\n\nТы узнаешь их:\n\nQUEN · IGNI · AARD · YRDEN · AXII",
+        text: "Пять древних знаков высечены прямо в камне.\n\nТы узнаешь их:\n\nAXII · QUEN · AARD · YRDEN · IGNI",
       },
       audio: audio.forest,
       nextScene: "chapter1-stone-4",
@@ -155,10 +133,10 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-stone-4",
-      background: images.wallWithTrack,
+      background: images.wallWithTraces,
       content: {
         type: "text",
-        text: "А у подножия стены, в сырой земле, — тот самый след.\n\nЗдесь он обрывается. Прямо у камня.",
+        text: "А у подножия стены, в сырой земле, — теже самые следы.\n\nЗдесь они обрывается. Прямо у камня.",
       },
       audio: audio.forest,
       actions: [
@@ -227,10 +205,10 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-signs",
-      background: images.wallWithTrack,
+      background: images.wallWithTraces,
       content: {
         type: "text",
-        text: "Ты подходишь ближе и касаешься первого знака.",
+        text: "Ты подходишь ближе и касаешься знака.",
       },
       audio: audio.forest,
       nextScene: "chapter1-rune-puzzle",
@@ -238,7 +216,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-rune-puzzle",
-      background: images.wallWithTrack,
+      background: images.wallWithTraces,
       content: {
         type: "text",
         text: "",
@@ -256,7 +234,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-door",
-      background: images.wallWithTrack,
+      background: images.wallWithTraces,
       content: {
         type: "text",
         text: "Последняя нота затихает.\n\nНесколько секунд — полная тишина.",
@@ -361,7 +339,7 @@ export const firstChapter: ChapterData = {
       background: images.book,
       content: {
         type: "text",
-        text: "Ты делаешь шаг к двери.\n\nВдруг за спиной раздаётся шорох.\n\nТы медленно оборачиваешься.",
+        text: "Ты делаешь шаг к двери.\n\nВдруг за спиной раздаётся шорох и глухой стук о камень.\n\nТы медленно оборачиваешься.",
       },
       audio: audio.room,
       nextScene: "chapter1-leave-3",
@@ -413,7 +391,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-relic-2",
-      background: images.bookInHands,
+      background: images.bookOpen,
       content: {
         type: "text",
         text: "Книга в твоих руках начинает сама перелистывать страницы.",
@@ -424,7 +402,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-relic-3",
-      background: images.bookText,
+      background: images.bookOpen,
       content: {
         type: "text",
         text: "Страницы одна за другой переворачиваются на ветру.\n\nПока книга не останавливается на одной из них.",
@@ -438,7 +416,7 @@ export const firstChapter: ChapterData = {
       background: images.bookText,
       content: {
         type: "text",
-        text: "Книга начинает светиться.",
+        text: "Книга начинает светиться и на странице проступает надпись.",
       },
       audio: audio.room,
       nextScene: "chapter1-relic-5",
@@ -446,17 +424,6 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-relic-5",
-      background: images.bookText,
-      content: {
-        type: "text",
-        text: "На странице проступает надпись.",
-      },
-      audio: audio.room,
-      nextScene: "chapter1-relic-6",
-    },
-
-    {
-      id: "chapter1-relic-6",
       background: images.bookText,
       content: {
         type: "text",
@@ -493,10 +460,10 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-sound",
-      background: images.forest,
+      background: images.bookInHands,
       content: {
         type: "text",
-        text: "Ты закрываешь книгу.\n\nСвет внутри неё гаснет.",
+        text: "Как только ты закрываешь книгу, в комнате снова становится тихо.\n\nА затем в дальней стене что-то приходит в движение.",
       },
       audio: audio.room,
       nextScene: "chapter1-sound-2",
@@ -504,10 +471,10 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-sound-2",
-      background: images.forest,
+      background: images.roomDoor,
       content: {
         type: "text",
-        text: "В комнате снова становится тихо.\n\nА затем в дальней стене что-то приходит в движение.",
+        text: "Камни медленно расходятся, открывая узкий проход.",
       },
       audio: audio.room,
       nextScene: "chapter1-sound-3",
@@ -515,18 +482,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-sound-3",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Камни медленно расходятся, открывая узкий проход.",
-      },
-      audio: audio.room,
-      nextScene: "chapter1-sound-4",
-    },
-
-    {
-      id: "chapter1-sound-4",
-      background: images.shadow,
+      background: images.roomDoorShadow,
       content: {
         type: "text",
         text: "В глубине прохода — небольшая тень.",
@@ -549,10 +505,18 @@ export const firstChapter: ChapterData = {
     // ============================================================
     // CHASE
     // ============================================================
+    //
+    // Mirrors "wait" in weight (10 scenes) rather than being the
+    // short, reward-less branch it used to be. Same emotional beat
+    // as wait — the player still ends up with the yarn — but earned
+    // differently: not a gift left on purpose, but a scrap torn off
+    // mid-flight, found only because the player pushed forward
+    // instead of holding still.
+    // ============================================================
 
     {
       id: "chapter1-chase",
-      background: images.withoutShadow,
+      background: images.roomDoor,
       content: {
         type: "text",
         text: "Ты бросаешься к проходу.\n\nНо тень уже исчезла.",
@@ -563,7 +527,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-chase-2",
-      background: images.corridor,
+      background: images.corridorTraces,
       content: {
         type: "text",
         text: "Ты видишь следы, уходящие вглубь тёмного коридора.",
@@ -577,7 +541,7 @@ export const firstChapter: ChapterData = {
       background: images.corridor,
       content: {
         type: "text",
-        text: "Ты идёшь дальше по следам.\n\nКоридор кажется бесконечным.",
+        text: "Ты бежишь напролом, ничего не видя перед собой.\n\nПлечом задеваешь стену — острый камень царапает кожу.",
       },
       audio: audio.room,
       nextScene: "chapter1-chase-4",
@@ -585,7 +549,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-chase-4",
-      background: images.corridor,
+      background: images.corridorTracesFinal,
       content: {
         type: "text",
         text: "Следы продолжаются всё глубже.\n\nНо тени впереди больше нет.",
@@ -596,10 +560,10 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-chase-5",
-      background: images.corridor,
+      background: images.yarnWall,
       content: {
         type: "text",
-        text: "И вдруг стены вокруг начинают дрожать.\n\nБудто сам мир больше не может оставаться прежним.",
+        text: "Ты останавливаешься, чтобы отдышаться.\n\nИ тут замечаешь что-то на выступе стены рядом.",
       },
       audio: audio.room,
       nextScene: "chapter1-chase-6",
@@ -607,13 +571,24 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-chase-6",
-      background: images.corridor,
+      background: images.yarnWall,
       content: {
         type: "text",
-        text: "Свет вспыхивает прямо перед глазами.",
+        text: "Клочок пряжи тёплого рыжеватого цвета зацепился за острый край камня.\n\nТот, кто бежал здесь, задел его второпях.",
       },
       audio: audio.room,
-      nextScene: "chapter2-transition",
+      nextScene: "chapter1-chase-7",
+    },
+
+    {
+      id: "chapter1-chase-7",
+      background: images.yarnWall,
+      content: {
+        type: "text",
+        text: "Ты снимаешь нитку с камня и продолжаешь путь.",
+      },
+      audio: audio.room,
+      nextScene: "chapter1-ending",
     },
 
     // ============================================================
@@ -622,7 +597,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-wait",
-      background: images.shadow,
+      background: images.roomDoorShadow,
       content: {
         type: "text",
         text: "Ты не двигаешься.\n\nПроходит секунда. Другая.",
@@ -633,7 +608,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-wait-2",
-      background: images.shadow,
+      background: images.roomDoorShadow,
       content: {
         type: "text",
         text: "Тень в проходе тоже не двигается.\n\nА потом делает шаг вперёд.",
@@ -644,7 +619,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-wait-3",
-      background: images.shadow,
+      background: images.roomDoorShadow,
       content: {
         type: "text",
         text: "Теперь ты видишь её чуть лучше.\n\nНебольшой силуэт смотрит на тебя несколько секунд.",
@@ -655,10 +630,10 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-wait-4",
-      background: images.shadow,
+      background: images.roomDoorShadow,
       content: {
         type: "text",
-        text: "Потом тень опускается к земле и что-то оставляет на полу.",
+        text: "Потом тень наклоняется и оставляет что-то на полу.",
       },
       audio: audio.room,
       nextScene: "chapter1-wait-5",
@@ -666,7 +641,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-wait-5",
-      background: images.withoutShadow,
+      background: images.roomDoor,
       content: {
         type: "text",
         text: "И прежде чем ты успеваешь сделать шаг, она исчезает в проходе.",
@@ -688,7 +663,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-wait-7",
-      background: images.corridor,
+      background: images.yarnWall,
       content: {
         type: "text",
         text: "Ты поднимаешь пряжу и идёшь дальше по коридору.",
@@ -699,28 +674,32 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-wait-8",
-      background: images.corridor,
+      background: images.corridorTracesFinal,
       content: {
         type: "text",
         text: "Впереди снова видны небольшие следы.",
       },
       audio: audio.room,
-      nextScene: "chapter1-wait-9",
+      nextScene: "chapter1-ending",
     },
 
+    // ============================================================
+    // THE ENDING
+    // ============================================================
+
     {
-      id: "chapter1-wait-9",
+      id: "chapter1-ending",
       background: images.corridor,
       content: {
         type: "text",
-        text: "И вдруг стены вокруг начинают дрожать.",
+        text: "И вдруг стены вокруг начинают дрожать.\n\nБудто сам мир больше не может оставаться прежним.",
       },
       audio: audio.room,
-      nextScene: "chapter1-wait-10",
+      nextScene: "chapter1-ending-2",
     },
 
     {
-      id: "chapter1-wait-10",
+      id: "chapter1-ending-2",
       background: images.corridor,
       content: {
         type: "text",

@@ -4,9 +4,10 @@ import type { SceneAction } from "@/types/game";
 
 interface SceneActionsProps {
   actions: SceneAction[];
+  disabled?: boolean;
 }
 
-export function SceneActions({ actions }: SceneActionsProps) {
+export function SceneActions({ actions, disabled }: SceneActionsProps) {
   const setScene = useGameStore((state) => state.setScene);
 
   return (
@@ -15,7 +16,10 @@ export function SceneActions({ actions }: SceneActionsProps) {
         <ActionButton
           key={action.id}
           text={action.label}
+          disabled={disabled}
           onClick={() => {
+            if (disabled) return;
+
             if (action.nextScene) {
               setScene(action.nextScene);
             }

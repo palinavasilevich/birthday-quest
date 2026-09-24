@@ -4,12 +4,13 @@ import type { SceneContent as SceneContentType } from "@/types/game";
 
 interface SceneContentProps {
   content: SceneContentType;
+  onTypingComplete?: () => void;
 }
 
-export function SceneContent({ content }: SceneContentProps) {
+export function SceneContent({ content, onTypingComplete }: SceneContentProps) {
   switch (content.type) {
     case "text":
-      return <TextTyper text={content.text} />;
+      return <TextTyper text={content.text} onComplete={onTypingComplete} />;
 
     case "image":
       return (

@@ -8,12 +8,13 @@ interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export function ActionButton({
   text,
   code = "BDA249",
+  disabled,
   ...props
 }: ActionButtonProps) {
   return (
     <button
       {...props}
-      className="
+      className={`
         group
         relative
         z-3
@@ -36,7 +37,8 @@ export function ActionButton({
         focus-visible:outline-offset-4
         disabled:cursor-not-allowed
         disabled:opacity-40
-      "
+        ${disabled && "cursor-not-allowed opacity-40"}
+      `}
     >
       <span
         className="
