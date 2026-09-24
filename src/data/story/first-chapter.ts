@@ -704,9 +704,11 @@ export const firstChapter: ChapterData = {
       background: images.corridor,
       content: {
         type: "text",
-        text: "И вдруг стены вокруг начинают дрожать.\n\nБудто сам мир больше не может оставаться прежним.",
+        text: "И вдруг свет в коридоре гаснет.\n\nСтены начинают дрожать.",
       },
-      audio: audio.room,
+      audio: audio.destruction,
+      specialEffects: ["shake"],
+      autoTransitionToNexScene: true,
       nextScene: "chapter1-ending-2",
     },
 
@@ -715,9 +717,11 @@ export const firstChapter: ChapterData = {
       background: images.corridor,
       content: {
         type: "text",
-        text: "Свет вспыхивает прямо перед глазами.",
+        text: "Земля уходит из-под ног.\n\nБудто сам мир начинает разваливаться на части...",
       },
-      audio: audio.room,
+      audio: audio.destruction,
+      specialEffects: ["shake"],
+      autoTransitionToNexScene: true,
       nextScene: "chapter2-transition",
     },
   ],

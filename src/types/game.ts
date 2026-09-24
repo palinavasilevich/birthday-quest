@@ -9,9 +9,11 @@ export type SceneContent =
       alt: string;
     };
 
+type PuzzleTypeData = "runes" | "cyberpunk" | "final";
+
 export type PuzzleData = {
   id: string;
-  type: "runes" | "cyberpunk" | "final";
+  type: PuzzleTypeData;
   nextScene: string;
   mode?: "discovery" | "puzzle";
 };
@@ -23,6 +25,8 @@ export interface SceneAction {
   puzzle?: PuzzleData;
 }
 
+export type SpecialEffect = "fade" | "shake" | "flash";
+
 export interface SceneData {
   id: string;
   background?: string;
@@ -31,6 +35,8 @@ export interface SceneData {
   nextScene?: string;
   puzzle?: PuzzleData;
   actions?: SceneAction[];
+  specialEffects?: SpecialEffect[];
+  autoTransitionToNexScene?: boolean;
 }
 
 export interface ChapterData {
