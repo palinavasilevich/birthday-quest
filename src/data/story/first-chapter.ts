@@ -62,10 +62,10 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-footprints-2",
-      background: images.track,
+      background: images.forestTraces,
       content: {
         type: "text",
-        text: "Это след.\n\nНебольшой, глубокий, с пятью пальцами.\n\nОпределённо не человеческий.",
+        text: "Это следы.\n\nНебольшие, глубокие, с пятью пальцами.\n\nОпределённо не человеческие.",
       },
       audio: audio.forest,
       nextScene: "chapter1-footprints-3",
@@ -73,7 +73,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-footprints-3",
-      background: images.track,
+      background: images.forestTraces,
       content: {
         type: "text",
         text: "Ты поднимаешь взгляд.\n\nВ нескольких метрах впереди — ещё один.\n\nИ ещё один, чуть дальше.\n\nКто-то прошёл здесь совсем недавно.\n\n🐾",
@@ -136,7 +136,7 @@ export const firstChapter: ChapterData = {
       background: images.wallWithTraces,
       content: {
         type: "text",
-        text: "А у подножия стены, в сырой земле, — теже самые следы.\n\nЗдесь они обрывается. Прямо у камня.",
+        text: "А у подножия стены ты видишь теже следы.\n\nЗдесь они обрывается.",
       },
       audio: audio.forest,
       actions: [
@@ -538,7 +538,7 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-chase-3",
-      background: images.corridor,
+      background: images.corridorTracesFinal,
       content: {
         type: "text",
         text: "Ты бежишь напролом, ничего не видя перед собой.\n\nПлечом задеваешь стену — острый камень царапает кожу.",
@@ -577,7 +577,13 @@ export const firstChapter: ChapterData = {
         text: "Клочок пряжи тёплого рыжеватого цвета зацепился за острый край камня.\n\nТот, кто бежал здесь, задел его второпях.",
       },
       audio: audio.room,
-      nextScene: "chapter1-chase-7",
+      actions: [
+        {
+          id: "take-thread-torn",
+          label: "Take the thread",
+          nextScene: "chapter1-chase-7",
+        },
+      ],
     },
 
     {
@@ -663,13 +669,19 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-wait-7",
-      background: images.yarnWall,
+      background: images.yarn,
       content: {
         type: "text",
         text: "Ты поднимаешь пряжу и идёшь дальше по коридору.",
       },
       audio: audio.room,
-      nextScene: "chapter1-wait-8",
+      actions: [
+        {
+          id: "take-thread-torn",
+          label: "Take the thread",
+          nextScene: "chapter1-wait-8",
+        },
+      ],
     },
 
     {

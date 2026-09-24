@@ -1,6 +1,6 @@
 export const images = {
   forest: "/images/chapter1/forest.png",
-  track: "/images/chapter1/track.png",
+  forestTraces: "/images/chapter1/forest-traces.png",
   wall: "/images/chapter1/wall.png",
   wallWithSymbols: "/images/chapter1/wall-with-symbols.png",
   wallWithTraces: "/images/chapter1/wall-with-traces.png",
