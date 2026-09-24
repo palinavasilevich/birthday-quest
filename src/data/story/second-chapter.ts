@@ -7,41 +7,7 @@ export const secondChapter: ChapterData = {
 
   scenes: [
     // ─────────────────────────────
-    // SCENE 01 — TRANSITION
-    // ─────────────────────────────
-
-    {
-      id: "chapter2-transition",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Ты идёшь по следам.\n\nОни уводят всё дальше от тропы — а потом внезапно обрываются.",
-      },
-      nextScene: "chapter2-transition-2",
-    },
-
-    {
-      id: "chapter2-transition-2",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Ты оглядываешься.\n\nЛес вокруг кажется совершенно неподвижным.",
-      },
-      nextScene: "chapter2-transition-3",
-    },
-
-    {
-      id: "chapter2-transition-3",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "И вдруг мир перед тобой начинает дрожать.\n\nСвет вспыхивает прямо перед глазами.",
-      },
-      nextScene: "chapter2-night-city",
-    },
-
-    // ─────────────────────────────
-    // SCENE 02 — NIGHT CITY
+    // SCENE 01 — NIGHT CITY
     // ─────────────────────────────
 
     {
@@ -89,7 +55,7 @@ export const secondChapter: ChapterData = {
       background: images.cyberpunk,
       content: {
         type: "text",
-        text: "Ты пытаешься понять, куда исчез след.\n\nНо среди тысяч людей, машин и огней его уже не найти.",
+        text: "Ты пытаешься понять, куда привёл тебя след.\n\nНо среди тысяч людей, машин и огней его уже не найти.",
       },
       nextScene: "chapter2-night-city-6",
     },
@@ -120,7 +86,7 @@ export const secondChapter: ChapterData = {
       background: images.cyberpunk,
       content: {
         type: "text",
-        text: "Дождь, реклама, чужие лица.\n\nИ ни одного следа на мокром асфальте — кроме твоих собственных.",
+        text: "Дождь, реклама, чужие лица.\n\nИ ни одного следа на мокром асфальте кроме твоих собственных.",
       },
       actions: [
         {
@@ -160,7 +126,7 @@ export const secondChapter: ChapterData = {
       background: images.cyberpunk,
       content: {
         type: "text",
-        text: "Под панелью — старый терминал.\n\nЭкран всё ещё работает.",
+        text: "Под панелью ты видишь старый терминал.\n\nЭкран всё ещё работает.",
       },
       actions: [
         {
@@ -244,7 +210,7 @@ export const secondChapter: ChapterData = {
       background: images.cyberpunk,
       content: {
         type: "text",
-        text: "Затем включается свет.\n\nПеред тобой открывается небольшая мастерская.",
+        text: "Затем включается свет.\n\nПеред тобой открывается дверь в небольшую мастерскую.",
       },
       nextScene: "chapter2-workshop-3",
     },
@@ -385,7 +351,7 @@ export const secondChapter: ChapterData = {
       background: images.cyberpunk,
       content: {
         type: "text",
-        text: "Тот же почерк, что и на чертежах.",
+        text: "Почерк тот же.",
       },
       nextScene: "chapter2-table-7",
     },
@@ -453,32 +419,32 @@ export const secondChapter: ChapterData = {
       nextScene: "chapter2-open-4",
     },
 
-    {
-      id: "chapter2-open-4",
-      background: images.cyberpunk,
-      content: {
-        type: "text",
-        text: "РЕЛИКВИЯ II — ПОЛУЧЕНА\n\nMI-01 — CYBERPUNK BEETLE",
-      },
-      nextScene: "chapter2-open-5",
-    },
+    // {
+    //   id: "chapter2-open-4",
+    //   background: images.cyberpunk,
+    //   content: {
+    //     type: "text",
+    //     text: "РЕЛИКВИЯ II — ПОЛУЧЕНА\n\nMI-01 — CYBERPUNK BEETLE",
+    //   },
+    //   nextScene: "chapter2-open-5",
+    // },
 
-    {
-      id: "chapter2-open-5",
-      background: images.cyberpunk,
-      content: {
-        type: "text",
-        text: "Тип: Механизм. В разобранном виде.\n\nРедкость: ★★★★★",
-      },
-      nextScene: "chapter2-open-6",
-    },
+    // {
+    //   id: "chapter2-open-5",
+    //   background: images.cyberpunk,
+    //   content: {
+    //     type: "text",
+    //     text: "Тип: Механизм. В разобранном виде.\n\nРедкость: ★★★★★",
+    //   },
+    //   nextScene: "chapter2-open-6",
+    // },
 
     {
       id: "chapter2-open-6",
       background: images.cyberpunk,
       content: {
         type: "text",
-        text: "А рядом с коробкой, в пыли на столе, — маленький след.\n\nПять пальцев.",
+        text: "Ты уже собираешься закрыть коробку.\n\n Но рядом, в пыли на столе, замечаешь маленький след.",
       },
       actions: [
         {

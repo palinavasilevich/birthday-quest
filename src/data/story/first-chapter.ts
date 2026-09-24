@@ -722,7 +722,21 @@ export const firstChapter: ChapterData = {
       audio: audio.destruction,
       specialEffects: ["shake"],
       autoTransitionToNexScene: true,
-      nextScene: "chapter2-transition",
+      nextScene: "chapter1-ending-3",
+    },
+
+    {
+      id: "chapter1-ending-3",
+      background: images.corridor,
+      content: {
+        type: "text",
+        text: "Внезапная вспышка яркого света ослепляет тебя.",
+      },
+      audio: audio.destruction,
+      specialEffects: ["flash"],
+      effectDelay: 1000,
+      autoTransitionToNexScene: true,
+      nextScene: "chapter2-night-city",
     },
   ],
 };

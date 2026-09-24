@@ -20,8 +20,9 @@ export function SceneEffects({
   onComplete,
 }: SceneEffectsProps) {
   const hasShake = effects.includes("shake");
-  const controls = useAnimationControls();
+  const hasFlash = effects.includes("flash");
 
+  const controls = useAnimationControls();
   const onCompleteRef = useRef(onComplete);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export function SceneEffects({
   }, [onComplete]);
 
   useEffect(() => {
-    if (!active || !hasShake) {
+    if (!active) {
       controls.set({
         x: 0,
         y: 0,
@@ -40,20 +41,21 @@ export function SceneEffects({
       return;
     }
 
-    // Бесконечный shake
-    controls.start(
-      {
-        x: [0, -3, 4, -5, 6, -5, 4, -3, 0],
-        y: [0, 2, -3, 4, -4, 3, -2, 1, 0],
-        rotate: [0, -0.1, 0.15, -0.2, 0.2, -0.15, 0.1, 0],
-        scale: [1, 1.002, 1.004, 1.006, 1.008, 1.005, 1.002, 1],
-      },
-      {
-        duration: 1,
-        ease: "easeInOut",
-        repeat: Infinity,
-      },
-    );
+    if (hasShake) {
+      controls.start(
+        {
+          x: [0, -3, 4, -5, 6, -5, 4, -3, 0],
+          y: [0, 2, -3, 4, -4, 3, -2, 1, 0],
+          rotate: [0, -0.1, 0.15, -0.2, 0.2, -0.15, 0.1, 0],
+          scale: [1, 1.002, 1.004, 1.006, 1.008, 1.005, 1.002, 1],
+        },
+        {
+          duration: 1,
+          ease: "easeInOut",
+          repeat: Infinity,
+        },
+      );
+    }
 
     const timer = window.setTimeout(() => {
       onCompleteRef.current?.();
@@ -68,6 +70,20 @@ export function SceneEffects({
   return (
     <motion.div className="relative h-full w-full" animate={controls}>
       {children}
+
+      {active && hasFlash && (
+        <motion.div
+          className="pointer-events-none fixed inset-0 z-[100] bg-white"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: [0, 1, 0],
+          }}
+          transition={{
+            duration: 0.5,
+            ease: "easeOut",
+          }}
+        />
+      )}
     </motion.div>
   );
 }

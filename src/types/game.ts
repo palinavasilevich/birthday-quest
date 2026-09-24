@@ -36,6 +36,7 @@ export interface SceneData {
   puzzle?: PuzzleData;
   actions?: SceneAction[];
   specialEffects?: SpecialEffect[];
+  effectDelay?: number;
   autoTransitionToNexScene?: boolean;
 }
 
