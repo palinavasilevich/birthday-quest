@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useGameStore } from "@/store/game-store";
 
@@ -19,15 +19,18 @@ export function Scene({ scene }: SceneProps) {
   const setScene = useGameStore((state) => state.setScene);
 
   const [completedSceneId, setCompletedSceneId] = useState<string | null>(null);
+
   const hasEffects = (scene.specialEffects?.length ?? 0) > 0;
-  const typingComplete = completedSceneId === scene.id;
+  const isTypingComplete = completedSceneId === scene.id;
+  const isTerminal = scene.content.type === "terminal";
+  const showBackgroundOnly = scene.showBackgroundOnly === true;
 
   const handleTypingComplete = () => {
     setCompletedSceneId(scene.id);
   };
 
   const handleContinue = () => {
-    if (!typingComplete) {
+    if (!isTypingComplete) {
       return;
     }
 
@@ -35,6 +38,30 @@ export function Scene({ scene }: SceneProps) {
       setScene(scene.nextScene);
     }
   };
+
+  useEffect(() => {
+    if (!scene.autoTransitionToNextScene) {
+      return;
+    }
+
+    if (!scene.nextScene) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setScene(scene.nextScene!);
+    }, scene.autoTransitionDelay ?? 3000);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [
+    scene.id,
+    scene.autoTransitionToNextScene,
+    scene.autoTransitionDelay,
+    scene.nextScene,
+    setScene,
+  ]);
 
   return (
     <SceneEffects
@@ -52,19 +79,30 @@ export function Scene({ scene }: SceneProps) {
         sceneKey={scene.id}
         isPuzzle={Boolean(scene.puzzle)}
         music={scene.audio}
+        showBackgroundOnly={scene.showBackgroundOnly}
       >
-        <SceneContent
-          content={scene.content}
-          onTypingComplete={handleTypingComplete}
-        />
+        {!showBackgroundOnly && (
+          <SceneContent
+            sceneId={scene.id}
+            content={scene.content}
+            onTypingComplete={handleTypingComplete}
+            onAction={() => {
+              if (scene.nextScene) {
+                setScene(scene.nextScene);
+              }
+            }}
+          />
+        )}
 
-        {typingComplete && (
+        {!showBackgroundOnly && (isTypingComplete || isTerminal) && (
           <>
             {scene.puzzle ? (
               <Puzzle puzzle={scene.puzzle} />
             ) : scene.actions?.length ? (
               <SceneActions actions={scene.actions} />
-            ) : scene.nextScene && !scene.autoTransitionToNexScene ? (
+            ) : scene.nextScene &&
+              !scene.autoTransitionToNextScene &&
+              !isTerminal ? (
               <div className="mt-10 flex justify-center">
                 <ActionButton text="Continue" onClick={handleContinue} />
               </div>

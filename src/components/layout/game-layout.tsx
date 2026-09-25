@@ -14,6 +14,7 @@ interface GameLayoutProps {
   isPuzzle?: boolean;
   classNameContentBlock?: string;
   music?: string;
+  showBackgroundOnly?: boolean;
 }
 
 export function GameLayout({
@@ -23,22 +24,23 @@ export function GameLayout({
   isPuzzle = false,
   classNameContentBlock = "",
   music,
+  showBackgroundOnly = false,
 }: GameLayoutProps) {
   return (
     <div
-      className={`
+      className="
         relative
         flex
         h-dvh
         min-h-0
         w-full
+        items-center
+        justify-center
         overflow-hidden
         bg-black
         font-story
         text-gray-100
-        items-center
-        justify-center
-      `}
+      "
     >
       {music && <AmbientMusic src={music} />}
 
@@ -62,8 +64,7 @@ export function GameLayout({
           w-full
           px-4
           text-shadow-lg
-          max-w-2xl py-8
-          // ${isPuzzle ? "max-w-250 py-2" : "max-w-2xl py-8"}
+          ${showBackgroundOnly ? "" : "max-w-180 py-2"}
           ${classNameContentBlock}
         `}
       >
@@ -71,17 +72,19 @@ export function GameLayout({
           <motion.div
             key={sceneKey}
             initial={{ opacity: 0 }}
-            animate={{ opacity: isPuzzle ? 1 : 0.85 }}
+            animate={{
+              opacity: showBackgroundOnly ? 1 : isPuzzle ? 1 : 0.85,
+            }}
             exit={{ opacity: 0 }}
             transition={{
-              // duration: isPuzzle ? 0.35 : 0.8,
               duration: 0.8,
             }}
             className={
-              !isPuzzle
-                ? "flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-12 shadow-2xl backdrop-blur-md"
-                : ""
-              // : "w-full m-auto"
+              showBackgroundOnly
+                ? "w-full"
+                : !isPuzzle
+                  ? "flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-10 shadow-2xl backdrop-blur-md"
+                  : ""
             }
           >
             {children}

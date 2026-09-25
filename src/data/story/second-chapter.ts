@@ -1,5 +1,6 @@
 import type { ChapterData } from "@/types/game";
-import { images } from "@/data/images/chapter1";
+import { images } from "@/data/images/chapter2";
+import { audio } from "@/data/audio/chapter2";
 
 export const secondChapter: ChapterData = {
   id: "chapter2",
@@ -12,70 +13,80 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city",
-      background: images.cyberpunk,
+      background: images.city,
       content: {
         type: "text",
         text: "Ты открываешь глаза.\n\nПеред тобой — город.",
       },
+      audio: audio.cyberpunk,
       nextScene: "chapter2-night-city-2",
     },
 
     {
       id: "chapter2-night-city-2",
-      background: images.cyberpunk,
+      background: images.city,
       content: {
         type: "text",
         text: "Неон отражается в мокром асфальте.\n\nВысотные здания уходят куда-то вверх.",
       },
+      audio: audio.cyberpunk,
       nextScene: "chapter2-night-city-3",
     },
 
     {
       id: "chapter2-night-city-3",
-      background: images.cyberpunk,
+      background: images.city,
       content: {
         type: "text",
         text: "Рекламные вывески мигают сквозь дождь.\n\nГде-то далеко гудят двигатели.",
       },
+      audio: audio.cyberpunk,
       nextScene: "chapter2-night-city-4",
     },
 
     {
       id: "chapter2-night-city-4",
-      background: images.cyberpunk,
+      background: images.nightCity,
       content: {
         type: "text",
-        text: "NIGHT CITY",
+        text: "",
       },
+      audio: audio.cyberpunk,
+
+      showBackgroundOnly: true,
+      autoTransitionToNextScene: true,
+      autoTransitionDelay: 3000,
       nextScene: "chapter2-night-city-5",
     },
 
     {
       id: "chapter2-night-city-5",
-      background: images.cyberpunk,
+      background: images.nightCity,
       content: {
         type: "text",
         text: "Ты пытаешься понять, куда привёл тебя след.\n\nНо среди тысяч людей, машин и огней его уже не найти.",
       },
+      audio: audio.cyberpunk,
       nextScene: "chapter2-night-city-6",
     },
 
     {
       id: "chapter2-night-city-6",
-      background: images.cyberpunk,
+      background: images.greenLightStreet,
       content: {
         type: "text",
         text: "И тут ты замечаешь странный зелёный свет.\n\nОн мерцает в глубине переулка.",
       },
+      audio: audio.cyberpunk,
       actions: [
         {
           id: "approach-light",
-          label: "Подойти к свету",
+          label: "Approach the light",
           nextScene: "chapter2-night-city-8",
         },
         {
           id: "look-around",
-          label: "Сначала осмотреться",
+          label: "Look around first",
           nextScene: "chapter2-night-city-7",
         },
       ],
@@ -83,15 +94,16 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city-7",
-      background: images.cyberpunk,
+      background: images.street,
       content: {
         type: "text",
         text: "Дождь, реклама, чужие лица.\n\nИ ни одного следа на мокром асфальте кроме твоих собственных.",
       },
+      audio: audio.cyberpunk,
       actions: [
         {
           id: "approach-light-after",
-          label: "Подойти к свету",
+          label: "Approach the light",
           nextScene: "chapter2-night-city-8",
         },
       ],
@@ -99,93 +111,269 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city-8",
-      background: images.cyberpunk,
+      background: images.signboard,
       content: {
         type: "text",
         text: "Ты подходишь ближе.\n\nСвет идёт от небольшой панели в стене.",
       },
+      audio: audio.cyberpunk,
       nextScene: "chapter2-night-city-9",
     },
 
     {
       id: "chapter2-night-city-9",
-      background: images.cyberpunk,
+      background: images.signboard,
       content: {
         type: "text",
-        text: "На ней едва различима надпись:\n\nPRIVATE WORKSHOP",
+        text: "На ней ты видишь надпись:\n\nPRIVATE WORKSHOP",
       },
-      nextScene: "chapter2-terminal",
+      audio: audio.cyberpunk,
+
+      actions: [
+        {
+          id: "touch-screen",
+          label: "Inspect the panel",
+          nextScene: "chapter2-terminal",
+        },
+      ],
     },
 
     // ─────────────────────────────
     // SCENE 03 — TERMINAL
     // ─────────────────────────────
 
+    // {
+    //   id: "chapter2-terminal",
+    //   background: images.terminal,
+    //   content: {
+    //     type: "text",
+    //     text: "Под панелью ты видишь старый терминал.\n\nЭкран всё ещё работает.",
+    //   },
+    //   actions: [
+    //     {
+    //       id: "touch-screen",
+    //       label: "Touch screen",
+    //       nextScene: "chapter2-terminal-2",
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: "chapter2-terminal-2",
+    //   background: images.terminal,
+    //   content: {
+    //     type: "text",
+    //     text: "Экран вспыхивает зелёным светом.\n\nНесколько секунд — только помехи.\n\nЗатем появляется сообщение:\n\n«PRIVATE WORKSHOP // ACCESS DENIED».",
+    //   },
+    //   actions: [
+    //     {
+    //       id: "inspect-terminal",
+    //       label: "Inspect terminal",
+    //       nextScene: "chapter2-terminal-3",
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: "chapter2-terminal-3",
+    //   background: images.terminal,
+    //   content: {
+    //     type: "text",
+    //     text: "Ниже появляется ещё одна строка: «RECOVERY PROTOCOL AVAILABLE».\n\nПохоже, система повреждена.\n\nЕсли удастся восстановить её, возможно, откроется вход в мастерскую.",
+    //   },
+    //   actions: [
+    //     {
+    //       id: "start-recovery",
+    //       label: "Start recovery",
+    //       nextScene: "chapter2-system-repair-1",
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: "chapter2-system-repair-1",
+    //   background: images.terminal,
+    //   content: {
+    //     type: "text",
+    //     text: "Экран меняется.\n\nВместо привычного интерфейса появляются строки кода.",
+    //   },
+    //   nextScene: "chapter2-system-repair-2",
+    // },
+
     {
       id: "chapter2-terminal",
-      background: images.cyberpunk,
       content: {
-        type: "text",
-        text: "Под панелью ты видишь старый терминал.\n\nЭкран всё ещё работает.",
+        type: "terminal",
+
+        title: "LOCAL TERMINAL",
+        status: "ONLINE",
+        date: "21/11/2026",
+
+        lines: [
+          {
+            text: "> SYSTEM BOOT...",
+            type: "system",
+          },
+          {
+            text: "> MEMORY CHECK ............ OK",
+            type: "success",
+          },
+          {
+            text: "> DISPLAY .................. OK",
+            type: "success",
+          },
+          {
+            text: "> NETWORK ................. OFFLINE",
+            type: "warning",
+          },
+          {
+            text: "> SECURITY ................ ACTIVE",
+            type: "success",
+          },
+          {
+            text: "",
+          },
+          {
+            text: "> UNKNOWN USER DETECTED",
+            type: "warning",
+          },
+          {
+            text: "> ACCESS DENIED",
+            type: "error",
+          },
+          {
+            text: "> RECOVERY PROTOCOL AVAILABLE",
+            type: "system",
+          },
+        ],
+
+        actionLabel: "TOUCH SCREEN",
       },
-      actions: [
-        {
-          id: "touch-screen",
-          label: "Коснуться экрана",
-          nextScene: "chapter2-terminal-2",
-        },
-      ],
-    },
-    {
-      id: "chapter2-terminal-2",
-      background: images.cyberpunk,
-      content: {
-        type: "text",
-        text: "Экран вспыхивает зелёным светом.\n\nНесколько секунд — только помехи.\n\nЗатем появляется сообщение: «PRIVATE WORKSHOP // ACCESS DENIED».",
-      },
-      actions: [
-        {
-          id: "inspect-terminal",
-          label: "Осмотреть терминал",
-          nextScene: "chapter2-terminal-3",
-        },
-      ],
-    },
-    {
-      id: "chapter2-terminal-3",
-      background: images.cyberpunk,
-      content: {
-        type: "text",
-        text: "Ниже появляется ещё одна строка: «RECOVERY PROTOCOL AVAILABLE».\n\nПохоже, система повреждена.\n\nЕсли удастся восстановить её, возможно, откроется вход в мастерскую.",
-      },
-      actions: [
-        {
-          id: "start-recovery",
-          label: "Запустить восстановление",
-          nextScene: "chapter2-system-repair-1",
-        },
-      ],
-    },
-    {
-      id: "chapter2-system-repair-1",
-      background: images.cyberpunk,
-      content: {
-        type: "text",
-        text: "Экран меняется.\n\nВместо привычного интерфейса появляются строки кода.",
-      },
-      nextScene: "chapter2-system-repair-2",
+
+      nextScene: "chapter2-terminal-2",
     },
 
     {
-      id: "chapter2-system-repair-2",
-      background: images.cyberpunk,
+      id: "chapter2-terminal-2",
+      content: {
+        type: "terminal",
+
+        title: "PRIVATE WORKSHOP",
+        status: "ACCESS DENIED",
+        date: "21/11/2026",
+
+        lines: [
+          {
+            text: "> PRIVATE WORKSHOP",
+            type: "system",
+          },
+          {
+            text: "> ACCESS DENIED",
+            type: "error",
+          },
+          {
+            text: "> SYSTEM STATUS: CRITICAL",
+            type: "warning",
+          },
+          {
+            text: "> CORE MODULES: 03",
+          },
+          {
+            text: "> MEMORY ................. FAILED",
+            type: "error",
+          },
+          {
+            text: "> LOGIC .................. FAILED",
+            type: "error",
+          },
+          {
+            text: "> OUTPUT ................. FAILED",
+            type: "error",
+          },
+          {
+            text: "",
+          },
+          {
+            text: "> RECOVERY PROTOCOL AVAILABLE",
+            type: "system",
+          },
+        ],
+
+        actionLabel: "START RECOVERY",
+      },
+
+      audio: audio.cyberpunk,
+
+      nextScene: "chapter2-code-puzzle",
+    },
+
+    // {
+    //   id: "chapter2-terminal-3",
+    //   content: {
+    //     type: "terminal",
+
+    //     title: "WORKSHOP CONTROL SYSTEM",
+    //     status: "RECOVERY MODE",
+    //     date: "21/11/2026",
+
+    //     lines: [
+    //       {
+    //         text: "> WORKSHOP CONTROL SYSTEM",
+    //         type: "system",
+    //       },
+    //       {
+    //         text: "> RECOVERY MODE INITIALIZED",
+    //         type: "system",
+    //       },
+    //       {
+    //         text: "",
+    //       },
+    //       {
+    //         text: "> MEMORY MODULE .......... OFFLINE",
+    //         type: "error",
+    //       },
+    //       {
+    //         text: "> LOGIC MODULE ........... OFFLINE",
+    //         type: "error",
+    //       },
+    //       {
+    //         text: "> OUTPUT MODULE .......... OFFLINE",
+    //         type: "error",
+    //       },
+    //       {
+    //         text: "",
+    //       },
+    //       {
+    //         text: "> MANUAL RECOVERY REQUIRED",
+    //         type: "warning",
+    //       },
+    //       {
+    //         text: "",
+    //       },
+    //       {
+    //         text: "> THREE MODULES REQUIRED",
+    //         type: "system",
+    //       },
+    //       {
+    //         text: "> AWAITING INPUT...",
+    //         type: "system",
+    //       },
+    //     ],
+
+    //     actionLabel: "BEGIN RECOVERY",
+    //   },
+
+    //   nextScene: "chapter2-code-puzzle",
+    // },
+
+    {
+      id: "chapter2-code-puzzle",
+      background: images.terminal,
       content: {
         type: "text",
         text: "",
-        // text: "RECOVERY MODE",
       },
+
+      audio: audio.cyberpunk,
       puzzle: {
-        id: "workshop-system-repair",
+        id: "chapter2-system-repair",
         type: "cyberpunk",
         nextScene: "chapter2-workshop",
       },
@@ -202,6 +390,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Где-то за стеной раздаётся механический звук.\n\nЩёлк.\n\nПауза.\n\nЩёлк.",
       },
+      audio: audio.cyberpunk,
       nextScene: "chapter2-workshop-2",
     },
 

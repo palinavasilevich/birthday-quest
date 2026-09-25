@@ -1,3 +1,18 @@
+export interface TerminalLine {
+  text: string;
+  type?: "default" | "success" | "warning" | "error" | "system";
+  delay?: number;
+}
+
+export interface TerminalContent {
+  type: "terminal";
+  title?: string;
+  status?: string;
+  date?: string;
+  lines: TerminalLine[];
+  actionLabel?: string;
+}
+
 export type SceneContent =
   | {
       type: "text";
@@ -7,7 +22,8 @@ export type SceneContent =
       type: "image";
       src: string;
       alt: string;
-    };
+    }
+  | TerminalContent;
 
 type PuzzleTypeData = "runes" | "cyberpunk" | "final";
 
@@ -37,7 +53,9 @@ export interface SceneData {
   actions?: SceneAction[];
   specialEffects?: SpecialEffect[];
   effectDelay?: number;
-  autoTransitionToNexScene?: boolean;
+  autoTransitionToNextScene?: boolean;
+  showBackgroundOnly?: boolean;
+  autoTransitionDelay?: number;
 }
 
 export interface ChapterData {

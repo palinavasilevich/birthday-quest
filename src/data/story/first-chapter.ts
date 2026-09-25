@@ -708,7 +708,7 @@ export const firstChapter: ChapterData = {
       },
       audio: audio.destruction,
       specialEffects: ["shake"],
-      autoTransitionToNexScene: true,
+      autoTransitionToNextScene: true,
       nextScene: "chapter1-ending-2",
     },
 
@@ -721,7 +721,7 @@ export const firstChapter: ChapterData = {
       },
       audio: audio.destruction,
       specialEffects: ["shake"],
-      autoTransitionToNexScene: true,
+      autoTransitionToNextScene: true,
       nextScene: "chapter1-ending-3",
     },
 
@@ -735,7 +735,7 @@ export const firstChapter: ChapterData = {
       audio: audio.destruction,
       specialEffects: ["flash"],
       effectDelay: 1000,
-      autoTransitionToNexScene: true,
+      autoTransitionToNextScene: true,
       nextScene: "chapter2-night-city",
     },
   ],

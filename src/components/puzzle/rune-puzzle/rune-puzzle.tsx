@@ -53,7 +53,7 @@ declare global {
 
 const ROLLBACK = 2;
 
-const DISCOVERY_START_DELAY = 1200;
+const DISCOVERY_START_DELAY = 900;
 
 const RICKROLL_VIDEO_ID = "dQw4w9WgXcQ";
 const RICKROLL_DURATION = 10_000;
