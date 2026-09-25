@@ -55,7 +55,7 @@ export const secondChapter: ChapterData = {
 
       showBackgroundOnly: true,
       autoTransitionToNextScene: true,
-      autoTransitionDelay: 3000,
+      autoTransitionDelay: 2000,
       nextScene: "chapter2-night-city-5",
     },
 
@@ -64,7 +64,7 @@ export const secondChapter: ChapterData = {
       background: images.nightCity,
       content: {
         type: "text",
-        text: "Ты пытаешься понять, куда привёл тебя след.\n\nНо среди тысяч людей, машин и огней его уже не найти.",
+        text: "Ты пытаешься понять, где след, который привёл тебя сюда.\n\nНо среди тысяч людей, машин и огней его уже не найти.",
       },
       audio: audio.cyberpunk,
       nextScene: "chapter2-night-city-6",
@@ -125,7 +125,7 @@ export const secondChapter: ChapterData = {
       background: images.signboard,
       content: {
         type: "text",
-        text: "На ней ты видишь надпись:\n\nPRIVATE WORKSHOP",
+        text: "На ней ты видишь надпись:\n\nPRIVATE WORKSHOP.",
       },
       audio: audio.cyberpunk,
 
@@ -247,6 +247,8 @@ export const secondChapter: ChapterData = {
         actionLabel: "TOUCH SCREEN",
       },
 
+      audio: audio.cyberpunk,
+
       nextScene: "chapter2-terminal-2",
     },
 
@@ -365,7 +367,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-code-puzzle",
-      background: images.terminal,
+      // background: images.terminal,
       content: {
         type: "text",
         text: "",
