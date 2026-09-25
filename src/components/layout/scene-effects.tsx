@@ -73,7 +73,7 @@ export function SceneEffects({
 
       {active && hasFlash && (
         <motion.div
-          className="pointer-events-none fixed inset-0 z-[100] bg-white"
+          className="pointer-events-none fixed inset-0 z-100 bg-white"
           initial={{ opacity: 0 }}
           animate={{
             opacity: [0, 1, 0],

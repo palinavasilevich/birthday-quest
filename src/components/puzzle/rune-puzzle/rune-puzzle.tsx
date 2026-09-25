@@ -1,11 +1,18 @@
-"use client";
-
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useGameStore } from "@/store/game-store";
-import { useRunePlayback } from "@/hooks/puzzle/use-rune-playback";
 
-import { PUZZLE_ROUNDS, RUNES, type Rune } from "@/data/puzzle/rune-data";
+import {
+  playMelodyNote,
+  playRune,
+} from "@/hooks/puzzle/rune-puzzle/use-rune-piano";
+
+import {
+  LEVEL_MELODIES,
+  type MelodyNote,
+} from "@/data/puzzle/rune-puzzle/rune-melody";
+
+import { RUNES, type Rune } from "@/data/puzzle/rune-data";
 
 interface RunePuzzleProps {
   puzzleId: string;
@@ -52,6 +59,23 @@ const RICKROLL_VIDEO_ID = "dQw4w9WgXcQ";
 const RICKROLL_DURATION = 10_000;
 const AFTER_RICKROLL_DELAY = 1_800;
 
+/**
+ * Note -> Rune mapping
+ *
+ * G4  -> QUEN
+ * A#4 -> AXII
+ * A4  -> IGNI
+ * D4  -> AARD
+ * D#4 -> YRDEN
+ */
+const NOTE_TO_RUNE: Record<string, string> = {
+  G4: "quen",
+  "A#4": "axii",
+  A4: "igni",
+  D4: "aard",
+  "D#4": "yrden",
+};
+
 type PuzzlePhase = "discovery" | "round";
 
 export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
@@ -63,57 +87,85 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
   const [discoveredRunes, setDiscoveredRunes] = useState<string[]>([]);
 
   const [round, setRound] = useState(0);
+
   const [sequence, setSequence] = useState<string[]>([]);
 
   const [isSolved, setIsSolved] = useState(false);
 
   const [isMistake, setIsMistake] = useState(false);
+
   const [mistakeRune, setMistakeRune] = useState<string | null>(null);
 
   const [replayFrom, setReplayFrom] = useState(0);
 
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const [activeRune, setActiveRune] = useState<string | null>(null);
+
+  const [introFinished, setIntroFinished] = useState(false);
+
   const youtubePlayerRef = useRef<YouTubePlayer | null>(null);
+
   const youtubeContainerRef = useRef<HTMLDivElement | null>(null);
 
   const discoveryStartedRef = useRef(false);
 
-  const currentSequence = PUZZLE_ROUNDS[round];
-
-  const playbackSequence = useMemo(
-    () => currentSequence.slice(replayFrom),
-    [currentSequence, replayFrom],
-  );
-
-  const { isPlaying, activeRune, playRune, playNote, replay } = useRunePlayback(
-    {
-      runes: RUNES,
-      sequence: playbackSequence,
-      autoPlay: phase === "round",
-    },
-  );
+  const currentMelody: MelodyNote[] = LEVEL_MELODIES[round];
 
   /*
    * ------------------------------------------------------------
-   * YouTube / Rickroll
+   * INTRO
    * ------------------------------------------------------------
+   *
+   * При загрузке игры звучит первая нота G4.
+   * QUEN подсвечивается ДО начала звучания.
    */
 
-  const [introFinished, setIntroFinished] = useState(false);
-
   useEffect(() => {
-    const startTimer = window.setTimeout(() => {
-      playNote("quen", 1200);
-    }, 100);
+    let cancelled = false;
 
-    const finishTimer = window.setTimeout(() => {
-      setIntroFinished(true);
-    }, 3500);
+    const startIntro = async () => {
+      await new Promise<void>((resolve) => {
+        window.setTimeout(resolve, 100);
+      });
+
+      if (cancelled) {
+        return;
+      }
+
+      setIsPlaying(true);
+      setActiveRune("quen");
+
+      try {
+        await playMelodyNote("G4", 1.2);
+      } finally {
+        if (!cancelled) {
+          setActiveRune(null);
+          setIsPlaying(false);
+        }
+      }
+
+      if (!cancelled) {
+        window.setTimeout(() => {
+          if (!cancelled) {
+            setIntroFinished(true);
+          }
+        }, 1800);
+      }
+    };
+
+    void startIntro();
 
     return () => {
-      window.clearTimeout(startTimer);
-      window.clearTimeout(finishTimer);
+      cancelled = true;
     };
-  }, [playNote]);
+  }, []);
+
+  /*
+   * ------------------------------------------------------------
+   * YOUTUBE
+   * ------------------------------------------------------------
+   */
 
   useEffect(() => {
     let cancelled = false;
@@ -164,6 +216,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
         const script = document.createElement("script");
 
         script.src = "https://www.youtube.com/iframe_api";
+
         script.async = true;
 
         document.body.appendChild(script);
@@ -180,41 +233,38 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
   /*
    * ------------------------------------------------------------
-   * Discovery
+   * DISCOVERY
    * ------------------------------------------------------------
-   *
-   * Player can press every rune in any order.
-   * Each rune plays its own note.
    */
 
-  const handleDiscoveryRune = (rune: Rune) => {
+  const handleDiscoveryRune = async (rune: Rune) => {
     if (!introFinished || phase !== "discovery" || isPlaying || isSolved) {
       return;
     }
 
-    playRune(rune.id);
+    setIsPlaying(true);
+    setActiveRune(rune.id);
 
-    setDiscoveredRunes((current) => {
-      if (current.includes(rune.id)) {
-        return current;
-      }
+    try {
+      await playRune(rune.id);
 
-      return [...current, rune.id];
-    });
+      setDiscoveredRunes((current) => {
+        if (current.includes(rune.id)) {
+          return current;
+        }
+
+        return [...current, rune.id];
+      });
+    } finally {
+      setActiveRune(null);
+      setIsPlaying(false);
+    }
   };
 
   /*
    * ------------------------------------------------------------
-   * Start first puzzle round
+   * START FIRST ROUND
    * ------------------------------------------------------------
-   *
-   * After all five runes have been discovered:
-   *
-   * discovery
-   *    ↓
-   * short pause
-   *    ↓
-   * Round 1 playback
    */
 
   useEffect(() => {
@@ -242,46 +292,152 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
   /*
    * ------------------------------------------------------------
-   * Player interaction during puzzle
+   * PLAY CURRENT MELODY
    * ------------------------------------------------------------
    */
 
-  const handleRuneClick = (rune: Rune) => {
+  const playCurrentMelody = async (fromIndex = 0) => {
+    if (isPlaying || isSolved) {
+      return;
+    }
+
+    setIsPlaying(true);
+
+    try {
+      for (let index = fromIndex; index < currentMelody.length; index += 1) {
+        const item = currentMelody[index];
+
+        const runeId = NOTE_TO_RUNE[item.note];
+
+        if (!runeId) {
+          console.warn(`No rune configured for note: ${item.note}`);
+
+          continue;
+        }
+
+        /*
+         * VERY IMPORTANT:
+         *
+         * First highlight the rune.
+         * Only then play the note.
+         */
+
+        setActiveRune(runeId);
+
+        await playMelodyNote(item.note, item.duration);
+
+        setActiveRune(null);
+
+        /*
+         * Pause after the note.
+         */
+
+        if (item.pause) {
+          await new Promise<void>((resolve) => {
+            window.setTimeout(resolve, item.pause! * 1000);
+          });
+        }
+      }
+    } finally {
+      setActiveRune(null);
+      setIsPlaying(false);
+    }
+  };
+
+  /*
+   * ------------------------------------------------------------
+   * AUTOPLAY ROUND
+   * ------------------------------------------------------------
+   */
+
+  useEffect(() => {
+    if (phase !== "round" || isSolved) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      void playCurrentMelody(0);
+    }, 500);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+
+    // playCurrentMelody intentionally excluded.
+    // We only want to trigger when the round changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, round]);
+
+  /*
+   * ------------------------------------------------------------
+   * PLAYER INPUT
+   * ------------------------------------------------------------
+   */
+
+  const handleRuneClick = async (rune: Rune) => {
     if (phase !== "round" || isPlaying || isSolved) {
       return;
     }
 
-    /*
-     * Play the note selected by the player.
-     */
-    playRune(rune.id);
+    const expectedNote = currentMelody[sequence.length];
 
-    const expectedRune = currentSequence[sequence.length]?.runeId;
+    const expectedRune = expectedNote
+      ? NOTE_TO_RUNE[expectedNote.note]
+      : undefined;
+
+    const isCorrectRune = rune.id === expectedRune;
 
     /*
      * ----------------------------------------------------------
-     * Wrong rune
+     * PLAY PLAYER'S NOTE
      * ----------------------------------------------------------
      */
 
-    if (rune.id !== expectedRune) {
+    setIsPlaying(true);
+    setActiveRune(rune.id);
+
+    try {
+      if (isCorrectRune && expectedNote) {
+        await playMelodyNote(expectedNote.note, expectedNote.duration);
+      } else {
+        await playRune(rune.id);
+      }
+    } finally {
+      setActiveRune(null);
+      setIsPlaying(false);
+    }
+
+    /*
+     * ----------------------------------------------------------
+     * WRONG RUNE
+     * ----------------------------------------------------------
+     */
+
+    if (!isCorrectRune) {
       const rollback = Math.max(0, sequence.length - ROLLBACK);
 
       setMistakeRune(rune.id);
       setIsMistake(true);
 
       /*
-       * Сохраняем всё, кроме последних двух нот.
+       * Keep only the part before the rollback.
        */
-      setSequence(
-        currentSequence.slice(0, rollback).map((note) => note.runeId),
-      );
 
-      if (rollback === replayFrom) {
-        replay();
-      } else {
-        setReplayFrom(rollback);
-      }
+      const rolledBackSequence = currentMelody
+        .slice(0, rollback)
+        .map((note) => NOTE_TO_RUNE[note.note]);
+
+      setSequence(rolledBackSequence);
+
+      setReplayFrom(rollback);
+
+      /*
+       * Play the melody again from the rollback point.
+       */
+
+      window.setTimeout(() => {
+        void playCurrentMelody(rollback);
+      }, 700);
 
       window.setTimeout(() => {
         setIsMistake(false);
@@ -293,7 +449,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
     /*
      * ----------------------------------------------------------
-     * Correct rune
+     * CORRECT RUNE
      * ----------------------------------------------------------
      */
 
@@ -302,19 +458,20 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     setSequence(nextSequence);
 
     /*
-     * Current round is not complete.
+     * Current fragment is not complete.
      */
-    if (nextSequence.length < currentSequence.length) {
+
+    if (nextSequence.length < currentMelody.length) {
       return;
     }
 
     /*
      * ----------------------------------------------------------
-     * Move to next round
+     * NEXT ROUND
      * ----------------------------------------------------------
      */
 
-    if (round < PUZZLE_ROUNDS.length - 1) {
+    if (round < LEVEL_MELODIES.length - 1) {
       setSequence([]);
       setReplayFrom(0);
 
@@ -327,7 +484,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
     /*
      * ----------------------------------------------------------
-     * Puzzle completed
+     * PUZZLE COMPLETED
      * ----------------------------------------------------------
      */
 
@@ -335,9 +492,6 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
     completePuzzle(puzzleId);
 
-    /*
-     * Final reward.
-     */
     youtubePlayerRef.current?.playVideo();
 
     window.setTimeout(() => {
@@ -351,7 +505,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
   /*
    * ------------------------------------------------------------
-   * Replay current round
+   * REPLAY
    * ------------------------------------------------------------
    */
 
@@ -363,12 +517,12 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     setIsMistake(false);
     setMistakeRune(null);
 
-    replay();
+    void playCurrentMelody(0);
   };
 
   /*
    * ------------------------------------------------------------
-   * Messages
+   * MESSAGE
    * ------------------------------------------------------------
    */
 
@@ -402,15 +556,11 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
         return "Брависсимо! Прекрасное «ЛЯ», прекрасное!";
       }
 
-      if (discoveredRunes.length < RUNES.length) {
-        return "Другой звук...";
-      }
-
       return "Вслушайся...";
     }
 
     if (isMistake) {
-      return "Солнышко, давай... я тебя люблю... давай... ";
+      return "Солнышко, давай... я тебя люблю... давай...";
     }
 
     if (isPlaying) {
@@ -426,7 +576,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
   /*
    * ------------------------------------------------------------
-   * Render
+   * RENDER
    * ------------------------------------------------------------
    */
 
@@ -497,26 +647,9 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
             text-[#ff9b00]/60
           "
         >
-          Фрагмент {round + 1} / {PUZZLE_ROUNDS.length}
+          Фрагмент {round + 1} / {LEVEL_MELODIES.length}
         </p>
       )}
-
-      {/* Discovery hint */}
-
-      {/* {phase === "discovery" && (
-        <p
-          className="
-            mb-8
-            text-center
-            text-xs
-            uppercase
-            tracking-[0.25em]
-            text-white/30
-          "
-        >
-          Открыто {discoveredRunes.length} / {RUNES.length}
-        </p>
-      )} */}
 
       {/* Runes */}
 
@@ -535,8 +668,8 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
               disabled={isPlaying || isSolved}
               onClick={() =>
                 phase === "discovery"
-                  ? handleDiscoveryRune(rune)
-                  : handleRuneClick(rune)
+                  ? void handleDiscoveryRune(rune)
+                  : void handleRuneClick(rune)
               }
               aria-label={`Руна ${rune.label}`}
               className={`
@@ -675,28 +808,28 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
             sm:gap-2
           "
         >
-          {currentSequence.map((_, index) => {
+          {currentMelody.map((_, index) => {
             const isCompleted = index < sequence.length;
 
             return (
               <span
                 key={index}
                 className={`
-                    h-1.5
-                    w-6
-                    transition-all
-                    duration-300
-                    sm:w-8
+                  h-1.5
+                  w-6
+                  transition-all
+                  duration-300
+                  sm:w-8
 
-                    ${
-                      isCompleted
-                        ? `
-                          bg-[#ff9b00]
-                          shadow-[0_0_8px_rgba(255,155,0,0.6)]
-                        `
-                        : "bg-white/10"
-                    }
-                  `}
+                  ${
+                    isCompleted
+                      ? `
+                        bg-[#ff9b00]
+                        shadow-[0_0_8px_rgba(255,155,0,0.6)]
+                      `
+                      : "bg-white/10"
+                  }
+                `}
               />
             );
           })}
@@ -711,17 +844,17 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
           disabled={isPlaying}
           onClick={handleReplay}
           className="
-              mt-8
-              cursor-pointer
-              text-xs
-              uppercase
-              tracking-[0.2em]
-              text-white/40
-              transition-colors
-              hover:text-[#ff9b00]
-              disabled:cursor-default
-              disabled:opacity-30
-            "
+            mt-8
+            cursor-pointer
+            text-xs
+            uppercase
+            tracking-[0.2em]
+            text-white/40
+            transition-colors
+            hover:text-[#ff9b00]
+            disabled:cursor-default
+            disabled:opacity-30
+          "
         >
           Послушать мелодию ещё раз
         </button>
