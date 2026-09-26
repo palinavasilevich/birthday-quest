@@ -12,6 +12,21 @@ export const secondChapter: ChapterData = {
     // ─────────────────────────────
 
     {
+      id: "chapter2-eyes-opening",
+      background: images.city,
+      content: {
+        type: "text",
+        text: "",
+      },
+      specialEffects: ["signal"],
+      effectDelay: 3000,
+      showBackgroundOnly: true,
+      autoTransitionToNextScene: true,
+      autoTransitionDelay: 1700,
+      nextScene: "chapter2-night-city",
+    },
+
+    {
       id: "chapter2-night-city",
       background: images.city,
       content: {

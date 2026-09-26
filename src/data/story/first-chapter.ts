@@ -736,7 +736,7 @@ export const firstChapter: ChapterData = {
       specialEffects: ["flash"],
       effectDelay: 1000,
       autoTransitionToNextScene: true,
-      nextScene: "chapter2-night-city",
+      nextScene: "chapter2-eyes-opening",
     },
   ],
 };
