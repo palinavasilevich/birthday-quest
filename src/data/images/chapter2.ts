@@ -5,4 +5,5 @@ export const images = {
   greenLightStreet: "/images/chapter2/green-light-street.png",
   signboard: "/images/chapter2/signboard.png",
   terminal: "/images/chapter2/terminal.png",
+  workshop: "/images/chapter2/workshop.png",
 };

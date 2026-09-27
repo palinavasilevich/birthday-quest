@@ -259,7 +259,7 @@ export const secondChapter: ChapterData = {
           },
         ],
 
-        actionLabel: "TOUCH SCREEN",
+        actionLabel: "INSPECT TERMINAL",
       },
 
       audio: audio.cyberpunk,
@@ -413,7 +413,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-workshop-2",
-      background: images.cyberpunk,
+      background: images.workshop,
       content: {
         type: "text",
         text: "Затем включается свет.\n\nПеред тобой открывается дверь в небольшую мастерскую.",
