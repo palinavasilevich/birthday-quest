@@ -28,9 +28,9 @@ export function SceneEffects({
 
   const onCompleteRef = useRef(onComplete);
 
-  useEffect(() => {
-    onCompleteRef.current = onComplete;
-  }, [onComplete]);
+  // useEffect(() => {
+  //   onCompleteRef.current = onComplete;
+  // }, [onComplete]);
 
   useEffect(() => {
     if (!active) {
@@ -60,14 +60,14 @@ export function SceneEffects({
       );
     }
 
-    const timer = window.setTimeout(() => {
-      onCompleteRef.current?.();
-    }, effectDelay);
+    // const timer = window.setTimeout(() => {
+    //   onCompleteRef.current?.();
+    // }, effectDelay);
 
-    return () => {
-      window.clearTimeout(timer);
-      controls.stop();
-    };
+    // return () => {
+    //   window.clearTimeout(timer);
+    //   controls.stop();
+    // };
   }, [sceneId, active, hasShake, effectDelay, controls]);
 
   return (

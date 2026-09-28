@@ -10,6 +10,7 @@ import { ActionButton } from "@/components/scene/action-button";
 import { Puzzle } from "@/components/puzzle/puzzle";
 
 import type { SceneData } from "@/types/game";
+import { WorkshopLog } from "../cyberpunk/workshop-log";
 
 interface SceneProps {
   scene: SceneData;
@@ -23,6 +24,7 @@ export function Scene({ scene }: SceneProps) {
   const hasEffects = (scene.specialEffects?.length ?? 0) > 0;
   const isTypingComplete = completedSceneId === scene.id;
   const isTerminal = scene.content.type === "terminal";
+  const isSpecialComponent = Boolean(scene.specialComponent);
   const showBackgroundOnly = scene.showBackgroundOnly === true;
 
   const handleTypingComplete = () => {
@@ -39,18 +41,40 @@ export function Scene({ scene }: SceneProps) {
     }
   };
 
+  const sceneContent = () => {
+    if (scene.puzzle) {
+      return <Puzzle puzzle={scene.puzzle} />;
+    }
+
+    if (scene.specialComponent === "workshop-log") {
+      return <WorkshopLog />;
+    }
+
+    if (scene.actions?.length) {
+      return <SceneActions actions={scene.actions} />;
+    }
+
+    if (scene.nextScene && !scene.autoTransitionToNextScene && !isTerminal) {
+      return (
+        <div className="mt-10 flex justify-center">
+          <ActionButton text="Continue" onClick={handleContinue} />
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   useEffect(() => {
-    if (!scene.autoTransitionToNextScene) {
+    if (!scene.autoTransitionToNextScene || !scene.nextScene) {
       return;
     }
 
-    if (!scene.nextScene) {
-      return;
-    }
+    const delay = scene.autoTransitionDelay ?? 3000;
 
     const timer = window.setTimeout(() => {
       setScene(scene.nextScene!);
-    }, scene.autoTransitionDelay ?? 3000);
+    }, delay);
 
     return () => {
       window.clearTimeout(timer);
@@ -60,7 +84,6 @@ export function Scene({ scene }: SceneProps) {
     scene.autoTransitionToNextScene,
     scene.autoTransitionDelay,
     scene.nextScene,
-    setScene,
   ]);
 
   return (
@@ -68,11 +91,6 @@ export function Scene({ scene }: SceneProps) {
       active={hasEffects}
       effects={scene.specialEffects ?? []}
       sceneId={scene.id}
-      onComplete={() => {
-        if (scene.nextScene) {
-          setScene(scene.nextScene);
-        }
-      }}
     >
       <GameLayout
         backgroundImg={scene.background}
@@ -81,7 +99,7 @@ export function Scene({ scene }: SceneProps) {
         music={scene.audio}
         showBackgroundOnly={scene.showBackgroundOnly}
       >
-        {!showBackgroundOnly && (
+        {!showBackgroundOnly && !isSpecialComponent && (
           <SceneContent
             sceneId={scene.id}
             content={scene.content}
@@ -94,21 +112,10 @@ export function Scene({ scene }: SceneProps) {
           />
         )}
 
-        {!showBackgroundOnly && (isTypingComplete || isTerminal) && (
-          <>
-            {scene.puzzle ? (
-              <Puzzle puzzle={scene.puzzle} />
-            ) : scene.actions?.length ? (
-              <SceneActions actions={scene.actions} />
-            ) : scene.nextScene &&
-              !scene.autoTransitionToNextScene &&
-              !isTerminal ? (
-              <div className="mt-10 flex justify-center">
-                <ActionButton text="Continue" onClick={handleContinue} />
-              </div>
-            ) : null}
-          </>
-        )}
+        {!showBackgroundOnly &&
+          (isTypingComplete || isTerminal || isSpecialComponent) && (
+            <>{sceneContent()}</>
+          )}
       </GameLayout>
     </SceneEffects>
   );

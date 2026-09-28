@@ -16,8 +16,17 @@ import startScreen from "../../public/images/chapter1/forest.png";
 
 export function Game() {
   const [isStarted, setIsStarted] = useState(false);
-
   const currentSceneId = useGameStore((state) => state.currentSceneId);
+
+  const startGame = useGameStore((state) => state.startGame);
+  const setScene = useGameStore((state) => state.setScene);
+
+  const handleStart = () => {
+    startGame();
+    setIsStarted(true);
+    // setScene("chapter1-start");
+  };
+
   const story = [
     ...firstChapter.scenes,
     ...secondChapter.scenes,
@@ -30,17 +39,12 @@ export function Game() {
     return <div>Scene not found</div>;
   }
 
-  const startGame = () => {
-    // initAudio();
-    setIsStarted(true);
-  };
-
   const musicMode = scene.puzzle ? "puzzle" : "chapter";
 
   if (!isStarted) {
     return (
       <GameLayout backgroundImg={startScreen} sceneKey="start-screen">
-        <StartScreen onStart={startGame} />
+        <StartScreen onStart={handleStart} />
       </GameLayout>
     );
   }

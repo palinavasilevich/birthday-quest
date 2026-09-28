@@ -56,6 +56,7 @@ export interface SceneData {
   autoTransitionToNextScene?: boolean;
   showBackgroundOnly?: boolean;
   autoTransitionDelay?: number;
+  specialComponent?: "workshop-log";
 }
 
 export interface ChapterData {

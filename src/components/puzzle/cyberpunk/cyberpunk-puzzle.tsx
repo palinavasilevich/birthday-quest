@@ -165,7 +165,7 @@ interface OptionsProps {
 
 function Options({ values, selected, onSelect, labels }: OptionsProps) {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-2 gap-1.5">
       {values.map((value) => {
         const isSelected = selected === value;
 
@@ -175,8 +175,8 @@ function Options({ values, selected, onSelect, labels }: OptionsProps) {
             type="button"
             onClick={() => onSelect(value)}
             className={[
-              "flex min-h-10 items-center gap-3",
-              "border px-3 py-2",
+              "flex min-h-8 items-center gap-3 sm:min-h-9",
+              "border px-3 py-1 sm:py-1.5",
               "font-mono text-left text-[10px]",
               "transition-all duration-150",
               isSelected
@@ -216,12 +216,12 @@ function ExecuteButton({
   onClick: () => void;
 }) {
   return (
-    <div className="mt-3">
+    <div className="mt-2">
       <button
         type="button"
         disabled={disabled}
         onClick={onClick}
-        className="w-full border border-[#d99b22]/40 bg-[#d99b22]/5 px-5 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-[#d99b22] transition-all duration-200 hover:border-[#d99b22] hover:bg-[#d99b22]/10 hover:shadow-[0_0_20px_rgba(217,155,34,0.12)] disabled:cursor-not-allowed disabled:opacity-30"
+        className="w-full border border-[#d99b22]/40 bg-[#d99b22]/5 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.22em] text-[#d99b22] transition-all duration-200 hover:border-[#d99b22] hover:bg-[#d99b22]/10 hover:shadow-[0_0_20px_rgba(217,155,34,0.12)] disabled:cursor-not-allowed disabled:opacity-30 sm:px-5 sm:py-2.5"
       >
         &gt; EXECUTE
       </button>
@@ -294,8 +294,8 @@ function SystemLog({ lines, solved }: { lines: string[]; solved: boolean }) {
   const isPrinting = visibleCount < lines.length;
 
   return (
-    <div className="mt-6 border-t border-[#d99b22]/15 bg-black/30 px-4 py-3">
-      <div className="mb-2 flex items-center justify-between font-mono text-[7px] uppercase tracking-[0.16em]">
+    <div className="mt-3 border-t border-[#d99b22]/15 bg-black/30 px-3 py-1.5 sm:mt-4 sm:px-4 sm:py-2">
+      <div className="mb-1 flex items-center justify-between font-mono text-[7px] uppercase tracking-[0.16em]">
         <span className="text-[#465149]">SYSTEM LOG</span>
 
         <span className={solved ? "text-[#78c98c]" : "text-[#d99b22]/60"}>
@@ -305,7 +305,7 @@ function SystemLog({ lines, solved }: { lines: string[]; solved: boolean }) {
 
       <div
         ref={containerRef}
-        className="max-h-28 overflow-y-auto font-mono text-[7px] leading-[1.6]"
+        className="max-h-20 overflow-y-auto font-mono text-[7px] leading-[1.5] sm:max-h-24"
       >
         {visibleLines.map((line, index) => {
           const isError = line.includes("MISMATCH") || line.includes("FAILED");
@@ -372,7 +372,7 @@ function BootSequence() {
   }, []);
 
   return (
-    <section className="flex min-h-90 flex-col items-center justify-center border border-[#d99b22]/20 bg-black/20 px-5 py-10 text-center">
+    <section className="flex min-h-48 flex-col items-center justify-center border border-[#d99b22]/20 bg-black/20 px-4 py-5 text-center sm:min-h-72 sm:px-5 sm:py-8">
       <div className="w-full max-w-sm space-y-2 text-left font-mono text-[9px] text-[#78c98c]">
         {lines.map((line, index) => (
           <p key={index}>{line}</p>
@@ -528,7 +528,7 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
           {/* SYSTEM INTRO */}
 
           {!solved && (
-            <div className="mb-5 border-l border-[#d99b22]/40 pl-4 font-mono text-[9px] leading-[1.8]">
+            <div className="mb-2 border-l border-[#d99b22]/40 pl-4 font-mono text-[9px] leading-[1.5] sm:mb-3 sm:leading-[1.6]">
               <div className="text-[#d99b22]">&gt; SYSTEM REPAIR PROTOCOL</div>
 
               <div className="text-[#8c8060]">&gt; MANUAL RECOVERY REQUIRED</div>
@@ -539,14 +539,14 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
 
           {/* MODULE STATUS */}
 
-          <div className="mb-5 grid grid-cols-3 border-y border-[#d99b22]/15">
+          <div className="mb-2 grid grid-cols-3 border-y border-[#d99b22]/15 sm:mb-3">
             {MODULES.map((module, index) => (
               <div
                 key={module.id}
                 className={[
                   "flex items-center justify-center",
                   "border-r border-[#d99b22]/10",
-                  "px-2 py-2.5 last:border-r-0",
+                  "px-2 py-2 last:border-r-0",
                 ].join(" ")}
               >
                 <ModuleStatus
@@ -572,7 +572,7 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
 
               <div
                 className={[
-                  "flex items-center justify-between border-b px-4 py-3",
+                  "flex items-center justify-between border-b px-3 py-1.5 sm:px-4 sm:py-2",
                   isMismatch
                     ? "border-[#d85c4c]/40 bg-[#d85c4c]/5"
                     : "border-[#d99b22]/15",
@@ -592,7 +592,7 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
                 </span>
               </div>
 
-              <div className="p-4 sm:p-5">
+              <div className="p-3 sm:p-4">
                 <h2 className="font-mono text-base font-semibold tracking-[0.08em] text-[#d8d2b0]">
                   {currentModule.title}
                 </h2>
@@ -604,8 +604,8 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
                 {/* MEMORY */}
 
                 {currentModule.id === "memory" && (
-                  <div className="mt-4">
-                    <pre className="overflow-x-auto border border-[#d99b22]/15 border-l-2 border-l-[#d99b22]/60 bg-black/35 p-3.5 font-mono text-[10px] leading-[1.8] text-[#aeb5a4]">
+                  <div className="mt-2 sm:mt-3">
+                    <pre className="overflow-x-auto border border-[#d99b22]/15 border-l-2 border-l-[#d99b22]/60 bg-black/35 p-2.5 font-mono text-[10px] leading-[1.55] text-[#aeb5a4] sm:p-3">
                       {`int data[] = {4, 8, 15, 16, 23, 42};
 
 int* p = data + 2;
@@ -613,17 +613,17 @@ int* p = data + 2;
 std::cout << *(p + 1);`}
                     </pre>
 
-                    <div className="mt-4 grid grid-cols-6 gap-1">
+                    <div className="mt-2 grid grid-cols-6 gap-1 sm:mt-3">
                       {[4, 8, 15, 16, 23, 42].map((value, index) => (
                         <div
                           key={value}
-                          className="relative border border-[#d99b22]/15 bg-[#090b09] px-1 py-2 text-center"
+                          className="relative border border-[#d99b22]/15 bg-[#090b09] px-1 py-1 text-center sm:py-1.5"
                         >
-                          <strong className="block font-mono text-sm text-[#c8b879]">
+                          <strong className="block font-mono text-xs text-[#c8b879] sm:text-sm">
                             {value}
                           </strong>
 
-                          <span className="mt-1 block font-mono text-[6px] text-[#55594e]">
+                          <span className="mt-0.5 block font-mono text-[6px] text-[#55594e]">
                             data[{index}]
                           </span>
 
@@ -636,7 +636,7 @@ std::cout << *(p + 1);`}
                       ))}
                     </div>
 
-                    <div className="mb-2 mt-4 font-mono text-[8px] tracking-[0.08em] text-[#756f5b]">
+                    <div className="mb-1.5 mt-2 font-mono text-[8px] tracking-[0.08em] text-[#756f5b] sm:mt-3">
                       &gt; SELECT OUTPUT
                     </div>
 
@@ -653,15 +653,15 @@ std::cout << *(p + 1);`}
                 {/* LOGIC */}
 
                 {currentModule.id === "logic" && (
-                  <div className="mt-4">
-                    <pre className="overflow-x-auto border border-[#d99b22]/15 border-l-2 border-l-[#d99b22]/60 bg-black/35 p-3.5 font-mono text-[10px] leading-[1.8] text-[#aeb5a4]">
+                  <div className="mt-2 sm:mt-3">
+                    <pre className="overflow-x-auto border border-[#d99b22]/15 border-l-2 border-l-[#d99b22]/60 bg-black/35 p-2.5 font-mono text-[10px] leading-[1.55] text-[#aeb5a4] sm:p-3">
                       {`int power = 7;
 int core = 2;
 
 std::cout << power / core * 2;`}
                     </pre>
 
-                    <div className="mt-4 flex items-center justify-center gap-3 border border-[#d99b22]/10 bg-black/25 p-4 font-mono">
+                    <div className="mt-2 flex items-center justify-center gap-3 border border-[#d99b22]/10 bg-black/25 p-2 font-mono sm:mt-3 sm:p-3">
                       <span className="text-lg text-[#c8b879]">7</span>
 
                       <b className="text-[9px] font-normal text-[#d99b22]">/</b>
@@ -679,7 +679,7 @@ std::cout << power / core * 2;`}
                       </span>
                     </div>
 
-                    <div className="mb-2 mt-4 font-mono text-[8px] tracking-[0.08em] text-[#756f5b]">
+                    <div className="mb-1.5 mt-2 font-mono text-[8px] tracking-[0.08em] text-[#756f5b] sm:mt-3">
                       &gt; SELECT OUTPUT
                     </div>
 
@@ -696,8 +696,8 @@ std::cout << power / core * 2;`}
                 {/* SIZE */}
 
                 {currentModule.id === "size" && (
-                  <div className="mt-4">
-                    <pre className="overflow-x-auto border border-[#d99b22]/15 border-l-2 border-l-[#d99b22]/60 bg-black/35 p-3.5 font-mono text-[10px] leading-[1.8] text-[#aeb5a4]">
+                  <div className="mt-2 sm:mt-3">
+                    <pre className="overflow-x-auto border border-[#d99b22]/15 border-l-2 border-l-[#d99b22]/60 bg-black/35 p-2.5 font-mono text-[10px] leading-[1.55] text-[#aeb5a4] sm:p-3">
                       {`int data[8];
 int* p = data;
 
@@ -705,7 +705,7 @@ sizeof(data)
 sizeof(p)`}
                     </pre>
 
-                    <div className="mt-4 grid grid-cols-1 gap-1 sm:grid-cols-2">
+                    <div className="mt-2 grid grid-cols-1 gap-1 sm:mt-3 sm:grid-cols-2">
                       {/* DATA */}
 
                       <div className="border border-[#d99b22]/15 bg-[#090b09] p-3">
@@ -746,7 +746,7 @@ sizeof(p)`}
                       </div>
                     </div>
 
-                    <div className="mb-2 mt-4 font-mono text-[8px] tracking-[0.08em] text-[#756f5b]">
+                    <div className="mb-1.5 mt-2 font-mono text-[8px] tracking-[0.08em] text-[#756f5b] sm:mt-3">
                       &gt; WHAT DOES THE COMPILER KNOW?
                     </div>
 
@@ -769,7 +769,7 @@ sizeof(p)`}
           ) : (
             /* SUCCESS */
 
-            <section className="flex min-h-90 flex-col items-center justify-center border border-[#d99b22]/20 bg-black/20 px-5 py-10 text-center">
+            <section className="flex min-h-48 flex-col items-center justify-center border border-[#d99b22]/20 bg-black/20 px-4 py-5 text-center sm:min-h-72 sm:px-5 sm:py-8">
               <div className="font-mono text-[8px] tracking-[0.15em] text-[#55bfc3]">
                 &gt; SYSTEM RESTORED
               </div>
@@ -778,7 +778,7 @@ sizeof(p)`}
                 CONTROL SYSTEM ONLINE
               </div>
 
-              <div className="mt-6 flex flex-col gap-2 text-left font-mono text-[8px] text-[#69705f]">
+              <div className="mt-3 flex flex-col gap-1 text-left font-mono text-[8px] text-[#69705f] sm:mt-4 sm:gap-1.5">
                 <span>MEMORY .............. OK</span>
 
                 <span>LOGIC ............... OK</span>

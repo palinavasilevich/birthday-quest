@@ -148,69 +148,24 @@ export const secondChapter: ChapterData = {
         {
           id: "touch-screen",
           label: "Inspect the panel",
-          nextScene: "chapter2-terminal",
+          nextScene: "chapter2-night-city-10",
         },
       ],
+    },
+
+    {
+      id: "chapter2-night-city-10",
+      background: images.terminal,
+      content: {
+        type: "text",
+        text: "Ты касаешься панели.\n\nВнутри стены что-то щёлкает.\n\nСтарый терминал оживает, и экран вспыхивает зелёным светом.\n\nНесколько секунд — только помехи.",
+      },
+      audio: audio.cyberpunk,
     },
 
     // ─────────────────────────────
     // SCENE 03 — TERMINAL
     // ─────────────────────────────
-
-    // {
-    //   id: "chapter2-terminal",
-    //   background: images.terminal,
-    //   content: {
-    //     type: "text",
-    //     text: "Под панелью ты видишь старый терминал.\n\nЭкран всё ещё работает.",
-    //   },
-    //   actions: [
-    //     {
-    //       id: "touch-screen",
-    //       label: "Touch screen",
-    //       nextScene: "chapter2-terminal-2",
-    //     },
-    //   ],
-    // },
-    // {
-    //   id: "chapter2-terminal-2",
-    //   background: images.terminal,
-    //   content: {
-    //     type: "text",
-    //     text: "Экран вспыхивает зелёным светом.\n\nНесколько секунд — только помехи.\n\nЗатем появляется сообщение:\n\n«PRIVATE WORKSHOP // ACCESS DENIED».",
-    //   },
-    //   actions: [
-    //     {
-    //       id: "inspect-terminal",
-    //       label: "Inspect terminal",
-    //       nextScene: "chapter2-terminal-3",
-    //     },
-    //   ],
-    // },
-    // {
-    //   id: "chapter2-terminal-3",
-    //   background: images.terminal,
-    //   content: {
-    //     type: "text",
-    //     text: "Ниже появляется ещё одна строка: «RECOVERY PROTOCOL AVAILABLE».\n\nПохоже, система повреждена.\n\nЕсли удастся восстановить её, возможно, откроется вход в мастерскую.",
-    //   },
-    //   actions: [
-    //     {
-    //       id: "start-recovery",
-    //       label: "Start recovery",
-    //       nextScene: "chapter2-system-repair-1",
-    //     },
-    //   ],
-    // },
-    // {
-    //   id: "chapter2-system-repair-1",
-    //   background: images.terminal,
-    //   content: {
-    //     type: "text",
-    //     text: "Экран меняется.\n\nВместо привычного интерфейса появляются строки кода.",
-    //   },
-    //   nextScene: "chapter2-system-repair-2",
-    // },
 
     {
       id: "chapter2-terminal",
@@ -321,68 +276,9 @@ export const secondChapter: ChapterData = {
       nextScene: "chapter2-code-puzzle",
     },
 
-    // {
-    //   id: "chapter2-terminal-3",
-    //   content: {
-    //     type: "terminal",
-
-    //     title: "WORKSHOP CONTROL SYSTEM",
-    //     status: "RECOVERY MODE",
-    //     date: "21/11/2026",
-
-    //     lines: [
-    //       {
-    //         text: "> WORKSHOP CONTROL SYSTEM",
-    //         type: "system",
-    //       },
-    //       {
-    //         text: "> RECOVERY MODE INITIALIZED",
-    //         type: "system",
-    //       },
-    //       {
-    //         text: "",
-    //       },
-    //       {
-    //         text: "> MEMORY MODULE .......... OFFLINE",
-    //         type: "error",
-    //       },
-    //       {
-    //         text: "> LOGIC MODULE ........... OFFLINE",
-    //         type: "error",
-    //       },
-    //       {
-    //         text: "> OUTPUT MODULE .......... OFFLINE",
-    //         type: "error",
-    //       },
-    //       {
-    //         text: "",
-    //       },
-    //       {
-    //         text: "> MANUAL RECOVERY REQUIRED",
-    //         type: "warning",
-    //       },
-    //       {
-    //         text: "",
-    //       },
-    //       {
-    //         text: "> THREE MODULES REQUIRED",
-    //         type: "system",
-    //       },
-    //       {
-    //         text: "> AWAITING INPUT...",
-    //         type: "system",
-    //       },
-    //     ],
-
-    //     actionLabel: "BEGIN RECOVERY",
-    //   },
-
-    //   nextScene: "chapter2-code-puzzle",
-    // },
-
     {
       id: "chapter2-code-puzzle",
-      // background: images.terminal,
+
       content: {
         type: "text",
         text: "",
@@ -402,7 +298,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-workshop",
-      background: images.cyberpunk,
+      background: images.terminal,
       content: {
         type: "text",
         text: "Где-то за стеной раздаётся механический звук.\n\nЩёлк.\n\nПауза.\n\nЩёлк.",
@@ -413,7 +309,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-workshop-2",
-      background: images.workshop,
+      background: images.workshopDoor,
       content: {
         type: "text",
         text: "Затем включается свет.\n\nПеред тобой открывается дверь в небольшую мастерскую.",
@@ -423,7 +319,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-workshop-3",
-      background: images.cyberpunk,
+      background: images.workshopDesk,
       content: {
         type: "text",
         text: "Инструменты, детали, разобранные механизмы.\n\nВсё покрыто пылью.\n\nПохоже, здесь давно никто не работал.",
@@ -433,10 +329,10 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-workshop-4",
-      background: images.cyberpunk,
+      background: images.workshopDesk,
       content: {
         type: "text",
-        text: "В центре комнаты — длинный рабочий стол.\n\nА в углу до сих пор горит одинокий монитор.",
+        text: "Перед тобой длинный рабочий стол.\n\nА в углу до сих пор горит одинокий монитор.",
       },
       actions: [
         {
@@ -457,42 +353,21 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-log",
-      background: images.cyberpunk,
+      background: images.workshopScreen,
       content: {
         type: "text",
         text: "На экране открыт лог.\n\nОн всё ещё пишется.",
       },
+      specialComponent: "workshop-log",
+
+      autoTransitionToNextScene: true,
+      autoTransitionDelay: 6500,
       nextScene: "chapter2-log-2",
     },
 
     {
       id: "chapter2-log-2",
-      background: images.cyberpunk,
-      content: {
-        type: "text",
-        text: `08:19  subject entered the forest
-08:31  subject found the trail
-09:04  subject touched the rune
-09:12  subject opened the door`,
-      },
-      nextScene: "chapter2-log-3",
-    },
-
-    {
-      id: "chapter2-log-3",
-      background: images.cyberpunk,
-      content: {
-        type: "text",
-        text: `Курсор мигает в последней строке.
-
-09:48  subject entered the workshop`,
-      },
-      nextScene: "chapter2-log-4",
-    },
-
-    {
-      id: "chapter2-log-4",
-      background: images.cyberpunk,
+      background: images.workshopScreen,
       content: {
         type: "text",
         text: "За тобой следят с самой первой минуты.\n\nИ всё это время тебя вели именно сюда.",
@@ -501,70 +376,68 @@ export const secondChapter: ChapterData = {
     },
 
     // ── Стол ──
-
     {
       id: "chapter2-table",
-      background: images.cyberpunk,
+      background: images.drawing,
       content: {
         type: "text",
-        text: "Стол завален чертежами.",
+        text: "Стол завален чертежами.\n\nСреди них снова и снова встречается один и тот же силуэт.",
       },
       nextScene: "chapter2-table-2",
     },
 
     {
       id: "chapter2-table-2",
-      background: images.cyberpunk,
+      background: images.drawing,
       content: {
         type: "text",
-        text: "Один и тот же рисунок — снова и снова.\n\nЖёсткие надкрылья, шесть ног, ни одного лишнего винта.",
+        text: "Небольшое механическое существо.\n\nДве широкие пластины на спине, прозрачные крылья и шесть тонких лап.",
       },
       nextScene: "chapter2-table-3",
     },
 
     {
       id: "chapter2-table-3",
-      background: images.cyberpunk,
+      background: images.drawing,
       content: {
         type: "text",
-        text: "Десятки листов, и почти все перечёркнуты.\n\nНа верхнем — ни одной поправки.",
+        text: "Внутри корпуса — шестерни, шарниры и десятки мелких деталей.\n\nКаждый механизм прорисован до последнего винта.",
       },
       nextScene: "chapter2-table-4",
     },
 
     {
       id: "chapter2-table-4",
-      background: images.cyberpunk,
+      background: images.drawing,
       content: {
         type: "text",
-        text: "А под чертежами лежит ещё один лист.\n\nЭто не чертёж.",
+        text: "Десятки вариантов перечёркнуты.\n\nНо последний чертёж выглядит иначе.\n\nНи одной поправки.",
       },
       nextScene: "chapter2-table-5",
     },
-
     {
       id: "chapter2-table-5",
-      background: images.cyberpunk,
+      background: images.knittingPattern,
       content: {
         type: "text",
-        text: "Схема вязания.\n\nМаленькая фигура. Круглые уши. Пять пальцев.",
+        text: "Ты переворачиваешь последний лист.\n\nПод ним обнаруживается ещё одна схема.",
       },
       nextScene: "chapter2-table-6",
     },
 
     {
       id: "chapter2-table-6",
-      background: images.cyberpunk,
+      background: images.knittingPattern,
       content: {
         type: "text",
-        text: "Почерк тот же.",
+        text: "Но эта схема совсем другая.\n\nЗдесь нет шестерён и механизмов — только простые линии.\n\nМаленькая фигура с круглыми ушами и короткими лапами.",
       },
       nextScene: "chapter2-table-7",
     },
 
     {
       id: "chapter2-table-7",
-      background: images.cyberpunk,
+      background: images.knittingPatternYarn,
       content: {
         type: "text",
         text: "А рядом со схемой лежит клубок.\n\nТого же тёплого рыжеватого цвета, что и нитка у тебя в кармане.",
@@ -574,15 +447,15 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-table-8",
-      background: images.cyberpunk,
+      background: images.box,
       content: {
         type: "text",
-        text: "В самом углу стола, отдельно от всего, стоит небольшая коробка.\n\nНа ней одна надпись:\n\nMI-01",
+        text: "В самом углу стола, отдельно от всего, стоит небольшая коробка.\n\nНа ней надпись:\n\nMI-01",
       },
       actions: [
         {
           id: "open-box",
-          label: "Открыть коробку",
+          label: "Open the box",
           nextScene: "chapter2-open",
         },
       ],
@@ -594,7 +467,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-open",
-      background: images.cyberpunk,
+      background: images.box,
       content: {
         type: "text",
         text: "Коробка не запечатана.\n\nТы снимаешь крышку.",
@@ -655,7 +528,7 @@ export const secondChapter: ChapterData = {
       actions: [
         {
           id: "leave-now",
-          label: "Забрать и уходить",
+          label: "Забрать коробку и уйти",
           nextScene: "chapter2-transition-back",
         },
         {

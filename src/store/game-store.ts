@@ -1,10 +1,25 @@
 import { create } from "zustand";
+// import { persist } from "zustand/middleware";
+
+type StoryEvent =
+  | "forestEntered"
+  | "trailFound"
+  | "runeSolved"
+  | "doorOpened"
+  | "nightCityEntered"
+  | "workshopEntered"
+  | "mi01Opened"
+  | "finalBattleStarted"
+  | "owbearRescued";
 
 interface GameState {
   currentSceneId: string;
   inventory: string[];
   completedPuzzles: string[];
   completedActions: string[];
+
+  gameStartedAt: number | null;
+  storyTimestamps: Partial<Record<StoryEvent, number>>;
 
   isSoundEnabled: boolean;
 
@@ -13,51 +28,72 @@ interface GameState {
   completePuzzle: (puzzleId: string) => void;
   completeAction: (actionId: string) => void;
   toggleSound: () => void;
+  startGame: () => void;
+  markStoryEvent: (event: StoryEvent) => void;
 }
 
-export const useGameStore = create<GameState>((set) => ({
-  // currentSceneId: "chapter1-forest",
-  // currentSceneId: "chapter1-door",
-  // currentSceneId: "chapter1-signs",
-  currentSceneId: "chapter2-terminal-2",
-  // currentSceneId: "chapter2-eyes-opening",
+export const useGameStore = create<GameState>()(
+  // persist(
+  (set) => ({
+    gameStartedAt: null,
+    storyTimestamps: {},
 
-  inventory: [],
+    currentSceneId: "chapter2-workshop",
 
-  completedPuzzles: [],
+    inventory: [],
 
-  completedActions: [],
+    completedPuzzles: [],
 
-  isSoundEnabled: true,
+    completedActions: [],
 
-  setScene: (sceneId) =>
-    set({
-      currentSceneId: sceneId,
-    }),
+    isSoundEnabled: true,
 
-  addItem: (itemId) =>
-    set((state) => ({
-      inventory: state.inventory.includes(itemId)
-        ? state.inventory
-        : [...state.inventory, itemId],
-    })),
+    startGame: () =>
+      set({
+        gameStartedAt: Date.now(),
+      }),
 
-  completePuzzle: (puzzleId) =>
-    set((state) => ({
-      completedPuzzles: state.completedPuzzles.includes(puzzleId)
-        ? state.completedPuzzles
-        : [...state.completedPuzzles, puzzleId],
-    })),
+    markStoryEvent: (event) =>
+      set((state) => ({
+        storyTimestamps: {
+          ...state.storyTimestamps,
+          [event]: state.storyTimestamps[event] ?? Date.now(),
+        },
+      })),
 
-  completeAction: (actionId) =>
-    set((state) => ({
-      completedActions: state.completedActions.includes(actionId)
-        ? state.completedActions
-        : [...state.completedActions, actionId],
-    })),
+    setScene: (sceneId) =>
+      set({
+        currentSceneId: sceneId,
+      }),
 
-  toggleSound: () =>
-    set((state) => ({
-      isSoundEnabled: !state.isSoundEnabled,
-    })),
-}));
+    addItem: (itemId) =>
+      set((state) => ({
+        inventory: state.inventory.includes(itemId)
+          ? state.inventory
+          : [...state.inventory, itemId],
+      })),
+
+    completePuzzle: (puzzleId) =>
+      set((state) => ({
+        completedPuzzles: state.completedPuzzles.includes(puzzleId)
+          ? state.completedPuzzles
+          : [...state.completedPuzzles, puzzleId],
+      })),
+
+    completeAction: (actionId) =>
+      set((state) => ({
+        completedActions: state.completedActions.includes(actionId)
+          ? state.completedActions
+          : [...state.completedActions, actionId],
+      })),
+
+    toggleSound: () =>
+      set((state) => ({
+        isSoundEnabled: !state.isSoundEnabled,
+      })),
+  }),
+  // {
+  //   name: "birthday-quest",
+  // },
+  // ),
+);

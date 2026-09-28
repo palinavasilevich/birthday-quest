@@ -31,7 +31,7 @@ export function CyberpunkFrame({
     >
       {/* TOP FRAME */}
 
-      <div className="relative flex items-center justify-between border-b border-[#d99b22]/30 bg-[#090b09] px-5 py-3">
+      <div className="relative flex items-center justify-between border-b border-[#d99b22]/30 bg-[#090b09] px-4 py-2 sm:px-5 sm:py-2.5">
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-[#d99b22]/60 to-transparent" />
 
         <div>
@@ -57,7 +57,7 @@ export function CyberpunkFrame({
 
       {/* SCREEN */}
 
-      <div className="relative overflow-hidden px-6 py-7 sm:px-8 sm:py-8">
+      <div className="relative overflow-hidden px-4 py-4 sm:px-6 sm:py-5">
         {/* scanlines */}
 
         <div className="pointer-events-none absolute inset-0 opacity-[0.06] [background:repeating-linear-gradient(to_bottom,transparent_0px,transparent_3px,rgba(255,255,255,0.25)_4px)]" />
@@ -88,7 +88,7 @@ export function CyberpunkConsoleLabel({
   children = "SYSTEM CONSOLE",
 }: CyberpunkConsoleLabelProps) {
   return (
-    <div className="mb-6 flex items-center gap-2 text-[9px] uppercase tracking-[0.2em] text-[#5f6961]">
+    <div className="mb-3 flex items-center gap-2 text-[9px] uppercase tracking-[0.2em] text-[#5f6961] sm:mb-4">
       <span className="h-1.5 w-1.5 rounded-full bg-[#d99b22] shadow-[0_0_8px_rgba(217,155,34,0.7)]" />
 
       {children}
