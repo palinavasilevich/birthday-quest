@@ -41,7 +41,13 @@ export interface SceneAction {
   puzzle?: PuzzleData;
 }
 
-export type SpecialEffect = "shake" | "flash" | "signal";
+export type SpecialEffect =
+  | "shake"
+  | "flash"
+  | "signal"
+  | "fade"
+  | "fade-in"
+  | "glitch";
 
 export interface SceneData {
   id: string;

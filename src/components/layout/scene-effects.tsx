@@ -1,6 +1,6 @@
 import type { SpecialEffect } from "@/types/game";
 import { motion, useAnimationControls } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import type { ReactNode } from "react";
 
 interface SceneEffectsProps {
@@ -18,19 +18,15 @@ export function SceneEffects({
   effects,
   sceneId,
   effectDelay = 5000,
-  onComplete,
 }: SceneEffectsProps) {
   const hasShake = effects.includes("shake");
   const hasFlash = effects.includes("flash");
   const hasSignal = effects.includes("signal");
+  const hasFade = effects.includes("fade");
+  const hasFadeIn = effects.includes("fade-in");
+  const hasGlitch = effects.includes("glitch");
 
   const controls = useAnimationControls();
-
-  const onCompleteRef = useRef(onComplete);
-
-  // useEffect(() => {
-  //   onCompleteRef.current = onComplete;
-  // }, [onComplete]);
 
   useEffect(() => {
     if (!active) {
@@ -244,6 +240,100 @@ export function SceneEffects({
             }}
           />
         </>
+      )}
+
+      {/* FADE */}
+      {active && hasFade && (
+        <motion.div
+          key={`fade-${sceneId}`}
+          className="pointer-events-none absolute inset-0 z-110 bg-[#050505]"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: [0, 0.15, 0.45, 0.8, 1],
+          }}
+          transition={{
+            duration: 2.4,
+            times: [0, 0.35, 0.65, 0.85, 1],
+            ease: "easeInOut",
+          }}
+        />
+      )}
+
+      {/* FADE IN */}
+      {active && hasFadeIn && (
+        <motion.div
+          key={`fade-in-${sceneId}`}
+          className="pointer-events-none absolute inset-0 z-[110] bg-[#050505]"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 0 }}
+          transition={{
+            duration: 2.2,
+            ease: "easeInOut",
+          }}
+        />
+      )}
+
+      {/* GLITCH */}
+      {active && hasGlitch && (
+        <div
+          key={`glitch-${sceneId}`}
+          className="pointer-events-none fixed inset-0 z-[120] overflow-hidden"
+        >
+          {/* Dark overlay */}
+          <motion.div
+            className="absolute inset-0 bg-black"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.15, 0.05, 0.3, 0.8, 1] }}
+            transition={{
+              duration: 1.8,
+              times: [0, 0.35, 0.48, 0.62, 0.82, 1],
+              ease: "linear",
+            }}
+          />
+
+          {/* Horizontal glitch bars */}
+          <motion.div
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0, 1, 0, 1, 0] }}
+            transition={{
+              duration: 1.4,
+              times: [0, 0.15, 0.28, 0.45, 0.58, 0.72, 1],
+              ease: "linear",
+            }}
+          >
+            <div className="absolute left-0 top-[18%] h-[3px] w-full bg-[#d99b22]/70" />
+            <div className="absolute left-[-10%] top-[31%] h-[8px] w-[120%] bg-[#55bfc3]/35" />
+            <div className="absolute left-0 top-[47%] h-[2px] w-full bg-white/50" />
+            <div className="absolute left-[-20%] top-[63%] h-[5px] w-[140%] bg-[#d85c4c]/45" />
+            <div className="absolute left-0 top-[78%] h-[3px] w-full bg-[#d99b22]/50" />
+          </motion.div>
+
+          {/* Digital displacement */}
+          <motion.div
+            className="absolute inset-0 bg-[repeating-linear-gradient(to_bottom,transparent_0px,transparent_3px,rgba(255,255,255,0.08)_4px)]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.8, 0.2, 0.9, 0] }}
+            transition={{
+              duration: 1.2,
+              times: [0, 0.2, 0.4, 0.65, 1],
+              ease: "linear",
+            }}
+          />
+
+          {/* Final white flash */}
+          <motion.div
+            className="absolute inset-0 bg-white"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0, 0.75, 0] }}
+            transition={{
+              duration: 0.35,
+              delay: 1.45,
+              times: [0, 0.35, 0.7, 1],
+              ease: "easeOut",
+            }}
+          />
+        </div>
       )}
     </div>
   );
