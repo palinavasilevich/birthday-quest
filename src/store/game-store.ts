@@ -38,7 +38,7 @@ export const useGameStore = create<GameState>()(
     gameStartedAt: null,
     storyTimestamps: {},
 
-    currentSceneId: "final-start",
+    currentSceneId: "chapter2-transition-back-3",
 
     inventory: [],
 

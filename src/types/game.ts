@@ -49,7 +49,12 @@ export type SpecialEffect =
   | "static"
   | "warp"
   | "warp-in"
-  | "glitch";
+  | "glitch"
+  | "rumble"
+  | "vignette-pulse"
+  | "zoom-in"
+  | "fade"
+  | "fade-in";
 
 export interface SceneData {
   id: string;

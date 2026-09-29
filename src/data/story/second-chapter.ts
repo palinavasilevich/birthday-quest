@@ -609,8 +609,24 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Шум города становится всё тише.\n\nНеон исчезает.",
       },
+
+      autoTransitionDelay: 3500,
+      autoTransitionToNextScene: true,
+
+      nextScene: "chapter2-transition-back-3",
+    },
+
+    {
+      id: "chapter2-transition-back-3",
+      background: images.workshopOutside,
+      content: {
+        type: "text",
+        text: "",
+      },
+
       specialEffects: ["warp"],
-      effectDelay: 2600,
+      effectDelay: 1600,
+      autoTransitionToNextScene: true,
       nextScene: "final-start",
     },
   ],

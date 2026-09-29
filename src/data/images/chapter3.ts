@@ -9,6 +9,8 @@ export const images = {
   deviceFliesAway: "/images/chapter3/device-flies-away.png",
   owlbearFound: "/images/chapter3/owlbear-found.png",
   victoryOverDragon: "/images/chapter3/victory-over-dragon.png",
-  victoryOverDragonOwlbear: "/images/chapter3/victory-over-dragon-owlbear.png",
+  owlbearSaved: "/images/chapter3/owlbear-saved.png",
   owlbearAndBeetle: "/images/chapter3/owlbear-and-beetle.png",
+  finalVictory: "/images/chapter3/final-victory.png",
+  yarn: "/images/chapter3/yarn.png",
 };

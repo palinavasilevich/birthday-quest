@@ -47,7 +47,7 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Ты слышишь рёв.\n\nЧто за зверь можем издавать такие звуки?..",
+        text: "Ты слышишь рёв.\n\nЧто за зверь может издавать такие звуки?..",
       },
       nextScene: "final-start-5",
     },
@@ -57,7 +57,7 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "ЭТО ЧТО ДРАКОН?!!",
+        text: "Это что... дракон?!",
       },
       nextScene: "final-battlefield",
     },
@@ -121,8 +121,10 @@ export const finalChapter: ChapterData = {
       background: images.owlbear,
       content: {
         type: "text",
-        text: "МЕДВЕСЫЧ?!!\n\nВот кто вёл тебя всё это время.",
+        text: "Медвесыч?.. \n\nТак вот кто вёл тебя всё это время.",
       },
+      autoTransitionToNextScene: true,
+      autoTransitionDelay: 3000,
       nextScene: "final-battle",
     },
 
@@ -145,7 +147,7 @@ export const finalChapter: ChapterData = {
       background: images.owlbearFire,
       content: {
         type: "text",
-        text: "Секунду назад ты видел, где он. Теперь — нет.\n\nТебе нужен ориентир.",
+        text: "Секунду назад ты видел, где он. Теперь — нет.\n\nТебе нужен как-то ориентир.",
       },
       nextScene: "final-battle-3",
     },
@@ -155,7 +157,7 @@ export const finalChapter: ChapterData = {
       background: images.owlbearFire,
       content: {
         type: "text",
-        text: "И ты вспоминаешь строку из книги:",
+        text: "И ты вспоминаешь строку из книги:\n\n«То, что когда-то существовало лишь в воображении, однажды может стать настоящим — и ожить в твоих руках.»",
       },
       nextScene: "final-battle-4",
     },
@@ -165,27 +167,17 @@ export const finalChapter: ChapterData = {
       background: images.owlbearFire,
       content: {
         type: "text",
-        text: "«То, что когда-то существовало лишь в воображении, однажды может стать настоящим — и ожить в твоих руках.»",
+        text: "И ты понимаешь.\n\nВсё необходимое у тебя уже есть.",
       },
       nextScene: "final-battle-5",
     },
 
-    // {
-    //   id: "final-battle-4",
-    //   background: images.owlbearFire,
-    //   content: {
-    //     type: "text",
-    //     text: "То, что однажды было лишь фантазией,\n\nможет стать настоящим — если однажды решиться создать его.",
-    //   },
-    //   nextScene: "final-battle-5",
-    // },
-
     {
       id: "final-battle-5",
-      background: images.owlbearFire,
+      background: images.deviceAssembly,
       content: {
         type: "text",
-        text: "И ты понимаешь.\n\nВсё необходимое у тебя уже есть.",
+        text: "Ты открываешь коробку.\n\nЛатунные пластины. Шестерни. Винты.\n\nВсе эти детали должны сложиться в одно целое.",
       },
       nextScene: "final-battle-6",
     },
@@ -195,27 +187,26 @@ export const finalChapter: ChapterData = {
       background: images.deviceAssembly,
       content: {
         type: "text",
-        text: "Ты открываешь коробку.\n\nЛатунные пластины. Шестерни. Винты.\n\nВсе эти детали должны сложиться в одно целое.",
+        text: "Ты собираешь устройство под рёв дракона.\n\nСреди дыма и огня.",
       },
       nextScene: "final-battle-7",
     },
-
     {
       id: "final-battle-7",
-      background: images.deviceAssembly,
+      background: images.device,
       content: {
         type: "text",
-        text: "Ты собираешь устройство под рёв дракона. Среди дыма и огня.",
+        text: "MI-01 лежит у тебя на ладони.\n\nНа мгновение — тишина.\n\nЗатем надкрылья раскрываются.\n\nОн оживает.",
       },
       nextScene: "final-battle-8",
     },
 
     {
       id: "final-battle-8",
-      background: images.device,
+      background: images.deviceFliesAway,
       content: {
         type: "text",
-        text: "MI-01 лежит у тебя на ладони.\n\nНа мгновение — тишина.\n\nЗатем надкрылья раскрываются.\n\nОн оживает.",
+        text: "Ты осторожно подбрасываешь его в воздух.\n\nОн раскрывает крылья и исчезает в густом дыму.",
       },
       nextScene: "final-battle-9",
     },
@@ -225,17 +216,17 @@ export const finalChapter: ChapterData = {
       background: images.deviceFliesAway,
       content: {
         type: "text",
-        text: "Ты осторожно подбрасываешь его в воздух.\n\nОн раскрывает крылья и исчезает в густом дыму.",
+        text: "Ты ждёшь.\n\nСекунда. Другая.\n\nТолько огонь, дым и рёв дракона.",
       },
       nextScene: "final-battle-10",
     },
 
     {
       id: "final-battle-10",
-      background: images.deviceFliesAway,
+      background: images.owlbearFound,
       content: {
         type: "text",
-        text: "Ты ждёшь.\n\nСекунда. Другая.\n\nТолько огонь, дым и рёв дракона.",
+        text: "И вдруг — в глубине поля боя появляется маленький огонёк.",
       },
       nextScene: "final-battle-11",
     },
@@ -245,23 +236,13 @@ export const finalChapter: ChapterData = {
       background: images.owlbearFound,
       content: {
         type: "text",
-        text: "И вдруг — в глубине поля боя появляется маленький огонёк.",
+        text: "MI-01 нашёл его.\n\nМедвесыч там.",
       },
       nextScene: "final-battle-12",
     },
 
     {
       id: "final-battle-12",
-      background: images.owlbearFound,
-      content: {
-        type: "text",
-        text: "MI-01 нашёл его.\n\nМедвесыч там.",
-      },
-      nextScene: "final-battle-13",
-    },
-
-    {
-      id: "final-battle-13",
       background: images.owlbearFound,
       content: {
         type: "text",
@@ -297,37 +278,27 @@ export const finalChapter: ChapterData = {
       background: images.victoryOverDragon,
       content: {
         type: "text",
-        text: "Дракон падает.\n\nНаступает тишина.",
+        text: "Дракон падает.\n\nНаступает тишина.\n\nПепел медленно оседает на землю.",
       },
       nextScene: "final-victory-2",
     },
 
     {
       id: "final-victory-2",
-      background: images.victoryOverDragon,
+      background: images.owlbearSaved,
       content: {
         type: "text",
-        text: "Пепел медленно оседает на землю.",
+        text: "Медвесыч рядом с тобой.\n\nОн не отходит ни на шаг с той секунды, как ты до него добрался.",
       },
       nextScene: "final-victory-3",
     },
 
     {
       id: "final-victory-3",
-      background: images.victoryOverDragonOwlbear,
-      content: {
-        type: "text",
-        text: "Медвесыч рядом c тобой.\n\nОн не отходит ни на шаг с той секунды, как ты до него добрался.",
-      },
-      nextScene: "final-victory-4",
-    },
-
-    {
-      id: "final-victory-4",
       background: images.owlbearAndBeetle,
       content: {
         type: "text",
-        text: "MI-01 возвращается сам.\n\nСадится рядом с медвесычом и складывает крылья.",
+        text: "MI-01 возвращается сам.\n\nСадится рядом с Медвесычем и складывает надкрылья.",
       },
       nextScene: "final-companion",
     },
@@ -358,7 +329,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-companion",
-      background: images.forest,
+      background: images.owlbearAndBeetle,
       content: {
         type: "text",
         text: "Где-то вдали звучит та мелодия, что ты слышал у каменной стены.",
@@ -368,10 +339,10 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-companion-2",
-      background: images.forest,
+      background: images.owlbearAndBeetle,
       content: {
         type: "text",
-        text: "Медвесыч поднимает голову.\n\nОн узнаёт её раньше, чем ты, и начинает подпевать.",
+        text: "Медвесыч поднимает голову.\n\nОн узнаёт её и начинает тихо повторять мелодию.",
       },
       nextScene: "final-reveal",
     },
@@ -382,7 +353,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-reveal",
-      background: images.forest,
+      background: images.finalVictory,
       content: {
         type: "text",
         text: "Поле боя стихло.\n\nТёмные облака начинают расходиться.",
@@ -392,7 +363,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-reveal-2",
-      background: images.forest,
+      background: images.finalVictory,
       content: {
         type: "text",
         text: "Ты вспоминаешь всё, что нашёл по дороге.",
@@ -436,7 +407,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread",
-      background: images.forest,
+      background: images.yarn,
       content: {
         type: "text",
         text: "Медвесыч возится с чем-то рядом.",
@@ -446,7 +417,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-2",
-      background: images.forest,
+      background: images.yarn,
       content: {
         type: "text",
         text: "Ты видишь клубок ниток.\n\nТёплый рыжеватый цвет. Тот же, что и его шерсть.",
@@ -456,7 +427,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-3",
-      background: images.forest,
+      background: images.yarn,
       content: {
         type: "text",
         text: "Ты вынимаешь свою нитку — ту самую, из тёмной комнаты в лесу.",
@@ -466,7 +437,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-4",
-      background: images.forest,
+      background: images.yarn,
       content: {
         type: "text",
         text: "Прикладываешь.\n\nТа же пряжа. Тот же клубок, что лежал на столе в мастерской.",
@@ -476,10 +447,10 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-5",
-      background: images.forest,
+      background: images.yarn,
       content: {
         type: "text",
-        text: "Медвесыч опускает клубок на землю.",
+        text: "Медвесыч смотрит на тебя, а потом...",
       },
       nextScene: "final-thread-6",
     },
@@ -489,7 +460,7 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "И толкает его лапой.",
+        text: "Толкает клубок лапой.",
       },
       nextScene: "final-thread-7",
     },
@@ -512,27 +483,27 @@ export const finalChapter: ChapterData = {
     },
 
     {
-      id: "final-thread-9",
+      id: "final-thread-8",
       background: images.forest,
       content: {
         type: "text",
         text: "Клубок скрывается за деревьями.\n\nА нитка остаётся.",
+      },
+      nextScene: "final-thread-9",
+    },
+
+    {
+      id: "final-thread-9",
+      background: images.forest,
+      content: {
+        type: "text",
+        text: "Один её конец здесь, в этом волшебном мире.\n\nВторой — уже в другом месте.",
       },
       nextScene: "final-thread-10",
     },
 
     {
       id: "final-thread-10",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Один её конец здесь, на выжженной земле.\n\nВторой — уже не в этой игре.",
-      },
-      nextScene: "final-thread-11",
-    },
-
-    {
-      id: "final-thread-11",
       background: images.forest,
       content: {
         type: "text",

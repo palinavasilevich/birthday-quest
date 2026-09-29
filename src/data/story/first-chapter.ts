@@ -128,6 +128,9 @@ export const firstChapter: ChapterData = {
         text: "Пять древних знаков высечены прямо в камне.\n\nТы узнаешь их:\n\nAXII · QUEN · AARD · YRDEN · IGNI",
       },
       audio: audio.forest,
+      // specialEffects: ["zoom-in"],
+      // effectDelay: 1600,
+
       nextScene: "chapter1-stone-4",
     },
 
@@ -252,6 +255,10 @@ export const firstChapter: ChapterData = {
       },
 
       audio: audio.room,
+
+      specialEffects: ["rumble"],
+      effectDelay: 3000,
+
       nextScene: "chapter1-door-3",
     },
 
@@ -431,6 +438,9 @@ export const firstChapter: ChapterData = {
         text: "«То, что существует лишь в воображении, однажды может стать настоящим...»",
       },
       audio: audio.room,
+      showBackgroundOnly: true,
+      autoTransitionDelay: 3000,
+      autoTransitionToNextScene: true,
       nextScene: "chapter1-sound",
     },
 
@@ -489,6 +499,9 @@ export const firstChapter: ChapterData = {
         text: "В глубине прохода — небольшая тень.",
       },
       audio: audio.room,
+      specialEffects: ["vignette-pulse"],
+      effectDelay: 1600,
+      autoTransitionToNextScene: true,
       actions: [
         {
           id: "chase",
@@ -722,6 +735,8 @@ export const firstChapter: ChapterData = {
       },
       audio: audio.destruction,
       specialEffects: ["shake"],
+      effectDelay: 2000,
+      autoTransitionDelay: 5000,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-ending-3",
     },

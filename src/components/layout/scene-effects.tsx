@@ -26,31 +26,13 @@ export function SceneEffects({
   const hasFade = effects.includes("fade");
   const hasFadeIn = effects.includes("fade-in");
 
-  /*
-   * "warp" / "warp-in" — a softer, color-tinted cousin of "signal":
-   * the world blurs/dissolves rather than cutting to a flat black
-   * screen, for transitions between the game's two realities (forest
-   * ↔ city) rather than a generic scene cut.
-   *
-   * ⚠️ Needs adding to the SpecialEffect union in @/types/game.
-   */
   const hasWarp = effects.includes("warp" as SpecialEffect);
   const hasWarpIn = effects.includes("warp-in" as SpecialEffect);
-
-  /*
-   * New:
-   *  - "glow"   — a warm amber pulse radiating from the center,
-   *               for moments where something magical lights up
-   *               (e.g. the runes activating).
-   *  - "static" — a short, green-tinted flicker/glitch burst —
-   *               lighter and shorter than "signal", for a screen
-   *               waking up rather than a full scene transition.
-   *
-   * ⚠️ These need to be added to the SpecialEffect union in
-   * @/types/game for TypeScript to accept them in scene data.
-   */
   const hasGlow = effects.includes("glow" as SpecialEffect);
   const hasStatic = effects.includes("static" as SpecialEffect);
+  const hasRumble = effects.includes("rumble" as SpecialEffect);
+  const hasVignettePulse = effects.includes("vignette-pulse" as SpecialEffect);
+  const hasZoomIn = effects.includes("zoom-in" as SpecialEffect);
 
   const controls = useAnimationControls();
 
@@ -58,25 +40,43 @@ export function SceneEffects({
 
   const delaySeconds = effectDelay / 1000;
 
+  // Always keep the latest callback.
   useEffect(() => {
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
+  /**
+   * Start / stop effects controlled through animation controls.
+   *
+   * IMPORTANT:
+   * When sceneId changes, this effect runs again and
+   * controls.stop() immediately kills the animation
+   * from the previous scene.
+   */
   useEffect(() => {
-    if (!active) {
-      controls.set({
-        x: 0,
-        y: 0,
-        rotate: 0,
-        scale: 1,
-      });
+    // Stop anything that may still be running
+    // from the previous scene.
+    controls.stop();
 
+    // Reset the transform.
+    controls.set({
+      x: 0,
+      y: 0,
+      rotate: 0,
+      scale: 1,
+    });
+
+    if (!active) {
       return;
     }
 
+    // --------------------------------------------------
+    // SHAKE
+    // --------------------------------------------------
+
     if (hasShake) {
       const timeoutId = window.setTimeout(() => {
-        controls.start(
+        void controls.start(
           {
             x: [0, -3, 4, -5, 6, -5, 4, -3, 0],
             y: [0, 2, -3, 4, -4, 3, -2, 1, 0],
@@ -91,32 +91,100 @@ export function SceneEffects({
         );
       }, effectDelay);
 
-      return () => window.clearTimeout(timeoutId);
+      return () => {
+        window.clearTimeout(timeoutId);
+        controls.stop();
+      };
     }
-  }, [sceneId, active, hasShake, effectDelay, controls]);
+
+    // --------------------------------------------------
+    // RUMBLE
+    // --------------------------------------------------
+
+    if (hasRumble) {
+      const timeoutId = window.setTimeout(() => {
+        void controls
+          .start(
+            {
+              x: [0, -1.5, 1.5, -2, 2, -1.5, 1, 0],
+              y: [0, 1, -1, 1.5, -1.5, 1, -0.5, 0],
+            },
+            {
+              duration: 0.9,
+              ease: "easeInOut",
+              repeat: 2,
+            },
+          )
+          .then(() => {
+            onCompleteRef.current?.();
+          });
+      }, effectDelay);
+
+      return () => {
+        window.clearTimeout(timeoutId);
+        controls.stop();
+      };
+    }
+
+    return undefined;
+  }, [sceneId, active, hasShake, hasRumble, effectDelay, controls]);
 
   return (
     <div className="relative h-full w-full min-h-0 overflow-hidden">
+      {/* ================================================== */}
+      {/* MAIN CONTENT / SHAKE / WARP / ZOOM */}
+      {/* ================================================== */}
+
       <motion.div
         className="relative h-full w-full min-h-0"
         animate={
-          hasShake
+          hasShake || hasRumble
             ? controls
             : hasWarp
-              ? { filter: ["blur(0px)", "blur(14px)"], scale: [1, 1.06] }
+              ? {
+                  filter: ["blur(0px)", "blur(14px)"],
+                  scale: [1, 1.06],
+                }
               : hasWarpIn
-                ? { filter: ["blur(14px)", "blur(0px)"], scale: [1.06, 1] }
-                : undefined
+                ? {
+                    filter: ["blur(14px)", "blur(0px)"],
+                    scale: [1.06, 1],
+                  }
+                : hasZoomIn
+                  ? {
+                      scale: [1, 1.06],
+                    }
+                  : undefined
         }
         transition={
           hasWarp || hasWarpIn
-            ? { delay: delaySeconds, duration: 2.5, ease: "easeInOut" }
+            ? {
+                delay: delaySeconds,
+                duration: 2.5,
+                ease: "easeInOut",
+              }
+            : hasZoomIn
+              ? {
+                  delay: delaySeconds,
+                  duration: 3.5,
+                  ease: "easeOut",
+                }
+              : undefined
+        }
+        onAnimationComplete={
+          hasZoomIn
+            ? () => {
+                onCompleteRef.current?.();
+              }
             : undefined
         }
       >
         {children}
       </motion.div>
+
+      {/* ================================================== */}
       {/* FLASH */}
+      {/* ================================================== */}
 
       {active && hasFlash && (
         <motion.div
@@ -137,7 +205,9 @@ export function SceneEffects({
         />
       )}
 
-      {/* GLOW — warm pulse for magical activation moments */}
+      {/* ================================================== */}
+      {/* GLOW */}
+      {/* ================================================== */}
 
       {active && hasGlow && (
         <motion.div
@@ -163,7 +233,9 @@ export function SceneEffects({
         />
       )}
 
-      {/* STATIC — short green flicker for a screen waking up */}
+      {/* ================================================== */}
+      {/* STATIC */}
+      {/* ================================================== */}
 
       {active && hasStatic && (
         <>
@@ -182,14 +254,14 @@ export function SceneEffects({
             }}
             style={{
               background: `
-          repeating-linear-gradient(
-            to bottom,
-            transparent 0px,
-            transparent 2px,
-            rgba(120,255,170,0.16) 3px,
-            transparent 4px
-          )
-        `,
+                repeating-linear-gradient(
+                  to bottom,
+                  transparent 0px,
+                  transparent 2px,
+                  rgba(120,255,170,0.16) 3px,
+                  transparent 4px
+                )
+              `,
             }}
           />
 
@@ -213,11 +285,38 @@ export function SceneEffects({
         </>
       )}
 
+      {/* ================================================== */}
+      {/* VIGNETTE PULSE */}
+      {/* ================================================== */}
+
+      {active && hasVignettePulse && (
+        <motion.div
+          key={`vignette-pulse-${sceneId}`}
+          className="pointer-events-none absolute inset-0 z-100"
+          initial={{ opacity: 0.3 }}
+          animate={{
+            opacity: [0.3, 0.65, 0.3],
+          }}
+          transition={{
+            delay: delaySeconds,
+            duration: 2.2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          style={{
+            background:
+              "radial-gradient(circle at center, transparent 35%, rgba(0,0,0,0.85) 100%)",
+          }}
+        />
+      )}
+
+      {/* ================================================== */}
       {/* SIGNAL RETURN */}
+      {/* ================================================== */}
 
       {active && hasSignal && (
         <>
-          {/* 1. Полный чёрный экран */}
+          {/* 1. Full white screen */}
           <motion.div
             key={`signal-dark-${sceneId}`}
             className="pointer-events-none absolute inset-0 z-100 bg-white"
@@ -233,7 +332,7 @@ export function SceneEffects({
             }}
           />
 
-          {/* 2. Горизонтальные scanlines */}
+          {/* 2. Scanlines */}
           <motion.div
             key={`signal-scanlines-${sceneId}`}
             className="pointer-events-none absolute inset-0 z-101"
@@ -249,18 +348,18 @@ export function SceneEffects({
             }}
             style={{
               background: `
-          repeating-linear-gradient(
-            to bottom,
-            transparent 0px,
-            transparent 2px,
-            rgba(255,255,255,0.18) 3px,
-            transparent 4px
-          )
-        `,
+                repeating-linear-gradient(
+                  to bottom,
+                  transparent 0px,
+                  transparent 2px,
+                  rgba(255,255,255,0.18) 3px,
+                  transparent 4px
+                )
+              `,
             }}
           />
 
-          {/* 3. Первый резкий glitch */}
+          {/* 3. First glitch */}
           <motion.div
             key={`signal-glitch-one-${sceneId}`}
             className="pointer-events-none absolute inset-0 z-102"
@@ -282,23 +381,23 @@ export function SceneEffects({
             }}
             style={{
               background: `
-          linear-gradient(
-            to bottom,
-            transparent 0%,
-            transparent 38%,
-            rgba(217,155,34,0.25) 39%,
-            rgba(217,155,34,0.08) 43%,
-            transparent 44%,
-            transparent 62%,
-            rgba(255,255,255,0.18) 63%,
-            transparent 66%,
-            transparent 100%
-          )
-        `,
+                linear-gradient(
+                  to bottom,
+                  transparent 0%,
+                  transparent 38%,
+                  rgba(217,155,34,0.25) 39%,
+                  rgba(217,155,34,0.08) 43%,
+                  transparent 44%,
+                  transparent 62%,
+                  rgba(255,255,255,0.18) 63%,
+                  transparent 66%,
+                  transparent 100%
+                )
+              `,
             }}
           />
 
-          {/* 4. Разрыв изображения */}
+          {/* 4. Second glitch */}
           <motion.div
             key={`signal-glitch-two-${sceneId}`}
             className="pointer-events-none absolute inset-0 z-103"
@@ -318,19 +417,18 @@ export function SceneEffects({
             }}
             style={{
               background: `
-          repeating-linear-gradient(
-            to bottom,
-            transparent 0px,
-            transparent 7px,
-            rgba(255,255,255,0.12) 8px,
-            transparent 10px
-          )
-        `,
+                repeating-linear-gradient(
+                  to bottom,
+                  transparent 0px,
+                  transparent 7px,
+                  rgba(255,255,255,0.12) 8px,
+                  transparent 10px
+                )
+              `,
             }}
           />
 
-          {/* 5. Янтарный импульс — последний по времени завершения слой,
-               поэтому именно он сигнализирует о полном завершении эффекта. */}
+          {/* 5. Amber pulse */}
           <motion.div
             key={`signal-pulse-${sceneId}`}
             className="pointer-events-none absolute inset-0 z-104"
@@ -353,7 +451,7 @@ export function SceneEffects({
             }}
           />
 
-          {/* 6. Финальный короткий flash */}
+          {/* 6. Final flash */}
           <motion.div
             key={`signal-flash-${sceneId}`}
             className="pointer-events-none absolute inset-0 z-105 bg-[#0e0d0d]"
@@ -371,7 +469,9 @@ export function SceneEffects({
         </>
       )}
 
-      {/* WARP — reality dissolving into distortion, replaces a flat fade-to-black */}
+      {/* ================================================== */}
+      {/* WARP */}
+      {/* ================================================== */}
 
       {active && hasWarp && (
         <motion.div
@@ -394,7 +494,9 @@ export function SceneEffects({
         />
       )}
 
-      {/* WARP IN — the reverse: distortion resolving back into clarity */}
+      {/* ================================================== */}
+      {/* WARP IN */}
+      {/* ================================================== */}
 
       {active && hasWarpIn && (
         <motion.div
@@ -417,11 +519,14 @@ export function SceneEffects({
         />
       )}
 
+      {/* ================================================== */}
       {/* FADE */}
+      {/* ================================================== */}
+
       {active && hasFade && (
         <motion.div
           key={`fade-${sceneId}`}
-          className="pointer-events-none absolute inset-0 z-[110] bg-[#050505]"
+          className="pointer-events-none fixed inset-0 z-[110] bg-[#050505]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
@@ -434,11 +539,15 @@ export function SceneEffects({
           }}
         />
       )}
+
+      {/* ================================================== */}
       {/* FADE IN */}
+      {/* ================================================== */}
+
       {active && hasFadeIn && (
         <motion.div
           key={`fade-in-${sceneId}`}
-          className="pointer-events-none absolute inset-0 z-[110] bg-[#050505]"
+          className="pointer-events-none fixed inset-0 z-[110] bg-[#050505]"
           initial={{ opacity: 1 }}
           animate={{ opacity: 0 }}
           transition={{
