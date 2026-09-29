@@ -1,5 +1,5 @@
 import type { ChapterData } from "@/types/game";
-import { images } from "@/data/images/chapter1";
+import { images } from "@/data/images/chapter3";
 
 export const finalChapter: ChapterData = {
   id: "final",
@@ -15,8 +15,10 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Ты снова в лесу.\n\nНо лес изменился.",
+        text: "Когда глаза привыкают к темноте, ты снова видишь знакомые деревья.\n\nТы вернулся в лес.\n\nНо он изменился.",
       },
+      specialEffects: ["warp-in"],
+      effectDelay: 2500,
       nextScene: "final-start-2",
     },
 
@@ -35,7 +37,7 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Где-то впереди раздаётся грохот.\n\nЗатем ещё один.",
+        text: "Где-то впереди раздаётся грохот.\n\nЗатем ещё раз.",
       },
       nextScene: "final-start-4",
     },
@@ -45,7 +47,7 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Ты слышишь рёв.\n\nЭто не зверь.",
+        text: "Ты слышишь рёв.\n\nЧто за зверь можем издавать такие звуки?..",
       },
       nextScene: "final-start-5",
     },
@@ -66,7 +68,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battlefield",
-      background: images.forest,
+      background: images.battleField,
       content: {
         type: "text",
         text: "Ты идёшь на звук.\n\nДеревья редеют. Впереди открывается поле боя.",
@@ -76,7 +78,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battlefield-2",
-      background: images.forest,
+      background: images.battleField,
       content: {
         type: "text",
         text: "Земля изрыта следами огня.\n\nПовсюду лежат обломки.",
@@ -86,7 +88,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battlefield-3",
-      background: images.forest,
+      background: images.dragon,
       content: {
         type: "text",
         text: "Над поляной кружит огромная тень.\n\nОн замечает тебя. Раздаётся рёв.",
@@ -96,7 +98,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battlefield-4",
-      background: images.forest,
+      background: images.dragon,
       content: {
         type: "text",
         text: "Но ты замечаешь ещё кое-что.\n\nВ стороне, среди обломков, что-то движется.",
@@ -106,7 +108,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battlefield-5",
-      background: images.forest,
+      background: images.dragon,
       content: {
         type: "text",
         text: "Маленькая фигура.\n\nТы узнаёшь её.",
@@ -116,10 +118,10 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battlefield-6",
-      background: images.forest,
+      background: images.owlbear,
       content: {
         type: "text",
-        text: "Медвесыч.\n\nВот кто вёл тебя всё это время.",
+        text: "МЕДВЕСЫЧ?!!\n\nВот кто вёл тебя всё это время.",
       },
       nextScene: "final-battle",
     },
@@ -130,7 +132,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battle",
-      background: images.forest,
+      background: images.owlbear,
       content: {
         type: "text",
         text: "Дракон обрушивает огонь на обломки.\n\nМежду вами встаёт стена дыма.",
@@ -143,7 +145,7 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Секунду назад ты видел, где он. Теперь — нет.\n\nНужен ориентир.",
+        text: "Секунду назад ты видел, где он. Теперь — нет.\n\nТебе нужен ориентир.",
       },
       nextScene: "final-battle-3",
     },
@@ -163,7 +165,7 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "«Каждое великое приключение начинается с мира, который существует лишь в чьём-то воображении.»",
+        text: "«То, что когда-то существовало лишь в воображении, однажды может стать настоящим — и ожить в твоих руках.»",
       },
       nextScene: "final-battle-5",
     },
@@ -193,7 +195,7 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Латунные пластины. Шестерни. Винты.\n\nИнструкция на дне — будто кто-то знал, что собирать придётся в спешке.",
+        text: "Латунные пластины. Шестерни. Винты.",
       },
       nextScene: "final-battle-8",
     },
@@ -223,7 +225,7 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Ты подбрасываешь его — и он улетает в дым.\n\nОгню до металла нет дела.",
+        text: "Ты подбрасываешь его — и он улетает в дым.",
       },
       nextScene: "final-battle-11",
     },

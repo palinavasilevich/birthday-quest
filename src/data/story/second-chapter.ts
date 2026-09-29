@@ -19,10 +19,10 @@ export const secondChapter: ChapterData = {
         text: "",
       },
       specialEffects: ["signal"],
-      effectDelay: 3000,
+      effectDelay: 0,
       showBackgroundOnly: true,
       autoTransitionToNextScene: true,
-      autoTransitionDelay: 1700,
+      autoTransitionDelay: 3400,
       nextScene: "chapter2-night-city",
     },
 
@@ -161,6 +161,8 @@ export const secondChapter: ChapterData = {
         text: "Ты касаешься панели.\n\nВнутри стены что-то щёлкает.\n\nСтарый терминал оживает, и экран вспыхивает зелёным светом.\n\nНесколько секунд — только помехи. А затем...",
       },
       audio: audio.cyberpunk,
+      specialEffects: ["static"],
+      effectDelay: 1800,
       autoTransitionToNextScene: true,
       autoTransitionDelay: 8000,
       nextScene: "chapter2-terminal",
@@ -607,37 +609,9 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Шум города становится всё тише.\n\nНеон исчезает.",
       },
-      specialEffects: ["glitch"],
-      effectDelay: 5000,
-      nextScene: "chapter2-transition-back-3",
-    },
-
-    {
-      id: "chapter2-transition-back-3",
-      background: images.workshopOutside,
-      content: {
-        type: "text",
-        text: "Когда глаза привыкают к темноте, ты снова видишь знакомые деревья.\n\nТы вернулся в лес.",
-      },
-      specialEffects: ["flash"],
-      effectDelay: 2500,
-      nextScene: "chapter2-transition-back-4",
-    },
-
-    {
-      id: "chapter2-transition-back-4",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Ты делаешь несколько шагов вперёд.\n\nИ вдруг слышишь хруст ветки.\n\nСовсем рядом.",
-      },
-      actions: [
-        {
-          id: "go-on",
-          label: "Go on",
-          nextScene: "final-start",
-        },
-      ],
+      specialEffects: ["warp"],
+      effectDelay: 2600,
+      nextScene: "final-start",
     },
   ],
 };

@@ -45,8 +45,10 @@ export type SpecialEffect =
   | "shake"
   | "flash"
   | "signal"
-  | "fade"
-  | "fade-in"
+  | "glow"
+  | "static"
+  | "warp"
+  | "warp-in"
   | "glitch";
 
 export interface SceneData {
