@@ -1,7 +1,6 @@
 import { GameMusic } from "@/components/audio/game-music";
 import { Scene } from "@/components/scene/scene";
 import { finalChapter } from "@/data/story/final";
-
 import { firstChapter } from "@/data/story/first-chapter";
 import { secondChapter } from "@/data/story/second-chapter";
 import { useGameStore } from "@/store/game-store";

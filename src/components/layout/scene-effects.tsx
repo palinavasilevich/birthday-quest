@@ -476,7 +476,7 @@ export function SceneEffects({
       {active && hasWarp && (
         <motion.div
           key={`warp-${sceneId}`}
-          className="pointer-events-none absolute inset-0 z-[110]"
+          className="pointer-events-none absolute inset-0 z-110"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
@@ -501,7 +501,7 @@ export function SceneEffects({
       {active && hasWarpIn && (
         <motion.div
           key={`warp-in-${sceneId}`}
-          className="pointer-events-none absolute inset-0 z-[110]"
+          className="pointer-events-none absolute inset-0 z-110"
           initial={{ opacity: 1 }}
           animate={{ opacity: 0 }}
           transition={{
@@ -526,7 +526,7 @@ export function SceneEffects({
       {active && hasFade && (
         <motion.div
           key={`fade-${sceneId}`}
-          className="pointer-events-none fixed inset-0 z-[110] bg-[#050505]"
+          className="pointer-events-none fixed inset-0 z-110 bg-[#050505]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
@@ -547,7 +547,7 @@ export function SceneEffects({
       {active && hasFadeIn && (
         <motion.div
           key={`fade-in-${sceneId}`}
-          className="pointer-events-none fixed inset-0 z-[110] bg-[#050505]"
+          className="pointer-events-none fixed inset-0 z-110 bg-[#050505]"
           initial={{ opacity: 1 }}
           animate={{ opacity: 0 }}
           transition={{

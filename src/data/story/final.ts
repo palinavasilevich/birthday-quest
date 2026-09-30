@@ -1,5 +1,5 @@
 import type { ChapterData } from "@/types/game";
-import { images } from "@/data/images/chapter3";
+import { images } from "@/data/images/final";
 
 export const finalChapter: ChapterData = {
   id: "final",
@@ -93,6 +93,8 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Над поляной кружит огромная тень.\n\nОн замечает тебя. Раздаётся рёв.",
       },
+      // Медленный наезд — тень дракона раскрывается игроку постепенно.
+      specialEffects: ["zoom-in"],
       nextScene: "final-battlefield-4",
     },
 
@@ -123,6 +125,8 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Медвесыч?.. \n\nТак вот кто вёл тебя всё это время.",
       },
+      // Тёплая вспышка узнавания — та же визуальная рифма, что у рун.
+      specialEffects: ["glow"],
       autoTransitionToNextScene: true,
       autoTransitionDelay: 3000,
       nextScene: "final-battle",
@@ -139,6 +143,8 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Дракон обрушивает огонь на обломки.\n\nМежду вами встаёт стена дыма.",
       },
+      // Затемнение по краям читается и как дым, застилающий обзор.
+      specialEffects: ["vignette-pulse"],
       nextScene: "final-battle-2",
     },
 
@@ -198,6 +204,8 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "MI-01 лежит у тебя на ладони.\n\nНа мгновение — тишина.\n\nЗатем надкрылья раскрываются.\n\nОн оживает.",
       },
+      // Механизм оживает так же, как ожили руны у стены.
+      specialEffects: ["glow"],
       nextScene: "final-battle-8",
     },
 
@@ -427,7 +435,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-3",
-      background: images.yarn,
+      background: images.yarnInHands,
       content: {
         type: "text",
         text: "Ты вынимаешь свою нитку — ту самую, из тёмной комнаты в лесу.",
@@ -437,7 +445,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-4",
-      background: images.yarn,
+      background: images.yarnInHands,
       content: {
         type: "text",
         text: "Прикладываешь.\n\nТа же пряжа. Тот же клубок, что лежал на столе в мастерской.",
@@ -457,7 +465,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-6",
-      background: images.forest,
+      background: images.yarnInBattleField,
       content: {
         type: "text",
         text: "Толкает клубок лапой.",
@@ -467,7 +475,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-7",
-      background: images.forest,
+      background: images.yarnInBattleField,
       content: {
         type: "text",
         text: "Клубок катится.\n\nМимо обломков.\n\nЗа деревья.",
@@ -484,7 +492,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-8",
-      background: images.forest,
+      background: images.yarnInForest,
       content: {
         type: "text",
         text: "Клубок скрывается за деревьями.\n\nА нитка остаётся.",
@@ -494,7 +502,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-9",
-      background: images.forest,
+      background: images.final,
       content: {
         type: "text",
         text: "Один её конец здесь, в этом волшебном мире.\n\nВторой — уже в другом месте.",
@@ -504,35 +512,38 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-10",
-      background: images.forest,
+      background: images.final,
       content: {
         type: "text",
         text: "Подними глаза.\n\nОн где-то совсем рядом с тобой.",
       },
-      nextScene: "final-thread-12",
+      nextScene: "final-the-end",
     },
 
-    {
-      id: "final-thread-12",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Книга. Жук. Медвесыч.\n\nВсё это сделала одна пара рук — и ты их очень хорошо знаешь.",
-      },
-    },
+    // {
+    //   id: "final-thread-12",
+    //   background: images.forest,
+    //   content: {
+    //     type: "text",
+    //     text: "Книга. Жук. Медвесыч.\n\nВсё это сделала одна пара рук — и ты их очень хорошо знаешь.",
+    //   },
+    //   // Было: ни nextScene, ни actions — история снова обрывалась
+    //   // здесь, и final-the-end снова оставался недостижимым.
+    //   nextScene: "final-the-end",
+    // },
 
-    // ─────────────────────────────
-    // SCENE 09 — THE END
-    // ─────────────────────────────
+    // // ─────────────────────────────
+    // // SCENE 09 — THE END
+    // // ─────────────────────────────
 
-    {
-      id: "final-the-end",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "THE END",
-      },
-      nextScene: "final-birthday",
-    },
+    // {
+    //   id: "final-the-end",
+    //   background: images.forest,
+    //   content: {
+    //     type: "text",
+    //     text: "THE END",
+    //   },
+    //   nextScene: "final-birthday",
+    // },
   ],
 };
