@@ -347,43 +347,55 @@ export const finalChapter: ChapterData = {
       },
       nextScene: "final-reveal-2",
     },
-
     {
       id: "final-reveal-2",
       background: images.finalVictory,
       content: {
         type: "text",
-        text: "Ты вспоминаешь всё, что нашёл по дороге.",
+        text: "Ты закрываешь глаза.\n\nИ вспоминаешь, как всё начиналось.",
       },
-      nextScene: "final-reveal-3",
+      specialEffects: ["vignette-pulse"],
+      effectDelay: 2500,
+      nextScene: "final-recollection-1",
     },
 
     {
-      id: "final-reveal-3",
-      background: images.forest,
+      id: "final-recollection-1",
+      background: images.book,
       content: {
         type: "text",
-        text: "Книгу на пьедестале.\n\nКоробку с жуком в мастерской.",
+        text: "Книга на древнем пьедестале.\n\nПервая загадка — и первый шаг в неизвестность.",
       },
-      nextScene: "final-reveal-4",
+      specialEffects: ["fade-in"],
+      effectDelay: 0,
+      nextScene: "final-recollection-2",
     },
 
     {
-      id: "final-reveal-4",
-      background: images.forest,
+      id: "final-recollection-2",
+      background: images.cyberpunk,
       content: {
         type: "text",
-        text: "Чертежи устройства и схему вязания.",
+        text: "Потом неоновые улицы.\n\nТайная мастерская и устройство, которое ты собрал.",
+      },
+      nextScene: "final-recollection-3",
+    },
+
+    {
+      id: "final-recollection-3",
+      background: images.workshopTraces,
+      content: {
+        type: "text",
+        text: "Чертежи, детали и странная схема.\n\nКаждая находка вела тебя дальше.",
       },
       nextScene: "final-reveal-5",
     },
-
     {
       id: "final-reveal-5",
-      background: images.forest,
+      background: images.finalVictory,
       content: {
         type: "text",
-        text: "Ничего из этого не лежало там случайно.\n\nКто-то оставил их для тебя.",
+        text: "Теперь ты понимаешь.\n\nНичего из этого не было случайностью.",
       },
       nextScene: "final-thread",
     },
@@ -397,8 +409,10 @@ export const finalChapter: ChapterData = {
       background: images.yarn,
       content: {
         type: "text",
-        text: "Медвесыч возится с чем-то рядом.",
+        text: "Ты открываешь глаза.\n\nМедвесыч возится с чем-то рядом.",
       },
+      specialEffects: ["glow"],
+      effectDelay: 1000,
       nextScene: "final-thread-2",
     },
 
@@ -441,7 +455,6 @@ export const finalChapter: ChapterData = {
       },
       nextScene: "final-thread-6",
     },
-
     {
       id: "final-thread-6",
       background: images.yarnInBattleField,
@@ -451,7 +464,6 @@ export const finalChapter: ChapterData = {
       },
       nextScene: "final-thread-7",
     },
-
     {
       id: "final-thread-7",
       background: images.yarnInForest,
@@ -459,7 +471,6 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Клубок катится.\n\nМимо обломков.\n\nЗа деревья.",
       },
-
       actions: [
         {
           id: "go-after",
@@ -468,37 +479,37 @@ export const finalChapter: ChapterData = {
         },
       ],
     },
-
     {
       id: "final-thread-8",
       background: images.yarnDisappeared,
       content: {
         type: "text",
-        text: "Клубок скрывается за деревьями.\n\nА нитка остаётся.",
+        text: "Нитка тянется сквозь этот волшебный мир.\n\nИ уходит туда, где заканчивается эта история и начинается что-то другое.",
       },
-      nextScene: "final-thread-9",
+      actions: [
+        {
+          id: "go-after",
+          label: "Follow the thread",
+          nextScene: "final-thread-9",
+        },
+      ],
+      specialEffects: ["shimmer"],
     },
-
     {
       id: "final-thread-9",
-      background: images.yarnDisappeared,
+      background: images.final,
       content: {
         type: "text",
-        text: "Один её конец здесь, в этом волшебном мире.\n\nВторой — уже в другом месте.",
+        text: "Ты узнаёшь это место.\n\nТы дома.",
       },
-      // Тихий отблеск — лёгкий акцент на мысли о другом месте, без
-      // полноценного перехода сцены.
-      specialEffects: ["shimmer"],
-
-      nextScene: "final-thread-10",
+      nextScene: "final-the-end",
     },
-
     {
-      id: "final-thread-10",
-      background: images.yarnDisappearedFinal,
+      id: "final-the-end",
+      background: images.final,
       content: {
         type: "text",
-        text: "Посмотри вокруг.\n\nНитка где-то совсем рядом с тобой.",
+        text: "Ты прошёл долгий путь.\n\nНо самые важные приключения ждут тебя впереди.",
       },
       nextScene: "final-the-end",
     },
