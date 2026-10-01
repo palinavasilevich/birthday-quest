@@ -454,7 +454,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-7",
-      background: images.yarnInBattleField,
+      background: images.yarnInForest,
       content: {
         type: "text",
         text: "Клубок катится.\n\nМимо обломков.\n\nЗа деревья.",
@@ -463,7 +463,7 @@ export const finalChapter: ChapterData = {
       actions: [
         {
           id: "go-after",
-          label: "Пойти следом",
+          label: "Follow the thread",
           nextScene: "final-thread-8",
         },
       ],
@@ -471,7 +471,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-8",
-      background: images.yarnInForest,
+      background: images.yarnDisappeared,
       content: {
         type: "text",
         text: "Клубок скрывается за деревьями.\n\nА нитка остаётся.",
@@ -481,7 +481,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-9",
-      background: images.final,
+      background: images.yarnDisappeared,
       content: {
         type: "text",
         text: "Один её конец здесь, в этом волшебном мире.\n\nВторой — уже в другом месте.",
@@ -495,38 +495,12 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-thread-10",
-      background: images.final,
+      background: images.yarnDisappearedFinal,
       content: {
         type: "text",
-        text: "Подними глаза.\n\nОн где-то совсем рядом с тобой.",
+        text: "Посмотри вокруг.\n\nНитка где-то совсем рядом с тобой.",
       },
       nextScene: "final-the-end",
     },
-
-    // {
-    //   id: "final-thread-12",
-    //   background: images.forest,
-    //   content: {
-    //     type: "text",
-    //     text: "Книга. Жук. Медвесыч.\n\nВсё это сделала одна пара рук — и ты их очень хорошо знаешь.",
-    //   },
-    //   // Было: ни nextScene, ни actions — история снова обрывалась
-    //   // здесь, и final-the-end снова оставался недостижимым.
-    //   nextScene: "final-the-end",
-    // },
-
-    // // ─────────────────────────────
-    // // SCENE 09 — THE END
-    // // ─────────────────────────────
-
-    // {
-    //   id: "final-the-end",
-    //   background: images.forest,
-    //   content: {
-    //     type: "text",
-    //     text: "THE END",
-    //   },
-    //   nextScene: "final-birthday",
-    // },
   ],
 };

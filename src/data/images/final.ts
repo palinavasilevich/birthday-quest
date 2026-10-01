@@ -16,5 +16,7 @@ export const images = {
   yarnInHands: "/images/final/yarn-in-hands.png",
   yarnInBattleField: "/images/final/yarn-in-battle-field.png",
   yarnInForest: "/images/final/yarn-in-forest.png",
+  yarnDisappeared: "/images/final/yarn-disappeared.png",
+  yarnDisappearedFinal: "/images/final/yarn-disappeared-final.png",
   final: "/images/final/final.png",
 };
