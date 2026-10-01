@@ -67,10 +67,9 @@ export const secondChapter: ChapterData = {
         text: "",
       },
       audio: audio.cyberpunk,
-
       showBackgroundOnly: true,
       autoTransitionToNextScene: true,
-      autoTransitionDelay: 2000,
+      autoTransitionDelay: 1700,
       nextScene: "chapter2-night-city-5",
     },
 
@@ -308,7 +307,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Где-то за стеной раздаётся механический звук.\n\nЩёлк.\n\nПауза.\n\nЩёлк.",
       },
-      audio: audio.cyberpunk,
+      audio: audio.workshop,
       nextScene: "chapter2-workshop-2",
     },
 
@@ -320,7 +319,7 @@ export const secondChapter: ChapterData = {
         text: "Затем включается свет.\n\nПеред тобой открывается дверь в небольшую мастерскую.",
       },
 
-      audio: audio.cyberpunk,
+      audio: audio.workshop,
       nextScene: "chapter2-workshop-3",
     },
 
@@ -332,7 +331,7 @@ export const secondChapter: ChapterData = {
         text: "Инструменты, детали, разобранные механизмы.\n\nВсё покрыто пылью.\n\nПохоже, здесь давно никто не работал.",
       },
 
-      audio: audio.cyberpunk,
+      audio: audio.workshop,
       nextScene: "chapter2-workshop-4",
     },
 
@@ -344,17 +343,17 @@ export const secondChapter: ChapterData = {
         text: "Перед тобой длинный рабочий стол.\n\nА в углу до сих пор горит одинокий монитор.",
       },
 
-      audio: audio.cyberpunk,
+      audio: audio.workshop,
 
       actions: [
         {
           id: "check-table",
-          label: "Осмотреть стол",
+          label: "Inspect table",
           nextScene: "chapter2-table",
         },
         {
           id: "check-log",
-          label: "Посмотреть, что на экране",
+          label: "View what's on the screen",
           nextScene: "chapter2-log",
         },
       ],
@@ -375,7 +374,7 @@ export const secondChapter: ChapterData = {
       autoTransitionToNextScene: true,
       autoTransitionDelay: 6500,
 
-      audio: audio.cyberpunk,
+      audio: audio.workshop,
       nextScene: "chapter2-log-2",
     },
 
@@ -386,7 +385,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "За тобой следят с самой первой минуты.\n\nИ всё это время тебя вели именно сюда.",
       },
-      audio: audio.cyberpunk,
+      audio: audio.workshop,
       nextScene: "chapter2-table",
     },
 
@@ -398,7 +397,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Стол завален чертежами.\n\nСреди них снова и снова встречается один и тот же силуэт.",
       },
-      audio: audio.cyberpunk,
+      audio: audio.workshop,
       nextScene: "chapter2-table-2",
     },
 
@@ -409,7 +408,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Небольшое механическое существо.\n\nДве широкие пластины на спине, прозрачные крылья и шесть тонких лап.",
       },
-      audio: audio.cyberpunk,
+      audio: audio.workshop,
       nextScene: "chapter2-table-3",
     },
 
@@ -420,7 +419,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Внутри корпуса — шестерни, шарниры и десятки мелких деталей.\n\nКаждый механизм прорисован до последнего винта.",
       },
-      audio: audio.cyberpunk,
+      audio: audio.workshop,
       nextScene: "chapter2-table-4",
     },
 
@@ -441,7 +440,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Ты переворачиваешь последний лист.\n\nПод ним обнаруживается ещё одна схема.",
       },
-      audio: audio.cyberpunk,
+      audio: audio.table,
       nextScene: "chapter2-table-5",
     },
 
@@ -452,7 +451,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Но эта схема совсем другая.\n\nЗдесь нет шестерён и механизмов — только простые линии.\n\nМаленькая фигура с круглыми ушами и четырьмя лапами.",
       },
-      audio: audio.cyberpunk,
+      audio: audio.table,
       nextScene: "chapter2-table-6",
     },
 
@@ -463,7 +462,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "А рядом со схемой лежит клубок.\n\nТого же тёплого рыжеватого цвета, что и нитка у тебя в кармане.",
       },
-      audio: audio.cyberpunk,
+      audio: audio.table,
       nextScene: "chapter2-table-7",
     },
 
@@ -474,7 +473,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "В самом углу стола, отдельно от всего, стоит небольшая коробка.\n\nНа ней надпись:\n\nMI-01",
       },
-      audio: audio.cyberpunk,
+      audio: audio.table,
       actions: [
         {
           id: "open-box",
@@ -495,7 +494,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Внутри — детали.\n\nЛатунные пластины, шестерни и винты.\n\nНа внутренней стороне крышки — инструкция по сборке.",
       },
-      audio: audio.cyberpunk,
+      audio: audio.table,
       nextScene: "chapter2-open-2",
     },
 
@@ -526,7 +525,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Ты уже собираешься закрыть коробку.\n\nНо рядом, в пыли на столе, замечаешь маленький след.",
       },
-      audio: audio.cyberpunk,
+      audio: audio.table,
       actions: [
         {
           id: "leave-now",
@@ -550,7 +549,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Ты садишься прямо на пол и ждёшь.\n\nМинуту. Две.",
       },
-      audio: audio.cyberpunk,
+      audio: audio.table,
       nextScene: "chapter2-wait-2",
     },
 
@@ -561,7 +560,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Никто не приходит.\n\nПотом в углу коротко щёлкает монитор.\n\nТы оборачиваешься.",
       },
-      audio: audio.cyberpunk,
+      audio: audio.table,
       nextScene: "chapter2-wait-3",
     },
 
@@ -584,7 +583,7 @@ export const secondChapter: ChapterData = {
         actionLabel: "Go outside",
       },
 
-      audio: audio.cyberpunk,
+      audio: audio.table,
       nextScene: "chapter2-transition-back",
     },
 
@@ -599,6 +598,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Ты выходишь обратно в переулок.\n\nСвет мастерской гаснет за спиной.",
       },
+      audio: audio.table,
       nextScene: "chapter2-transition-back-2",
     },
 
@@ -612,7 +612,7 @@ export const secondChapter: ChapterData = {
 
       autoTransitionDelay: 3500,
       autoTransitionToNextScene: true,
-
+      audio: audio.workshop,
       nextScene: "chapter2-transition-back-3",
     },
 
@@ -623,7 +623,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "",
       },
-
+      audio: audio.workshop,
       specialEffects: ["warp"],
       effectDelay: 1600,
       autoTransitionToNextScene: true,
