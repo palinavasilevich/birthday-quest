@@ -26,6 +26,7 @@ export function Scene({ scene }: SceneProps) {
   const isTerminal = scene.content.type === "terminal";
   const isSpecialComponent = Boolean(scene.specialComponent);
   const showBackgroundOnly = scene.showBackgroundOnly === true;
+  const isFinish = scene.isFinish === true;
 
   const handleTypingComplete = () => {
     setCompletedSceneId(scene.id);
@@ -42,6 +43,15 @@ export function Scene({ scene }: SceneProps) {
   };
 
   const sceneContent = () => {
+    if (isFinish) {
+      return null;
+      // (
+      //   <div className="mt-10 flex justify-center">
+      //     <ActionButton text="The End" onClick={() => {}} />
+      //   </div>
+      // );
+    }
+
     if (scene.puzzle) {
       return <Puzzle puzzle={scene.puzzle} />;
     }

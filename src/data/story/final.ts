@@ -511,7 +511,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты прошёл долгий путь.\n\nНо самые важные приключения ждут тебя впереди.",
       },
-      nextScene: "final-the-end",
+      isFinish: true,
     },
   ],
 };

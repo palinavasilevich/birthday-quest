@@ -72,6 +72,7 @@ export interface SceneData {
   showBackgroundOnly?: boolean;
   autoTransitionDelay?: number;
   specialComponent?: "workshop-log";
+  isFinish?: boolean;
 }
 
 export interface ChapterData {
