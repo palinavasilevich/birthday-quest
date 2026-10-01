@@ -288,6 +288,9 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Дракон падает.\n\nНаступает тишина.\n\nПепел медленно оседает на землю.",
       },
+      // Один резкий толчок + тёплая вспышка — удар падения дракона,
+      // который быстро гаснет в тишину.
+      specialEffects: ["impact"],
       nextScene: "final-victory-2",
     },
 
@@ -310,30 +313,6 @@ export const finalChapter: ChapterData = {
       },
       nextScene: "final-companion",
     },
-
-    // ─────────────────────────────
-    // SCENE 06 — COMPANION
-    // ─────────────────────────────
-
-    // {
-    //   id: "final-companion",
-    //   background: images.forest,
-    //   content: {
-    //     type: "text",
-    //     text: "Ты протягиваешь руку.",
-    //   },
-    //   nextScene: "final-companion-2",
-    // },
-
-    // {
-    //   id: "final-companion-2",
-    //   background: images.forest,
-    //   content: {
-    //     type: "text",
-    //     text: "Медвесыч делает шаг. Ещё один.\n\nИ садится рядом.",
-    //   },
-    //   nextScene: "final-companion-3",
-    // },
 
     {
       id: "final-companion",
@@ -507,6 +486,10 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Один её конец здесь, в этом волшебном мире.\n\nВторой — уже в другом месте.",
       },
+      // Тихий отблеск — лёгкий акцент на мысли о другом месте, без
+      // полноценного перехода сцены.
+      specialEffects: ["shimmer"],
+
       nextScene: "final-thread-10",
     },
 

@@ -54,7 +54,9 @@ export type SpecialEffect =
   | "vignette-pulse"
   | "zoom-in"
   | "fade"
-  | "fade-in";
+  | "fade-in"
+  | "impact"
+  | "shimmer";
 
 export interface SceneData {
   id: string;
