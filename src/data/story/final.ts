@@ -588,7 +588,7 @@ export const finalChapter: ChapterData = {
         text: "",
       },
       showBackgroundOnly: true,
-      audio: audio.final,
+      audio: audio.ending,
       isFinish: true,
     },
   ],

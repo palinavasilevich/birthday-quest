@@ -4,4 +4,5 @@ export const audio = {
   battleWithDragon: "/audio/final/nastelbom-battle.mp3",
   victory: "/audio/final/victory.mp3",
   final: "/audio/final/final.mp3",
+  ending: "/audio/final/ending.mp3",
 };
