@@ -10,6 +10,15 @@ interface SceneEffectsProps {
   sceneId: string;
   effectDelay?: number;
   onComplete?: () => void;
+  /**
+   * Classes for the root wrapper. Defaults to filling its normal
+   * flow position; pass "absolute inset-0 overflow-hidden" (or
+   * similar) when SceneEffects wraps just a background layer inside
+   * a larger layout, so the transform-based effects (zoom-in, warp,
+   * shake, rumble, impact) only move that layer — not whatever else
+   * is rendered alongside it.
+   */
+  containerClassName?: string;
 }
 
 export function SceneEffects({
@@ -19,6 +28,7 @@ export function SceneEffects({
   sceneId,
   effectDelay = 0,
   onComplete,
+  containerClassName = "relative h-full w-full min-h-0 overflow-hidden",
 }: SceneEffectsProps) {
   const hasShake = effects.includes("shake");
   const hasFlash = effects.includes("flash");
@@ -33,6 +43,20 @@ export function SceneEffects({
   const hasRumble = effects.includes("rumble" as SpecialEffect);
   const hasVignettePulse = effects.includes("vignette-pulse" as SpecialEffect);
   const hasZoomIn = effects.includes("zoom-in" as SpecialEffect);
+
+  /*
+   *  - "impact"  — one sharp jolt + a warm flash, then stillness —
+   *                for a single big hit (something falling), distinct
+   *                from "shake" (looping, world-ending) and "rumble"
+   *                (softer, grinding).
+   *  - "shimmer" — a single soft light sweep across the screen — a
+   *                quiet accent for a contemplative beat, not a full
+   *                scene transition like "warp".
+   *
+   * ⚠️ Also need adding to the SpecialEffect union in @/types/game.
+   */
+  const hasImpact = effects.includes("impact" as SpecialEffect);
+  const hasShimmer = effects.includes("shimmer" as SpecialEffect);
 
   const controls = useAnimationControls();
 
@@ -126,19 +150,48 @@ export function SceneEffects({
       };
     }
 
+    // --------------------------------------------------
+    // IMPACT
+    // --------------------------------------------------
+
+    if (hasImpact) {
+      const timeoutId = window.setTimeout(() => {
+        // Fire-and-forget — completion is signalled by the impact
+        // flash overlay below, not this jolt, so onComplete only
+        // fires once rather than from both at slightly different times.
+        void controls.start(
+          {
+            x: [0, -6, 5, -3, 0],
+            y: [0, 4, -3, 1, 0],
+            scale: [1, 1.01, 1],
+          },
+          {
+            duration: 0.5,
+            ease: "easeOut",
+          },
+        );
+      }, effectDelay);
+
+      return () => {
+        window.clearTimeout(timeoutId);
+        controls.stop();
+      };
+    }
+
     return undefined;
-  }, [sceneId, active, hasShake, hasRumble, effectDelay, controls]);
+  }, [sceneId, active, hasShake, hasRumble, hasImpact, effectDelay, controls]);
 
   return (
-    <div className="relative h-full w-full min-h-0 overflow-hidden">
+    <div className={containerClassName}>
       {/* ================================================== */}
       {/* MAIN CONTENT / SHAKE / WARP / ZOOM */}
       {/* ================================================== */}
 
       <motion.div
+        key={sceneId}
         className="relative h-full w-full min-h-0"
         animate={
-          hasShake || hasRumble
+          hasShake || hasRumble || hasImpact
             ? controls
             : hasWarp
               ? {
@@ -311,6 +364,59 @@ export function SceneEffects({
       )}
 
       {/* ================================================== */}
+      {/* IMPACT — one sharp jolt + warm flash, then stillness */}
+      {/* ================================================== */}
+
+      {active && hasImpact && (
+        <motion.div
+          key={`impact-${sceneId}`}
+          className="pointer-events-none absolute inset-0 z-100"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.8, 0] }}
+          transition={{
+            delay: delaySeconds,
+            duration: 0.5,
+            ease: "easeOut",
+          }}
+          style={{
+            background:
+              "radial-gradient(circle at center, rgba(255,140,60,0.5), transparent 70%)",
+          }}
+          onAnimationComplete={() => {
+            onCompleteRef.current?.();
+          }}
+        />
+      )}
+
+      {/* ================================================== */}
+      {/* SHIMMER — one soft light sweep, for a quiet accent */}
+      {/* ================================================== */}
+
+      {active && hasShimmer && (
+        <div className="pointer-events-none absolute inset-0 z-100 overflow-hidden">
+          <motion.div
+            key={`shimmer-${sceneId}`}
+            className="absolute -inset-y-1/2 w-1/3"
+            style={{
+              background:
+                "linear-gradient(75deg, transparent, rgba(255,235,190,0.35), transparent)",
+              transform: "rotate(8deg)",
+            }}
+            initial={{ x: "-120%" }}
+            animate={{ x: "220%" }}
+            transition={{
+              delay: delaySeconds,
+              duration: 2.2,
+              ease: "easeInOut",
+            }}
+            onAnimationComplete={() => {
+              onCompleteRef.current?.();
+            }}
+          />
+        </div>
+      )}
+
+      {/* ================================================== */}
       {/* SIGNAL RETURN */}
       {/* ================================================== */}
 
@@ -476,7 +582,7 @@ export function SceneEffects({
       {active && hasWarp && (
         <motion.div
           key={`warp-${sceneId}`}
-          className="pointer-events-none absolute inset-0 z-110"
+          className="pointer-events-none absolute inset-0 z-[110]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
@@ -501,7 +607,7 @@ export function SceneEffects({
       {active && hasWarpIn && (
         <motion.div
           key={`warp-in-${sceneId}`}
-          className="pointer-events-none absolute inset-0 z-110"
+          className="pointer-events-none absolute inset-0 z-[110]"
           initial={{ opacity: 1 }}
           animate={{ opacity: 0 }}
           transition={{
@@ -526,7 +632,7 @@ export function SceneEffects({
       {active && hasFade && (
         <motion.div
           key={`fade-${sceneId}`}
-          className="pointer-events-none fixed inset-0 z-110 bg-[#050505]"
+          className="pointer-events-none fixed inset-0 z-[110] bg-[#050505]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{
@@ -547,7 +653,7 @@ export function SceneEffects({
       {active && hasFadeIn && (
         <motion.div
           key={`fade-in-${sceneId}`}
-          className="pointer-events-none fixed inset-0 z-110 bg-[#050505]"
+          className="pointer-events-none fixed inset-0 z-[110] bg-[#050505]"
           initial={{ opacity: 1 }}
           animate={{ opacity: 0 }}
           transition={{

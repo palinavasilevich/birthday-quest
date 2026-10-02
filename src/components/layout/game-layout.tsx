@@ -6,6 +6,9 @@ import { AmbientMusic } from "@/components/audio/ambient-music";
 import { AmbientParticles } from "@/components/layout/ambient-particles";
 import { FullscreenButton } from "@/components/layout/fullscreen-button";
 import { SoundToggleButton } from "@/components/layout/sound-toggle-button";
+import { SceneEffects } from "@/components/layout/scene-effects";
+
+import type { SpecialEffect } from "@/types/game";
 
 interface GameLayoutProps {
   backgroundImg?: string;
@@ -15,6 +18,15 @@ interface GameLayoutProps {
   classNameContentBlock?: string;
   music?: string;
   showBackgroundOnly?: boolean;
+  /**
+   * Special-effect data for the current scene. Applied only to the
+   * background layer below — not to the content panel or the
+   * sound/fullscreen buttons — so transform-based effects (zoom-in,
+   * warp, shake, rumble, impact) move the scene's art, not the UI.
+   */
+  specialEffects?: SpecialEffect[];
+  effectDelay?: number;
+  onEffectComplete?: () => void;
 }
 
 export function GameLayout({
@@ -25,6 +37,9 @@ export function GameLayout({
   classNameContentBlock = "",
   music,
   showBackgroundOnly = false,
+  specialEffects = [],
+  effectDelay,
+  onEffectComplete,
 }: GameLayoutProps) {
   return (
     <div
@@ -45,15 +60,24 @@ export function GameLayout({
       {music && <AmbientMusic src={music} />}
 
       {backgroundImg && (
-        <motion.img
-          key={backgroundImg}
-          src={backgroundImg}
-          alt=""
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5 }}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+        <SceneEffects
+          active={specialEffects.length > 0}
+          effects={specialEffects}
+          sceneId={sceneKey ?? backgroundImg}
+          effectDelay={effectDelay}
+          onComplete={onEffectComplete}
+          containerClassName="absolute inset-0 overflow-hidden"
+        >
+          <motion.img
+            key={backgroundImg}
+            src={backgroundImg}
+            alt=""
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.5 }}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </SceneEffects>
       )}
 
       <AmbientParticles />

@@ -5,7 +5,6 @@ import { useGameStore } from "@/store/game-store";
 import { GameLayout } from "@/components/layout/game-layout";
 import { SceneContent } from "@/components/scene/scene-content";
 import { SceneActions } from "@/components/scene/scene-actions";
-import { SceneEffects } from "@/components/layout/scene-effects";
 import { ActionButton } from "@/components/scene/action-button";
 import { Puzzle } from "@/components/puzzle/puzzle";
 
@@ -21,12 +20,10 @@ export function Scene({ scene }: SceneProps) {
 
   const [completedSceneId, setCompletedSceneId] = useState<string | null>(null);
 
-  const hasEffects = (scene.specialEffects?.length ?? 0) > 0;
   const isTypingComplete = completedSceneId === scene.id;
   const isTerminal = scene.content.type === "terminal";
   const isSpecialComponent = Boolean(scene.specialComponent);
   const showBackgroundOnly = scene.showBackgroundOnly === true;
-  const isFinish = scene.isFinish === true;
 
   const handleTypingComplete = () => {
     setCompletedSceneId(scene.id);
@@ -43,15 +40,6 @@ export function Scene({ scene }: SceneProps) {
   };
 
   const sceneContent = () => {
-    if (isFinish) {
-      return null;
-      // (
-      //   <div className="mt-10 flex justify-center">
-      //     <ActionButton text="The End" onClick={() => {}} />
-      //   </div>
-      // );
-    }
-
     if (scene.puzzle) {
       return <Puzzle puzzle={scene.puzzle} />;
     }
@@ -97,36 +85,32 @@ export function Scene({ scene }: SceneProps) {
   ]);
 
   return (
-    <SceneEffects
-      active={hasEffects}
-      effects={scene.specialEffects ?? []}
-      sceneId={scene.id}
+    <GameLayout
+      backgroundImg={scene.background}
+      sceneKey={scene.id}
+      isPuzzle={Boolean(scene.puzzle)}
+      music={scene.audio}
+      showBackgroundOnly={scene.showBackgroundOnly}
+      specialEffects={scene.specialEffects}
+      effectDelay={scene.effectDelay}
     >
-      <GameLayout
-        backgroundImg={scene.background}
-        sceneKey={scene.id}
-        isPuzzle={Boolean(scene.puzzle)}
-        music={scene.audio}
-        showBackgroundOnly={scene.showBackgroundOnly}
-      >
-        {!showBackgroundOnly && !isSpecialComponent && (
-          <SceneContent
-            sceneId={scene.id}
-            content={scene.content}
-            onTypingComplete={handleTypingComplete}
-            onAction={() => {
-              if (scene.nextScene) {
-                setScene(scene.nextScene);
-              }
-            }}
-          />
-        )}
+      {!showBackgroundOnly && !isSpecialComponent && (
+        <SceneContent
+          sceneId={scene.id}
+          content={scene.content}
+          onTypingComplete={handleTypingComplete}
+          onAction={() => {
+            if (scene.nextScene) {
+              setScene(scene.nextScene);
+            }
+          }}
+        />
+      )}
 
-        {!showBackgroundOnly &&
-          (isTypingComplete || isTerminal || isSpecialComponent) && (
-            <>{sceneContent()}</>
-          )}
-      </GameLayout>
-    </SceneEffects>
+      {!showBackgroundOnly &&
+        (isTypingComplete || isTerminal || isSpecialComponent) && (
+          <>{sceneContent()}</>
+        )}
+    </GameLayout>
   );
 }

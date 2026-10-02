@@ -128,8 +128,8 @@ export const firstChapter: ChapterData = {
         text: "Пять древних знаков высечены прямо в камне.\n\nТы узнаешь их:\n\nAXII · QUEN · AARD · YRDEN · IGNI",
       },
       audio: audio.forest,
-      // specialEffects: ["zoom-in"],
-      // effectDelay: 1600,
+      specialEffects: ["zoom-in"],
+      effectDelay: 1600,
 
       nextScene: "chapter1-stone-4",
     },
@@ -256,8 +256,9 @@ export const firstChapter: ChapterData = {
 
       audio: audio.room,
 
-      specialEffects: ["rumble"],
-      effectDelay: 3000,
+      // Было: ["rumble"] — но текст про свет, не про гул. rumble
+      // перенесён на door-3, где он описан буквально ("глубокий гул").
+      specialEffects: ["glow"],
 
       nextScene: "chapter1-door-3",
     },
@@ -271,6 +272,9 @@ export const firstChapter: ChapterData = {
         text: "Раздаётся глубокий гул.\n\nКамень начинает двигаться.\n\nДревняя дверь медленно открывается.",
       },
       audio: audio.room,
+      // Было: без эффекта, хотя текст прямо описывает гул движущегося
+      // камня — ровно то, под что сделан rumble.
+      specialEffects: ["rumble"],
       actions: [
         {
           id: "enter-chamber",
@@ -393,6 +397,8 @@ export const firstChapter: ChapterData = {
         text: "Как только ты прикасаешься к книге, внезапный порыв воздуха проносится по комнате.\n\nДверь за твоей спиной с глухим хлопком захлопывается.",
       },
       audio: audio.room,
+      // Резкий толчок + хлопок двери — ровно под что сделан impact.
+      specialEffects: ["impact"],
       nextScene: "chapter1-relic-2",
     },
 
@@ -501,7 +507,9 @@ export const firstChapter: ChapterData = {
       audio: audio.room,
       specialEffects: ["vignette-pulse"],
       effectDelay: 1600,
-      autoTransitionToNextScene: true,
+      // Было: autoTransitionToNextScene: true — но у сцены нет своего
+      // nextScene (только actions), так что флаг ничего не делал.
+      // Убран как мёртвый код.
       actions: [
         {
           id: "chase",

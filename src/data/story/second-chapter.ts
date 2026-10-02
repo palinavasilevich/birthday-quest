@@ -598,7 +598,9 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Ты выходишь обратно в переулок.\n\nСвет мастерской гаснет за спиной.",
       },
-      audio: audio.table,
+      // Было: audio.table — явный хвост от соседних table-сцен, хотя
+      // герой уже покинул стол и выходит из мастерской в переулок.
+      audio: audio.workshop,
       nextScene: "chapter2-transition-back-2",
     },
 
@@ -623,6 +625,9 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "",
       },
+      // Было: без showBackgroundOnly, хотя текст пуст — несогласованно
+      // с остальными пустыми сценами в истории.
+      showBackgroundOnly: true,
       audio: audio.workshop,
       specialEffects: ["warp"],
       effectDelay: 1600,

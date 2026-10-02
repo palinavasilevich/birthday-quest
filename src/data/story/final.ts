@@ -366,7 +366,8 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Книга на древнем пьедестале.\n\nПервая загадка — и первый шаг в неизвестность.",
       },
-      specialEffects: ["fade-in"],
+      // Лёгкий отблеск — вспышка памяти, а не полноценный переход.
+      specialEffects: ["fade-in", "shimmer"],
       effectDelay: 0,
       nextScene: "final-recollection-2",
     },
@@ -378,6 +379,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Потом неоновые улицы.\n\nТайная мастерская и устройство, которое ты собрал.",
       },
+      specialEffects: ["shimmer"],
       nextScene: "final-recollection-3",
     },
 
@@ -388,6 +390,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Чертежи, детали и странная схема.\n\nКаждая находка вела тебя дальше.",
       },
+      specialEffects: ["shimmer"],
       nextScene: "final-reveal-5",
     },
     {
