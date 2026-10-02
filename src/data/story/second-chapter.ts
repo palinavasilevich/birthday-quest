@@ -625,8 +625,6 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "",
       },
-      // Было: без showBackgroundOnly, хотя текст пуст — несогласованно
-      // с остальными пустыми сценами в истории.
       showBackgroundOnly: true,
       audio: audio.workshop,
       specialEffects: ["warp"],
