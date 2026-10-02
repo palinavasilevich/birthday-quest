@@ -10,6 +10,7 @@ import { Puzzle } from "@/components/puzzle/puzzle";
 
 import type { SceneData } from "@/types/game";
 import { WorkshopLog } from "../cyberpunk/workshop-log";
+import { EndingOverlay } from "./ending-overlay";
 
 interface SceneProps {
   scene: SceneData;
@@ -85,32 +86,36 @@ export function Scene({ scene }: SceneProps) {
   ]);
 
   return (
-    <GameLayout
-      backgroundImg={scene.background}
-      sceneKey={scene.id}
-      isPuzzle={Boolean(scene.puzzle)}
-      music={scene.audio}
-      showBackgroundOnly={scene.showBackgroundOnly}
-      specialEffects={scene.specialEffects}
-      effectDelay={scene.effectDelay}
-    >
-      {!showBackgroundOnly && !isSpecialComponent && (
-        <SceneContent
-          sceneId={scene.id}
-          content={scene.content}
-          onTypingComplete={handleTypingComplete}
-          onAction={() => {
-            if (scene.nextScene) {
-              setScene(scene.nextScene);
-            }
-          }}
-        />
-      )}
-
-      {!showBackgroundOnly &&
-        (isTypingComplete || isTerminal || isSpecialComponent) && (
-          <>{sceneContent()}</>
+    <div className="relative h-full w-full">
+      <GameLayout
+        backgroundImg={scene.background}
+        sceneKey={scene.id}
+        isPuzzle={Boolean(scene.puzzle)}
+        music={scene.audio}
+        showBackgroundOnly={scene.showBackgroundOnly}
+        specialEffects={scene.specialEffects}
+        effectDelay={scene.effectDelay}
+      >
+        {!showBackgroundOnly && !isSpecialComponent && (
+          <SceneContent
+            sceneId={scene.id}
+            content={scene.content}
+            onTypingComplete={handleTypingComplete}
+            onAction={() => {
+              if (scene.nextScene) {
+                setScene(scene.nextScene);
+              }
+            }}
+          />
         )}
-    </GameLayout>
+
+        {!showBackgroundOnly &&
+          (isTypingComplete || isTerminal || isSpecialComponent) && (
+            <>{sceneContent()}</>
+          )}
+      </GameLayout>
+
+      {scene.isFinish && <EndingOverlay />}
+    </div>
   );
 }

@@ -411,8 +411,8 @@ export const finalChapter: ChapterData = {
       },
       // Лёгкий отблеск — вспышка памяти, а не полноценный переход.
       audio: audio.victory,
-      specialEffects: ["fade-in"],
-      effectDelay: 1600,
+      specialEffects: ["warp-in"],
+      effectDelay: 0,
       nextScene: "final-recollection-2",
     },
 
@@ -424,7 +424,8 @@ export const finalChapter: ChapterData = {
         text: "Потом неоновые улицы.\n\nТайная мастерская и устройство, которое ты собрал.",
       },
       audio: audio.victory,
-      specialEffects: ["fade-in"],
+      specialEffects: ["warp-in"],
+      effectDelay: 0,
       nextScene: "final-recollection-3",
     },
 
@@ -436,7 +437,8 @@ export const finalChapter: ChapterData = {
         text: "Чертежи, детали и странная схема.\n\nКаждая находка вела тебя дальше.",
       },
       audio: audio.victory,
-      specialEffects: ["fade-in"],
+      specialEffects: ["warp-in"],
+      effectDelay: 0,
       nextScene: "final-reveal-5",
     },
     {
@@ -462,7 +464,9 @@ export const finalChapter: ChapterData = {
         text: "Ты открываешь глаза.\n\nМедвесыч возится с чем-то рядом.",
       },
       audio: audio.final,
-      specialEffects: ["glow"],
+      // specialEffects: ["glow"],
+      // effectDelay: 1000,
+      specialEffects: ["warp-in"],
       effectDelay: 1000,
       nextScene: "final-thread-2",
     },
@@ -561,15 +565,29 @@ export const finalChapter: ChapterData = {
         text: "Ты узнаёшь это место.\n\nТы дома.",
       },
       audio: audio.final,
-      nextScene: "final-the-end",
+      nextScene: "final-thread-10",
     },
     {
-      id: "final-the-end",
+      id: "final-thread-10",
       background: images.final,
       content: {
         type: "text",
         text: "Ты прошёл долгий путь.\n\nНо самые важные приключения ждут тебя впереди.",
       },
+      audio: audio.final,
+      autoTransitionToNextScene: true,
+      autoTransitionDelay: 5500,
+      nextScene: "final-the-end",
+    },
+
+    {
+      id: "final-the-end",
+      background: images.final,
+      content: {
+        type: "text",
+        text: "",
+      },
+      showBackgroundOnly: true,
       audio: audio.final,
       isFinish: true,
     },
