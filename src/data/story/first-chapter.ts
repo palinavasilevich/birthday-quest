@@ -352,6 +352,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты делаешь шаг к двери.\n\nВдруг за спиной раздаётся шорох и глухой стук о камень.\n\nТы медленно оборачиваешься.",
       },
+      specialEffects: ["impact"],
       audio: audio.room,
       nextScene: "chapter1-leave-3",
     },

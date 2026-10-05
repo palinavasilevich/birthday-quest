@@ -8,7 +8,7 @@ export const images = {
   workshopDoor: "/images/chapter2/workshop-door.png",
   workshop: "/images/chapter2/workshop.png",
   workshopDesk: "/images/chapter2/workshop-desk.png",
-  workshopScreen: "/images/chapter2/workshop-screen-2.png",
+  workshopScreen: "/images/chapter2/workshop-screen.png",
   drawing: "/images/chapter2/drawing.png",
   knittingPattern: "/images/chapter2/knitting-pattern.png",
   knittingPatternYarn: "/images/chapter2/knitting-pattern-yarn.png",

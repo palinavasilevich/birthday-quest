@@ -17,8 +17,8 @@ export const images = {
   roomDoor: "/images/chapter1/room-door.png",
   roomDoorShadow: "/images/chapter1/room-door-shadow.png",
   corridorTraces: "/images/chapter1/corridor-traces.png",
-  corridorTracesFinal: "/images/chapter1/corridor-traces-2.png",
-  corridor: "/images/chapter1/corridor-2.png",
+  corridorTracesFinal: "/images/chapter1/corridor-traces-3.png",
+  corridor: "/images/chapter1/corridor.png",
   yarn: "/images/chapter1/yarn.png",
   yarnWall: "/images/chapter1/yarn-wall-2.png",
 

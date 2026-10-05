@@ -13,7 +13,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-eyes-opening",
-      background: images.city,
+      // background: images.city,
       content: {
         type: "text",
         text: "",
@@ -22,7 +22,7 @@ export const secondChapter: ChapterData = {
       effectDelay: 0,
       showBackgroundOnly: true,
       autoTransitionToNextScene: true,
-      autoTransitionDelay: 3400,
+      autoTransitionDelay: 1500,
       nextScene: "chapter2-night-city",
     },
 
@@ -33,6 +33,8 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Ты открываешь глаза.\n\nПеред тобой — город.",
       },
+      specialEffects: ["warp-in"],
+      effectDelay: 1000,
       audio: audio.cyberpunk,
       nextScene: "chapter2-night-city-2",
     },

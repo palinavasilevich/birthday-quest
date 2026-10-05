@@ -488,7 +488,7 @@ export const finalChapter: ChapterData = {
     },
     {
       id: "final-reveal-5",
-      background: images.finalVictory,
+      background: images.workshopTraces,
       content: {
         type: "text",
         text: "Теперь ты понимаешь.\n\nНичего из этого не было случайностью.",
