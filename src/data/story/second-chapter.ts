@@ -366,7 +366,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-log",
-      background: images.workshopScreen,
+      // background: images.workshopScreen,
       content: {
         type: "text",
         text: "На экране открыт лог.\n\nОн всё ещё пишется.",
@@ -374,7 +374,7 @@ export const secondChapter: ChapterData = {
       specialComponent: "workshop-log",
 
       autoTransitionToNextScene: true,
-      autoTransitionDelay: 6500,
+      autoTransitionDelay: 8700,
 
       audio: audio.workshop,
       nextScene: "chapter2-log-2",
@@ -473,7 +473,7 @@ export const secondChapter: ChapterData = {
       background: images.box,
       content: {
         type: "text",
-        text: "В самом углу стола, отдельно от всего, стоит небольшая коробка.\n\nНа ней надпись:\n\nMI-01",
+        text: "В самом углу стола, отдельно от всего, стоит небольшая коробка.\n\nНа ней надпись:\n\nMI-OI.",
       },
       audio: audio.table,
       actions: [
@@ -560,7 +560,7 @@ export const secondChapter: ChapterData = {
       background: images.wait,
       content: {
         type: "text",
-        text: "Никто не приходит.\n\nПотом в углу коротко щёлкает монитор.\n\nТы оборачиваешься.",
+        text: "Никто не приходит.\n\nВ тишине раздаётся короткий щелчок.\n\nВ углу загорается экран монитора.",
       },
       audio: audio.table,
       nextScene: "chapter2-wait-3",
@@ -602,7 +602,7 @@ export const secondChapter: ChapterData = {
       },
       // Было: audio.table — явный хвост от соседних table-сцен, хотя
       // герой уже покинул стол и выходит из мастерской в переулок.
-      audio: audio.workshop,
+      audio: audio.table,
       nextScene: "chapter2-transition-back-2",
     },
 
@@ -616,7 +616,7 @@ export const secondChapter: ChapterData = {
 
       autoTransitionDelay: 3500,
       autoTransitionToNextScene: true,
-      audio: audio.workshop,
+      audio: audio.table,
       nextScene: "chapter2-transition-back-3",
     },
 
@@ -628,7 +628,7 @@ export const secondChapter: ChapterData = {
         text: "",
       },
       showBackgroundOnly: true,
-      audio: audio.workshop,
+      audio: audio.table,
       specialEffects: ["warp"],
       effectDelay: 1600,
       autoTransitionToNextScene: true,

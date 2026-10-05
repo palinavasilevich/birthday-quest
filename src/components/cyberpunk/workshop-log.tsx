@@ -24,12 +24,21 @@ const LOG_EVENTS = [
     event: "doorOpened",
     text: "subject opened the door",
   },
+
+  {
+    event: "nightCityEntered",
+    text: "subject entered the night city",
+  },
+  {
+    event: "workshopEntered",
+    text: "subject entered the workshop",
+  },
 ] as const;
 
 const REVEAL_DELAY = 1100;
 
 function formatTime(timestamp?: number) {
-  if (!timestamp) return "--:--";
+  if (timestamp == null) return "--:--";
 
   return new Intl.DateTimeFormat("de-DE", {
     hour: "2-digit",

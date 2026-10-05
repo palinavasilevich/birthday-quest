@@ -7,10 +7,18 @@ type StoryEvent =
   | "runeSolved"
   | "doorOpened"
   | "nightCityEntered"
-  | "workshopEntered"
-  | "mi01Opened"
-  | "finalBattleStarted"
-  | "owbearRescued";
+  | "workshopEntered";
+
+const SCENE_STORY_EVENTS: Partial<Record<string, StoryEvent>> = {
+  "chapter1-forest": "forestEntered",
+  "chapter1-footprints-2": "trailFound",
+
+  "chapter1-rune": "runeSolved",
+  "chapter1-door": "doorOpened",
+
+  "chapter2-night-city": "nightCityEntered",
+  "chapter2-workshop-3": "workshopEntered",
+};
 
 interface GameState {
   currentSceneId: string;
@@ -38,9 +46,7 @@ export const useGameStore = create<GameState>()(
     gameStartedAt: null,
     storyTimestamps: {},
 
-    // currentSceneId: "chapter2-transition-back-3",
-    // currentSceneId: "final-victory",
-    currentSceneId: "chapter1-ending-3",
+    currentSceneId: "chapter2-workshop",
 
     inventory: [],
 
@@ -64,8 +70,22 @@ export const useGameStore = create<GameState>()(
       })),
 
     setScene: (sceneId) =>
-      set({
-        currentSceneId: sceneId,
+      set((state) => {
+        const event = SCENE_STORY_EVENTS[sceneId];
+
+        if (!event || state.storyTimestamps[event]) {
+          return {
+            currentSceneId: sceneId,
+          };
+        }
+
+        return {
+          currentSceneId: sceneId,
+          storyTimestamps: {
+            ...state.storyTimestamps,
+            [event]: Date.now(),
+          },
+        };
       }),
 
     addItem: (itemId) =>
