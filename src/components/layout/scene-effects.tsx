@@ -402,8 +402,8 @@ export function SceneEffects({
                 "linear-gradient(75deg, transparent, rgba(255,235,190,0.35), transparent)",
               transform: "rotate(8deg)",
             }}
-            initial={{ x: "-120%" }}
-            animate={{ x: "220%" }}
+            initial={{ x: "-100vw" }}
+            animate={{ x: "100vw" }}
             transition={{
               delay: delaySeconds,
               duration: 2.2,

@@ -171,24 +171,24 @@ export const finalChapter: ChapterData = {
       audio: audio.dragon,
       nextScene: "final-battle-3",
     },
-
     {
       id: "final-battle-3",
-      background: images.owlbearFire,
+      background: images.bookInHands,
       content: {
         type: "text",
-        text: "И ты вспоминаешь строку из книги:\n\nТо, что когда-то существовало лишь в воображении, однажды может стать настоящим...",
+        text: "Вдруг в твоей сумке что-то начинает светиться.",
       },
+      specialEffects: ["glow"],
       audio: audio.battleWithDragon,
       nextScene: "final-battle-4",
     },
 
     {
       id: "final-battle-4",
-      background: images.owlbearFire,
+      background: images.bookInHands,
       content: {
         type: "text",
-        text: "...и ожить в твоих руках.",
+        text: "Ты достаёшь книгу.\n\nОна сама раскрывается на той самой странице.",
       },
       audio: audio.battleWithDragon,
       nextScene: "final-battle-5",
@@ -196,10 +196,10 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battle-5",
-      background: images.owlbearFire,
+      background: images.bookText,
       content: {
         type: "text",
-        text: "И ты понимаешь.\n\nВсё необходимое у тебя уже есть.",
+        text: "Там, где раньше фраза обрывалась, появились новые слова.",
       },
       audio: audio.battleWithDragon,
       nextScene: "final-battle-6",
@@ -207,27 +207,51 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battle-6",
+      background: images.bookText,
+      content: {
+        type: "text",
+        text: "",
+      },
+      showBackgroundOnly: true,
+      autoTransitionToNextScene: true,
+      autoTransitionDelay: 5000,
+      audio: audio.battleWithDragon,
+      nextScene: "final-battle-7",
+    },
+    {
+      id: "final-battle-7",
+      background: images.owlbearFire,
+      content: {
+        type: "text",
+        text: "И ты понимаешь.\n\nВсё необходимое у тебя уже есть.",
+      },
+      audio: audio.battleWithDragon,
+      nextScene: "final-battle-8",
+    },
+
+    {
+      id: "final-battle-8",
       background: images.deviceAssembly,
       content: {
         type: "text",
         text: "Ты открываешь коробку.\n\nЛатунные пластины. Шестерни. Винты.\n\nВсе эти детали должны сложиться в одно целое.",
       },
       audio: audio.battleWithDragon,
-      nextScene: "final-battle-7",
+      nextScene: "final-battle-9",
     },
 
     {
-      id: "final-battle-7",
+      id: "final-battle-9",
       background: images.deviceAssembly,
       content: {
         type: "text",
         text: "Ты собираешь устройство под рёв дракона.\n\nСреди дыма и огня.",
       },
       audio: audio.battleWithDragon,
-      nextScene: "final-battle-8",
+      nextScene: "final-battle-10",
     },
     {
-      id: "final-battle-8",
+      id: "final-battle-10",
       background: images.device,
       content: {
         type: "text",
@@ -236,37 +260,15 @@ export const finalChapter: ChapterData = {
       // Механизм оживает так же, как ожили руны у стены.
       audio: audio.battleWithDragon,
       specialEffects: ["glow"],
-      nextScene: "final-battle-9",
-    },
-
-    {
-      id: "final-battle-9",
-      background: images.deviceFliesAway,
-      content: {
-        type: "text",
-        text: "Ты осторожно подбрасываешь его в воздух.\n\nОн раскрывает крылья и исчезает в густом дыму.",
-      },
-      audio: audio.battleWithDragon,
-      nextScene: "final-battle-10",
-    },
-
-    {
-      id: "final-battle-10",
-      background: images.deviceFliesAway,
-      content: {
-        type: "text",
-        text: "Ты ждёшь.\n\nСекунда. Другая.\n\nТолько огонь, дым и рёв дракона.",
-      },
-      audio: audio.battleWithDragon,
       nextScene: "final-battle-11",
     },
 
     {
       id: "final-battle-11",
-      background: images.owlbearFound,
+      background: images.deviceFliesAway,
       content: {
         type: "text",
-        text: "И вдруг — в глубине поля боя появляется маленький огонёк.",
+        text: "Ты осторожно подбрасываешь его в воздух.\n\nОн раскрывает крылья и исчезает в густом дыму.",
       },
       audio: audio.battleWithDragon,
       nextScene: "final-battle-12",
@@ -274,10 +276,10 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battle-12",
-      background: images.owlbearFound,
+      background: images.deviceFliesAway,
       content: {
         type: "text",
-        text: "MI-01 нашёл его.\n\nМедвесыч там.",
+        text: "Ты ждёшь.\n\nСекунда. Другая.\n\nТолько огонь, дым и рёв дракона.",
       },
       audio: audio.battleWithDragon,
       nextScene: "final-battle-13",
@@ -285,6 +287,28 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battle-13",
+      background: images.owlbearFound,
+      content: {
+        type: "text",
+        text: "И вдруг — в глубине поля боя появляется маленький огонёк.",
+      },
+      audio: audio.battleWithDragon,
+      nextScene: "final-battle-14",
+    },
+
+    {
+      id: "final-battle-14",
+      background: images.owlbearFound,
+      content: {
+        type: "text",
+        text: "MI-01 нашёл его.\n\nМедвесыч там.",
+      },
+      audio: audio.battleWithDragon,
+      nextScene: "final-battle-15",
+    },
+
+    {
+      id: "final-battle-15",
       background: images.owlbearFound,
       content: {
         type: "text",

@@ -426,12 +426,13 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-relic-4",
-      background: images.bookText,
+      background: images.bookOpen,
       content: {
         type: "text",
         text: "Книга начинает светиться и на странице проступает надпись.",
       },
       audio: audio.room,
+      specialEffects: ["glow"],
       nextScene: "chapter1-relic-5",
     },
 
@@ -446,6 +447,19 @@ export const firstChapter: ChapterData = {
       audio: audio.room,
       showBackgroundOnly: true,
       autoTransitionDelay: 3000,
+      autoTransitionToNextScene: true,
+      nextScene: "chapter1-relic-6",
+    },
+
+    {
+      id: "chapter1-relic-6",
+      background: images.bookText,
+      content: {
+        type: "text",
+        text: "Кажется, последние слова фразы потерялись...",
+      },
+      audio: audio.room,
+      autoTransitionDelay: 4300,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-sound",
     },

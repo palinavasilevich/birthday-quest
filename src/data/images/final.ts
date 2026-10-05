@@ -4,6 +4,8 @@ export const images = {
   dragon: "/images/final/dragon-2.png",
   owlbear: "/images/final/owlbear-2.png",
   owlbearFire: "/images/final/owlbear-fire.png",
+  bookInHands: "/images/final/book-in-hands.png",
+  bookText: "/images/final/book-text.png",
   deviceAssembly: "/images/final/device-assembly.png",
   device: "/images/final/device.png",
   deviceFliesAway: "/images/final/device-flies-away.png",
