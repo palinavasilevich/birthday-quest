@@ -11,7 +11,7 @@ export function SceneActions({ actions, disabled }: SceneActionsProps) {
   const setScene = useGameStore((state) => state.setScene);
 
   return (
-    <div className="mt-10 flex flex-col items-center gap-3">
+    <div className="mt-10 flex items-center gap-3">
       {actions.map((action) => (
         <ActionButton
           key={action.id}

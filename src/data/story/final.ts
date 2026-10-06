@@ -276,7 +276,7 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battle-12",
-      background: images.deviceFliesAway,
+      background: images.owlbearFire,
       content: {
         type: "text",
         text: "Ты ждёшь.\n\nСекунда. Другая.\n\nТолько огонь, дым и рёв дракона.",
@@ -286,10 +286,10 @@ export const finalChapter: ChapterData = {
     },
     {
       id: "final-battle-13",
-      background: images.owlbearFound,
+      background: images.owlbearFire,
       content: {
         type: "text",
-        text: "И вдруг — в глубине поля боя появляется маленький огонёк.",
+        text: "И вдруг — в глубине поля боя появляется маленький огонёк.\n\nMI-OI пробивается сквозь дым. Он что-то нашёл.",
       },
       audio: audio.battleWithDragon,
       nextScene: "final-battle-14",
@@ -300,7 +300,7 @@ export const finalChapter: ChapterData = {
       background: images.owlbearFound,
       content: {
         type: "text",
-        text: "MI-01 пробивается сквозь дым.\n\nОн что-то нашёл.",
+        text: "Дым рассеивается.\n\nИ ты видишь его.",
       },
       audio: audio.battleWithDragon,
       nextScene: "final-battle-15",
@@ -311,7 +311,7 @@ export const finalChapter: ChapterData = {
       background: images.owlbearFound,
       content: {
         type: "text",
-        text: "Дым рассеивается.\n\nИ ты видишь его.",
+        text: "Медвесыч жив.",
       },
       audio: audio.battleWithDragon,
       nextScene: "final-battle-16",
@@ -319,17 +319,6 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-battle-16",
-      background: images.owlbearFound,
-      content: {
-        type: "text",
-        text: "Медвесыч жив.",
-      },
-      audio: audio.battleWithDragon,
-      nextScene: "final-battle-17",
-    },
-
-    {
-      id: "final-battle-17",
       background: images.owlbearFound,
       content: {
         type: "text",

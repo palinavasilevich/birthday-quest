@@ -163,7 +163,7 @@ export const firstChapter: ChapterData = {
       background: images.wallWithSymbolsHint,
       content: {
         type: "text",
-        text: "Ты счищаешь мох у самого низа стены.",
+        text: "Ты счищаешь мох у самого низа стены. \n\nИ видишь, что под ним проступает знакомый символ.",
       },
       audio: audio.forest,
       nextScene: "chapter1-moss-2",
@@ -174,7 +174,7 @@ export const firstChapter: ChapterData = {
       background: images.wallWithSymbolsHint,
       content: {
         type: "text",
-        text: "Под мхом проступает знакомый символ.",
+        text: "Царапины свежие и совсем низко над землёй.\n\nТот, кто их оставил, был невысокого роста.",
       },
       audio: audio.forest,
       nextScene: "chapter1-moss-3",
@@ -182,17 +182,6 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-moss-3",
-      background: images.wallWithSymbolsHint,
-      content: {
-        type: "text",
-        text: "Царапины свежие и совсем низко над землёй.\n\nТот, кто их оставил, был невысокого роста.",
-      },
-      audio: audio.forest,
-      nextScene: "chapter1-moss-4",
-    },
-
-    {
-      id: "chapter1-moss-4",
       background: images.wallWithSymbolsHint,
       content: {
         type: "text",
@@ -772,9 +761,15 @@ export const firstChapter: ChapterData = {
         text: "Внезапная вспышка яркого света ослепляет тебя.",
       },
       audio: audio.destruction,
-      specialEffects: ["flash"],
-      effectDelay: 1000,
+      // specialEffects: ["flash"],
+      // effectDelay: 1000,
+      // autoTransitionToNextScene: true,
+
+      specialEffects: ["signal"],
+      effectDelay: 0,
+      showBackgroundOnly: true,
       autoTransitionToNextScene: true,
+      autoTransitionDelay: 1500,
       nextScene: "chapter2-eyes-opening",
     },
   ],
