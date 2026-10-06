@@ -179,7 +179,7 @@ export const finalChapter: ChapterData = {
         text: "Вдруг в твоей сумке что-то начинает светиться.",
       },
       specialEffects: ["glow"],
-      audio: audio.battleWithDragon,
+      audio: audio.book,
       nextScene: "final-battle-4",
     },
 
@@ -190,7 +190,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты достаёшь книгу.\n\nОна сама раскрывается на той самой странице.",
       },
-      audio: audio.battleWithDragon,
+      audio: audio.book,
       nextScene: "final-battle-5",
     },
 
@@ -201,7 +201,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Там, где раньше фраза обрывалась, появились новые слова.",
       },
-      audio: audio.battleWithDragon,
+      audio: audio.book,
       nextScene: "final-battle-6",
     },
 
@@ -215,7 +215,7 @@ export const finalChapter: ChapterData = {
       showBackgroundOnly: true,
       autoTransitionToNextScene: true,
       autoTransitionDelay: 5000,
-      audio: audio.battleWithDragon,
+      audio: audio.book,
       nextScene: "final-battle-7",
     },
     {
@@ -225,7 +225,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "И ты понимаешь.\n\nВсё необходимое у тебя уже есть.",
       },
-      audio: audio.battleWithDragon,
+      audio: audio.book,
       nextScene: "final-battle-8",
     },
 
@@ -236,7 +236,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты открываешь коробку.\n\nЛатунные пластины. Шестерни. Винты.\n\nВсе эти детали должны сложиться в одно целое.",
       },
-      audio: audio.battleWithDragon,
+      audio: audio.book,
       nextScene: "final-battle-9",
     },
 
@@ -247,7 +247,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты собираешь устройство под рёв дракона.\n\nСреди дыма и огня.",
       },
-      audio: audio.battleWithDragon,
+      audio: audio.book,
       nextScene: "final-battle-10",
     },
     {
@@ -255,10 +255,10 @@ export const finalChapter: ChapterData = {
       background: images.device,
       content: {
         type: "text",
-        text: "MI-01 лежит у тебя на ладони.\n\nНа мгновение — тишина.\n\nЗатем надкрылья раскрываются.\n\nОн оживает.",
+        text: "MI-OI лежит у тебя на ладони.\n\nНа мгновение — тишина.\n\nЗатем надкрылья раскрываются.\n\nОн оживает.",
       },
       // Механизм оживает так же, как ожили руны у стены.
-      audio: audio.battleWithDragon,
+      audio: audio.book,
       specialEffects: ["glow"],
       nextScene: "final-battle-11",
     },
@@ -270,7 +270,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты осторожно подбрасываешь его в воздух.\n\nОн раскрывает крылья и исчезает в густом дыму.",
       },
-      audio: audio.battleWithDragon,
+      audio: audio.book,
       nextScene: "final-battle-12",
     },
 
@@ -281,7 +281,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты ждёшь.\n\nСекунда. Другая.\n\nТолько огонь, дым и рёв дракона.",
       },
-      audio: audio.battleWithDragon,
+      audio: audio.book,
       nextScene: "final-battle-13",
     },
     {
@@ -291,7 +291,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "И вдруг — в глубине поля боя появляется маленький огонёк.\n\nMI-OI пробивается сквозь дым. Он что-то нашёл.",
       },
-      audio: audio.battleWithDragon,
+      audio: audio.book,
       nextScene: "final-battle-14",
     },
 
@@ -381,7 +381,7 @@ export const finalChapter: ChapterData = {
       background: images.owlbearAndBeetle,
       content: {
         type: "text",
-        text: "MI-01 возвращается сам.\n\nСадится рядом с Медвесычем и складывает надкрылья.",
+        text: "MI-OI возвращается сам.\n\nСадится рядом с Медвесычем и складывает надкрылья.",
       },
       audio: audio.victory,
       nextScene: "final-companion",
