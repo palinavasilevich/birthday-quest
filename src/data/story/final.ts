@@ -282,6 +282,7 @@ export const finalChapter: ChapterData = {
         text: "Ты ждёшь.\n\nСекунда. Другая.\n\nТолько огонь, дым и рёв дракона.",
       },
       audio: audio.book,
+
       nextScene: "final-battle-13",
     },
     {
@@ -292,6 +293,7 @@ export const finalChapter: ChapterData = {
         text: "И вдруг — в глубине поля боя появляется маленький огонёк.\n\nMI-OI пробивается сквозь дым. Он что-то нашёл.",
       },
       audio: audio.book,
+      sfx: "/audio/puzzle/piano/A4.mp3",
       nextScene: "final-battle-14",
     },
 

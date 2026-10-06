@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 
-import { AmbientMusic } from "@/components/audio/ambient-music";
 import { AmbientParticles } from "@/components/layout/ambient-particles";
 import { FullscreenButton } from "@/components/layout/fullscreen-button";
 import { SoundToggleButton } from "@/components/layout/sound-toggle-button";
@@ -16,14 +15,7 @@ interface GameLayoutProps {
   sceneKey?: string;
   isPuzzle?: boolean;
   classNameContentBlock?: string;
-  music?: string;
   showBackgroundOnly?: boolean;
-  /**
-   * Special-effect data for the current scene. Applied only to the
-   * background layer below — not to the content panel or the
-   * sound/fullscreen buttons — so transform-based effects (zoom-in,
-   * warp, shake, rumble, impact) move the scene's art, not the UI.
-   */
   specialEffects?: SpecialEffect[];
   effectDelay?: number;
   onEffectComplete?: () => void;
@@ -35,7 +27,6 @@ export function GameLayout({
   sceneKey,
   isPuzzle = false,
   classNameContentBlock = "",
-  music,
   showBackgroundOnly = false,
   specialEffects = [],
   effectDelay,
@@ -57,8 +48,6 @@ export function GameLayout({
         text-gray-100
       "
     >
-      {music && <AmbientMusic src={music} />}
-
       {backgroundImg && (
         <SceneEffects
           active={specialEffects.length > 0}

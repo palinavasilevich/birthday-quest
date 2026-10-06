@@ -1,30 +1,27 @@
+import { useState } from "react";
+
 import { GameMusic } from "@/components/audio/game-music";
+import { GameSfx } from "@/components/audio/game-sfx";
+
 import { Scene } from "@/components/scene/scene";
+
 import { finalChapter } from "@/data/story/final";
 import { firstChapter } from "@/data/story/first-chapter";
 import { secondChapter } from "@/data/story/second-chapter";
+
 import { useGameStore } from "@/store/game-store";
-import { useState } from "react";
+
 import { GameLayout } from "./layout/game-layout";
 import { StartScreen } from "./scene/start-scene";
-
-const CHAPTER1_MUSIC = "/audio/chapter1/background.mp3";
-const RUNE_PUZZLE_MUSIC = "/audio/chapter1/rune-puzzle.mp3";
 
 import startScreen from "../../public/images/chapter1/forest.png";
 
 export function Game() {
   const [isStarted, setIsStarted] = useState(false);
+
   const currentSceneId = useGameStore((state) => state.currentSceneId);
 
   const startGame = useGameStore((state) => state.startGame);
-  const setScene = useGameStore((state) => state.setScene);
-
-  const handleStart = () => {
-    startGame();
-    setIsStarted(true);
-    // setScene("chapter1-start");
-  };
 
   const story = [
     ...firstChapter.scenes,
@@ -38,25 +35,24 @@ export function Game() {
     return <div>Scene not found</div>;
   }
 
-  const musicMode = scene.puzzle ? "puzzle" : "chapter";
-
-  if (!isStarted) {
-    return (
-      <GameLayout backgroundImg={startScreen} sceneKey="start-screen">
-        <StartScreen onStart={handleStart} />
-      </GameLayout>
-    );
-  }
+  const handleStart = () => {
+    startGame();
+    setIsStarted(true);
+  };
 
   return (
     <>
-      <GameMusic
-        mode={musicMode}
-        chapterSrc={CHAPTER1_MUSIC}
-        puzzleSrc={RUNE_PUZZLE_MUSIC}
-      />
+      <GameMusic src={scene.audio} enabled={isStarted} />
 
-      <Scene scene={scene} />
+      {isStarted && <GameSfx src={scene.sfx} trigger={scene.id} />}
+
+      {!isStarted ? (
+        <GameLayout backgroundImg={startScreen} sceneKey="start-screen">
+          <StartScreen onStart={handleStart} />
+        </GameLayout>
+      ) : (
+        <Scene scene={scene} />
+      )}
     </>
   );
 }

@@ -9,6 +9,7 @@ import { ActionButton } from "@/components/scene/action-button";
 import { Puzzle } from "@/components/puzzle/puzzle";
 
 import type { SceneData } from "@/types/game";
+
 import { WorkshopLog } from "../cyberpunk/workshop-log";
 import { EndingOverlay } from "./ending-overlay";
 
@@ -22,8 +23,11 @@ export function Scene({ scene }: SceneProps) {
   const [completedSceneId, setCompletedSceneId] = useState<string | null>(null);
 
   const isTypingComplete = completedSceneId === scene.id;
+
   const isTerminal = scene.content.type === "terminal";
+
   const isSpecialComponent = Boolean(scene.specialComponent);
+
   const showBackgroundOnly = scene.showBackgroundOnly === true;
 
   const handleTypingComplete = () => {
@@ -31,9 +35,7 @@ export function Scene({ scene }: SceneProps) {
   };
 
   const handleContinue = () => {
-    if (!isTypingComplete) {
-      return;
-    }
+    if (!isTypingComplete) return;
 
     if (scene.nextScene) {
       setScene(scene.nextScene);
@@ -83,6 +85,7 @@ export function Scene({ scene }: SceneProps) {
     scene.autoTransitionToNextScene,
     scene.autoTransitionDelay,
     scene.nextScene,
+    setScene,
   ]);
 
   return (
@@ -91,7 +94,6 @@ export function Scene({ scene }: SceneProps) {
         backgroundImg={scene.background}
         sceneKey={scene.id}
         isPuzzle={Boolean(scene.puzzle)}
-        music={scene.audio}
         showBackgroundOnly={scene.showBackgroundOnly}
         specialEffects={scene.specialEffects}
         effectDelay={scene.effectDelay}

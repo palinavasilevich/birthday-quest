@@ -63,6 +63,7 @@ export interface SceneData {
   background?: string;
   content: SceneContent;
   audio?: string;
+  sfx?: string;
   nextScene?: string;
   puzzle?: PuzzleData;
   actions?: SceneAction[];

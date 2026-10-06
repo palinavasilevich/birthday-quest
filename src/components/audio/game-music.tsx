@@ -1,11 +1,10 @@
 import { useEffect, useRef } from "react";
 
-type MusicMode = "chapter" | "puzzle";
+import { useGameStore } from "@/store/game-store";
 
 interface GameMusicProps {
-  mode: MusicMode;
-  chapterSrc: string;
-  puzzleSrc: string;
+  src?: string;
+  enabled?: boolean;
   volume?: number;
   fadeDuration?: number;
 }
@@ -15,117 +14,180 @@ function clampVolume(value: number) {
 }
 
 export function GameMusic({
-  mode,
-  chapterSrc,
-  puzzleSrc,
+  src,
+  enabled = true,
   volume = 0.25,
-  fadeDuration = 1200,
+  fadeDuration = 1000,
 }: GameMusicProps) {
+  const soundEnabled = useGameStore((state) => state.isSoundEnabled);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentSrcRef = useRef<string | null>(null);
-  const animationRef = useRef<number | null>(null);
+  const fadeFrameRef = useRef<number | null>(null);
 
-  const targetSrc = mode === "puzzle" ? puzzleSrc : chapterSrc;
+  const stopFade = () => {
+    if (fadeFrameRef.current !== null) {
+      cancelAnimationFrame(fadeFrameRef.current);
+      fadeFrameRef.current = null;
+    }
+  };
 
-  useEffect(() => {
-    const stopAnimation = () => {
-      if (animationRef.current !== null) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
+  const fadeTo = (audio: HTMLAudioElement, targetVolume: number) => {
+    stopFade();
+
+    const startVolume = audio.volume;
+    const startTime = performance.now();
+
+    const animate = (time: number) => {
+      const progress = Math.min((time - startTime) / fadeDuration, 1);
+
+      audio.volume = startVolume + (targetVolume - startVolume) * progress;
+
+      if (progress < 1) {
+        fadeFrameRef.current = requestAnimationFrame(animate);
+      } else {
+        fadeFrameRef.current = null;
+        audio.volume = targetVolume;
       }
     };
 
-    const startFadeIn = (audio: HTMLAudioElement) => {
-      const startTime = performance.now();
+    fadeFrameRef.current = requestAnimationFrame(animate);
+  };
 
-      const fadeIn = (time: number) => {
-        const progress = Math.min((time - startTime) / fadeDuration, 1);
-
-        audio.volume = clampVolume(volume * progress);
-
-        if (progress < 1) {
-          animationRef.current = requestAnimationFrame(fadeIn);
-        } else {
-          animationRef.current = null;
-        }
-      };
-
-      animationRef.current = requestAnimationFrame(fadeIn);
-    };
-
-    const startNewAudio = (src: string) => {
-      const audio = new Audio(src);
-
-      audio.loop = true;
-      audio.volume = 0;
-
-      audioRef.current = audio;
-      currentSrcRef.current = src;
-
-      void audio
-        .play()
-        .then(() => {
-          startFadeIn(audio);
-        })
-        .catch(() => {
-          // Browser blocked autoplay.
-        });
-    };
+  /*
+   * Create / change music.
+   */
+  useEffect(() => {
+    if (!enabled || !src) {
+      return;
+    }
 
     const currentAudio = audioRef.current;
 
     /*
-     * First track.
+     * Same track — don't restart it.
      */
-    if (!currentAudio) {
-      startNewAudio(targetSrc);
+    if (currentAudio && currentSrcRef.current === src) {
+      if (soundEnabled) {
+        fadeTo(currentAudio, clampVolume(volume));
+      }
 
-      return stopAnimation;
+      return;
     }
 
     /*
-     * Same track — nothing to do.
+     * New track.
      */
-    if (currentSrcRef.current === targetSrc) {
-      return stopAnimation;
+    if (currentAudio) {
+      stopFade();
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
     }
 
+    const audio = new Audio(src);
+
+    audio.loop = true;
+    audio.preload = "auto";
+
     /*
-     * Different track.
+     * Start muted and fade in.
      */
-    stopAnimation();
+    audio.volume = soundEnabled ? 0 : 0;
 
-    const oldAudio = currentAudio;
-    const oldVolume = oldAudio.volume;
-    const fadeOutStart = performance.now();
+    audioRef.current = audio;
+    currentSrcRef.current = src;
 
-    const fadeOut = (time: number) => {
-      const progress = Math.min((time - fadeOutStart) / fadeDuration, 1);
+    if (soundEnabled) {
+      void audio
+        .play()
+        .then(() => {
+          fadeTo(audio, clampVolume(volume));
+        })
+        .catch(() => {});
+    }
 
-      oldAudio.volume = clampVolume(oldVolume * (1 - progress));
+    return () => {
+      stopFade();
+    };
+  }, [src, enabled]);
 
-      if (progress < 1) {
-        animationRef.current = requestAnimationFrame(fadeOut);
+  /*
+   * Sound ON / OFF.
+   *
+   * IMPORTANT:
+   * We DO NOT pause the audio.
+   * We only change volume.
+   */
+  useEffect(() => {
+    const audio = audioRef.current;
 
+    if (!audio || !enabled) {
+      return;
+    }
+
+    if (soundEnabled) {
+      /*
+       * Resume volume from zero.
+       * currentTime stays untouched.
+       */
+      if (audio.paused) {
+        void audio.play().catch(() => {});
+      }
+
+      fadeTo(audio, clampVolume(volume));
+    } else {
+      /*
+       * Keep audio playing.
+       * Only make it silent.
+       */
+      fadeTo(audio, 0);
+    }
+
+    return () => {
+      stopFade();
+    };
+  }, [soundEnabled, enabled, volume]);
+
+  /*
+   * Browser autoplay fallback.
+   */
+  useEffect(() => {
+    if (!enabled || !soundEnabled) {
+      return;
+    }
+
+    const handleInteraction = () => {
+      const audio = audioRef.current;
+
+      if (!audio || !audio.paused) {
         return;
       }
 
-      oldAudio.pause();
-      oldAudio.currentTime = 0;
-
-      startNewAudio(targetSrc);
+      void audio
+        .play()
+        .then(() => {
+          fadeTo(audio, clampVolume(volume));
+        })
+        .catch(() => {});
     };
 
-    animationRef.current = requestAnimationFrame(fadeOut);
+    window.addEventListener("pointerdown", handleInteraction);
 
-    return stopAnimation;
-  }, [targetSrc, volume, fadeDuration]);
+    window.addEventListener("keydown", handleInteraction);
 
+    return () => {
+      window.removeEventListener("pointerdown", handleInteraction);
+
+      window.removeEventListener("keydown", handleInteraction);
+    };
+  }, [enabled, soundEnabled, volume]);
+
+  /*
+   * Cleanup only when GameMusic itself is removed.
+   */
   useEffect(() => {
     return () => {
-      if (animationRef.current !== null) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      stopFade();
 
       const audio = audioRef.current;
 
