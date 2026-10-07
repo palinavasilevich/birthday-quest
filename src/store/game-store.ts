@@ -30,12 +30,16 @@ interface GameState {
   storyTimestamps: Partial<Record<StoryEvent, number>>;
 
   isSoundEnabled: boolean;
+  isSfxPlaying: boolean;
 
   setScene: (sceneId: string) => void;
   addItem: (itemId: string) => void;
   completePuzzle: (puzzleId: string) => void;
   completeAction: (actionId: string) => void;
+
   toggleSound: () => void;
+  setSfxPlaying: (playing: boolean) => void;
+
   startGame: () => void;
   markStoryEvent: (event: StoryEvent) => void;
 }
@@ -45,16 +49,12 @@ export const useGameStore = create<GameState>()(
   (set) => ({
     gameStartedAt: null,
     storyTimestamps: {},
-
-    currentSceneId: "final-battle-12",
-
-    inventory: [],
-
+    currentSceneId: "chapter1-chamber-3",
     completedPuzzles: [],
-
     completedActions: [],
-
+    inventory: [],
     isSoundEnabled: true,
+    isSfxPlaying: false,
 
     startGame: () =>
       set({
@@ -109,11 +109,14 @@ export const useGameStore = create<GameState>()(
           : [...state.completedActions, actionId],
       })),
 
+    setSfxPlaying: (playing) => set({ isSfxPlaying: playing }),
+
     toggleSound: () =>
       set((state) => ({
         isSoundEnabled: !state.isSoundEnabled,
       })),
   }),
+
   // {
   //   name: "birthday-quest",
   // },

@@ -6,8 +6,9 @@ interface GameMusicProps {
   src?: string;
   enabled?: boolean;
   volume?: number;
-  fadeDuration?: number;
 }
+
+const FADE_DURATION = 250;
 
 function clampVolume(value: number) {
   return Math.max(0, Math.min(1, value));
@@ -17,13 +18,17 @@ export function GameMusic({
   src,
   enabled = true,
   volume = 0.25,
-  fadeDuration = 1000,
 }: GameMusicProps) {
   const soundEnabled = useGameStore((state) => state.isSoundEnabled);
+
+  const isSfxPlaying = useGameStore((state) => state.isSfxPlaying);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentSrcRef = useRef<string | null>(null);
   const fadeFrameRef = useRef<number | null>(null);
+
+  const MUSIC_VOLUME = clampVolume(volume);
+  const DUCKED_VOLUME = 0.05;
 
   const stopFade = () => {
     if (fadeFrameRef.current !== null) {
@@ -32,22 +37,35 @@ export function GameMusic({
     }
   };
 
-  const fadeTo = (audio: HTMLAudioElement, targetVolume: number) => {
+  const fadeTo = (
+    audio: HTMLAudioElement,
+    targetVolume: number,
+    duration: number,
+  ) => {
     stopFade();
 
-    const startVolume = audio.volume;
+    const startVolume = clampVolume(audio.volume);
+    const safeTargetVolume = clampVolume(targetVolume);
+
+    if (duration <= 0) {
+      audio.volume = safeTargetVolume;
+      return;
+    }
+
     const startTime = performance.now();
 
     const animate = (time: number) => {
-      const progress = Math.min((time - startTime) / fadeDuration, 1);
+      const progress = Math.min(Math.max((time - startTime) / duration, 0), 1);
 
-      audio.volume = startVolume + (targetVolume - startVolume) * progress;
+      audio.volume = clampVolume(
+        startVolume + (safeTargetVolume - startVolume) * progress,
+      );
 
       if (progress < 1) {
         fadeFrameRef.current = requestAnimationFrame(animate);
       } else {
         fadeFrameRef.current = null;
-        audio.volume = targetVolume;
+        audio.volume = safeTargetVolume;
       }
     };
 
@@ -55,7 +73,7 @@ export function GameMusic({
   };
 
   /*
-   * Create / change music.
+   * Create music when the scene changes.
    */
   useEffect(() => {
     if (!enabled || !src) {
@@ -64,22 +82,13 @@ export function GameMusic({
 
     const currentAudio = audioRef.current;
 
-    /*
-     * Same track — don't restart it.
-     */
     if (currentAudio && currentSrcRef.current === src) {
-      if (soundEnabled) {
-        fadeTo(currentAudio, clampVolume(volume));
-      }
-
       return;
     }
 
-    /*
-     * New track.
-     */
+    stopFade();
+
     if (currentAudio) {
-      stopFade();
       currentAudio.pause();
       currentAudio.currentTime = 0;
     }
@@ -88,35 +97,46 @@ export function GameMusic({
 
     audio.loop = true;
     audio.preload = "auto";
-
-    /*
-     * Start muted and fade in.
-     */
-    audio.volume = soundEnabled ? 0 : 0;
+    audio.volume = isSfxPlaying ? DUCKED_VOLUME : MUSIC_VOLUME;
 
     audioRef.current = audio;
     currentSrcRef.current = src;
 
     if (soundEnabled) {
-      void audio
-        .play()
-        .then(() => {
-          fadeTo(audio, clampVolume(volume));
-        })
-        .catch(() => {});
+      void audio.play().catch(() => {});
     }
 
     return () => {
       stopFade();
+
+      audio.pause();
+      audio.currentTime = 0;
+
+      if (audioRef.current === audio) {
+        audioRef.current = null;
+      }
     };
   }, [src, enabled]);
 
   /*
-   * Sound ON / OFF.
-   *
-   * IMPORTANT:
-   * We DO NOT pause the audio.
-   * We only change volume.
+   * Change music volume when SFX starts/ends.
+   */
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    if (!audio || !enabled || !soundEnabled) {
+      return;
+    }
+
+    const targetVolume = isSfxPlaying ? DUCKED_VOLUME : MUSIC_VOLUME;
+
+    console.log("🎵 MUSIC VOLUME →", targetVolume, "SFX:", isSfxPlaying);
+
+    fadeTo(audio, targetVolume, FADE_DURATION);
+  }, [isSfxPlaying, soundEnabled, enabled, MUSIC_VOLUME]);
+
+  /*
+   * Global sound toggle.
    */
   useEffect(() => {
     const audio = audioRef.current;
@@ -125,50 +145,32 @@ export function GameMusic({
       return;
     }
 
-    if (soundEnabled) {
-      /*
-       * Resume volume from zero.
-       * currentTime stays untouched.
-       */
-      if (audio.paused) {
-        void audio.play().catch(() => {});
-      }
-
-      fadeTo(audio, clampVolume(volume));
-    } else {
-      /*
-       * Keep audio playing.
-       * Only make it silent.
-       */
-      fadeTo(audio, 0);
-    }
-
-    return () => {
+    if (!soundEnabled) {
       stopFade();
-    };
-  }, [soundEnabled, enabled, volume]);
-
-  /*
-   * Browser autoplay fallback.
-   */
-  useEffect(() => {
-    if (!enabled || !soundEnabled) {
+      audio.volume = 0;
       return;
     }
 
+    const targetVolume = isSfxPlaying ? DUCKED_VOLUME : MUSIC_VOLUME;
+
+    fadeTo(audio, targetVolume, FADE_DURATION);
+  }, [soundEnabled, enabled, isSfxPlaying, MUSIC_VOLUME]);
+
+  /*
+   * Resume music after a user interaction
+   * if autoplay was blocked.
+   */
+  useEffect(() => {
     const handleInteraction = () => {
       const audio = audioRef.current;
 
-      if (!audio || !audio.paused) {
+      if (!audio || !enabled || !soundEnabled) {
         return;
       }
 
-      void audio
-        .play()
-        .then(() => {
-          fadeTo(audio, clampVolume(volume));
-        })
-        .catch(() => {});
+      if (audio.paused) {
+        void audio.play().catch(() => {});
+      }
     };
 
     window.addEventListener("pointerdown", handleInteraction);
@@ -180,10 +182,10 @@ export function GameMusic({
 
       window.removeEventListener("keydown", handleInteraction);
     };
-  }, [enabled, soundEnabled, volume]);
+  }, [enabled, soundEnabled]);
 
   /*
-   * Cleanup only when GameMusic itself is removed.
+   * Cleanup.
    */
   useEffect(() => {
     return () => {
@@ -195,9 +197,6 @@ export function GameMusic({
         audio.pause();
         audio.currentTime = 0;
       }
-
-      audioRef.current = null;
-      currentSrcRef.current = null;
     };
   }, []);
 

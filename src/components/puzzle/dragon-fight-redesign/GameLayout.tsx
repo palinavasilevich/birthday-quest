@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 
-import { AmbientMusic } from "@/components/audio/ambient-music";
 import { AmbientParticles } from "@/components/layout/ambient-particles";
 import { FullscreenButton } from "@/components/layout/fullscreen-button";
 import { SoundToggleButton } from "@/components/layout/sound-toggle-button";
@@ -22,14 +21,9 @@ export function GameLayout({
   sceneKey,
   isPuzzle = false,
   classNameContentBlock = "",
-  music,
 }: GameLayoutProps) {
   return (
-    <div
-      className="relative flex h-[100dvh] min-h-0 w-full items-center justify-center overflow-hidden bg-black font-story text-gray-100"
-    >
-      {music && <AmbientMusic src={music} />}
-
+    <div className="relative flex h-[100dvh] min-h-0 w-full items-center justify-center overflow-hidden bg-black font-story text-gray-100">
       {backgroundImg && (
         <motion.img
           key={backgroundImg}

@@ -11,6 +11,8 @@ interface GameSfxProps {
 export function GameSfx({ src, trigger, volume = 1 }: GameSfxProps) {
   const soundEnabled = useGameStore((state) => state.isSoundEnabled);
 
+  const setSfxPlaying = useGameStore((state) => state.setSfxPlaying);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -18,9 +20,6 @@ export function GameSfx({ src, trigger, volume = 1 }: GameSfxProps) {
       return;
     }
 
-    /*
-     * Stop previous effect.
-     */
     const previousAudio = audioRef.current;
 
     if (previousAudio) {
@@ -28,9 +27,6 @@ export function GameSfx({ src, trigger, volume = 1 }: GameSfxProps) {
       previousAudio.currentTime = 0;
     }
 
-    /*
-     * Create new effect.
-     */
     const audio = new Audio(src);
 
     audio.preload = "auto";
@@ -38,22 +34,57 @@ export function GameSfx({ src, trigger, volume = 1 }: GameSfxProps) {
 
     audioRef.current = audio;
 
-    void audio.play().catch(() => {});
+    setSfxPlaying(true);
+
+    const handleEnded = () => {
+      if (audioRef.current === audio) {
+        audioRef.current = null;
+        setSfxPlaying(false);
+      }
+    };
+
+    const handleError = () => {
+      console.error(
+        "🔊 SFX ERROR:",
+        audio.src,
+        audio.error?.code,
+        audio.error?.message,
+      );
+
+      if (audioRef.current === audio) {
+        audioRef.current = null;
+        setSfxPlaying(false);
+      }
+    };
+
+    audio.addEventListener("ended", handleEnded);
+
+    audio.addEventListener("error", handleError);
+
+    void audio.play().catch(() => {
+      if (audioRef.current === audio) {
+        audioRef.current = null;
+        setSfxPlaying(false);
+      }
+    });
 
     return () => {
+      audio.removeEventListener("ended", handleEnded);
+
+      audio.removeEventListener("error", handleError);
+
       audio.pause();
       audio.currentTime = 0;
 
       if (audioRef.current === audio) {
         audioRef.current = null;
       }
-    };
-  }, [src, trigger]);
 
-  /*
-   * If sound is switched off while
-   * an effect is playing — stop it.
-   */
+      // ВАЖНО:
+      // здесь больше НЕТ setSfxPlaying(false)
+    };
+  }, [src, trigger, soundEnabled, volume, setSfxPlaying]);
+
   useEffect(() => {
     if (soundEnabled) {
       return;
@@ -68,7 +99,9 @@ export function GameSfx({ src, trigger, volume = 1 }: GameSfxProps) {
     audio.pause();
     audio.currentTime = 0;
     audioRef.current = null;
-  }, [soundEnabled]);
+
+    setSfxPlaying(false);
+  }, [soundEnabled, setSfxPlaying]);
 
   return null;
 }

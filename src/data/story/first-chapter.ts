@@ -18,7 +18,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Тихий лес.\n\nВетер шелестит в кронах деревьев.\n\nГде-то вдали кричит птица.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       nextScene: "chapter1-forest-2",
     },
 
@@ -29,7 +29,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Впереди виднеется узкая тропа.\n\nТы бывал здесь много раз.\n\nНо этой тропы раньше не было.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       actions: [
         {
           id: "follow-trail",
@@ -50,7 +50,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Тропа почти полностью скрыта под опавшими листьями.\n\nВдруг что-то привлекает твоё внимание.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       actions: [
         {
           id: "look-closer",
@@ -67,7 +67,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Это следы.\n\nНебольшие, глубокие, с пятью пальцами.\n\nОпределённо не человеческие.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       nextScene: "chapter1-footprints-3",
     },
 
@@ -78,7 +78,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты поднимаешь взгляд.\n\nВ нескольких метрах впереди — ещё один.\n\nИ ещё один, чуть дальше.\n\nКто-то прошёл здесь совсем недавно.\n\n🐾",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       actions: [
         {
           id: "follow-footprints",
@@ -99,7 +99,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Следы приводят тебя к древней каменной стене, покрытой мхом.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       actions: [
         {
           id: "examine-wall",
@@ -116,7 +116,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Сначала в ней не видно ничего необычного.\n\nНо затем ты замечаешь странные символы.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       nextScene: "chapter1-stone-3",
     },
 
@@ -127,9 +127,9 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Пять древних знаков высечены прямо в камне.\n\nТы узнаешь их:\n\nAXII · QUEN · AARD · YRDEN · IGNI",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       specialEffects: ["zoom-in"],
-      effectDelay: 1600,
+      // effectDelay: 1600,
 
       nextScene: "chapter1-stone-4",
     },
@@ -141,7 +141,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "А у подножия стены ты видишь теже следы.\n\nЗдесь они обрывается.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       actions: [
         {
           id: "touch-rune",
@@ -165,7 +165,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты счищаешь мох у самого низа стены. \n\nИ видишь, что под ним проступает знакомый символ.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       nextScene: "chapter1-moss-2",
     },
 
@@ -176,7 +176,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Царапины свежие и совсем низко над землёй.\n\nТот, кто их оставил, был невысокого роста.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       nextScene: "chapter1-moss-3",
     },
 
@@ -187,7 +187,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "QUEN.\n\nТеперь ты знаешь, с чего начинать.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       nextScene: "chapter1-signs",
     },
 
@@ -202,7 +202,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты подходишь ближе и касаешься знака.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       nextScene: "chapter1-rune-puzzle",
     },
 
@@ -231,7 +231,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Последняя нота затихает.\n\nНесколько секунд — полная тишина.",
       },
-      audio: audio.room,
+      audio: audio.music.room,
       nextScene: "chapter1-door-2",
     },
 
@@ -243,12 +243,8 @@ export const firstChapter: ChapterData = {
         text: "Затем руны вспыхивают одновременно.\n\nПо стене пробегает золотистая линия света.",
       },
 
-      audio: audio.room,
-
-      // Было: ["rumble"] — но текст про свет, не про гул. rumble
-      // перенесён на door-3, где он описан буквально ("глубокий гул").
+      audio: audio.music.room,
       specialEffects: ["glow"],
-
       nextScene: "chapter1-door-3",
     },
 
@@ -260,9 +256,9 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Раздаётся глубокий гул.\n\nКамень начинает двигаться.\n\nДревняя дверь медленно открывается.",
       },
-      audio: audio.room,
-      // Было: без эффекта, хотя текст прямо описывает гул движущегося
-      // камня — ровно то, под что сделан rumble.
+      audio: audio.music.room,
+      sfx: audio.sfx.door,
+
       specialEffects: ["rumble"],
       actions: [
         {
@@ -284,7 +280,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "За дверью — небольшая комната.\n\nВ центре стоит каменный пьедестал.",
       },
-      audio: audio.room,
+      audio: audio.music.room,
       nextScene: "chapter1-chamber-2",
     },
 
@@ -295,7 +291,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "На нём лежит книга.\n\nКажется, что этому месту сотни лет — а книга новая. Без единой пылинки.",
       },
-      audio: audio.room,
+      audio: audio.music.room,
       nextScene: "chapter1-chamber-3",
     },
 
@@ -306,7 +302,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "В пыли у пьедестала ты видишь тот же маленький след.",
       },
-      audio: audio.room,
+      audio: audio.music.room,
       actions: [
         {
           id: "take-book",
@@ -330,19 +326,20 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты не трогаешь её.\n\nЧужие вещи в чужих комнатах лучше оставлять на месте.",
       },
-      audio: audio.room,
+      audio: audio.music.room,
       nextScene: "chapter1-leave-2",
     },
 
     {
       id: "chapter1-leave-2",
-      background: images.book,
+      background: images.leaveRoom,
       content: {
         type: "text",
         text: "Ты делаешь шаг к двери.\n\nВдруг за спиной раздаётся шорох и глухой стук о камень.\n\nТы медленно оборачиваешься.",
       },
       specialEffects: ["impact"],
-      audio: audio.room,
+      audio: audio.music.room,
+      sfx: audio.sfx.bookDropped,
       nextScene: "chapter1-leave-3",
     },
 
@@ -353,7 +350,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Книга лежит на полу.\n\nЕё столкнули с пьедестала. Прямо тебе под ноги.",
       },
-      audio: audio.room,
+      audio: audio.music.room,
       actions: [
         {
           id: "pick-book",
@@ -386,8 +383,8 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Как только ты прикасаешься к книге, внезапный порыв воздуха проносится по комнате.\n\nДверь за твоей спиной с глухим хлопком захлопывается.",
       },
-      audio: audio.room,
-      // Резкий толчок + хлопок двери — ровно под что сделан impact.
+      audio: audio.music.book,
+      sfx: audio.sfx.doorClose,
       specialEffects: ["impact"],
       nextScene: "chapter1-relic-2",
     },
@@ -399,7 +396,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Книга в твоих руках начинает сама перелистывать страницы.",
       },
-      audio: audio.room,
+      audio: audio.music.book,
       nextScene: "chapter1-relic-3",
     },
 
@@ -410,7 +407,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Страницы одна за другой переворачиваются на ветру.\n\nПока книга не останавливается на одной из них.",
       },
-      audio: audio.room,
+      audio: audio.music.book,
       nextScene: "chapter1-relic-4",
     },
 
@@ -421,7 +418,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Книга начинает светиться и на странице проступает надпись.",
       },
-      audio: audio.room,
+      audio: audio.music.book,
       specialEffects: ["glow"],
       nextScene: "chapter1-relic-5",
     },
@@ -434,7 +431,7 @@ export const firstChapter: ChapterData = {
         // text: "«Каждое великое приключение начинается с мира, который существует лишь в чьём-то воображении.»",
         text: "«То, что существует лишь в воображении, однажды может стать настоящим...»",
       },
-      audio: audio.room,
+      audio: audio.music.book,
       showBackgroundOnly: true,
       autoTransitionDelay: 3000,
       autoTransitionToNextScene: true,
@@ -448,7 +445,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Кажется, последние слова фразы потерялись...",
       },
-      audio: audio.room,
+      audio: audio.music.book,
       autoTransitionDelay: 4300,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-sound",
@@ -461,7 +458,7 @@ export const firstChapter: ChapterData = {
     //     type: "text",
     //     text: "РЕЛИКВИЯ I — ПОЛУЧЕНА\n\nTHE ART OF JOHN HARRIS — Beyond the Horizon",
     //   },
-    //   audio: audio.forest,
+    //   audio: audio.music.forest,
     //   nextScene: "chapter1-relic-5",
     // },
 
@@ -484,9 +481,9 @@ export const firstChapter: ChapterData = {
       background: images.bookInHands,
       content: {
         type: "text",
-        text: "Как только ты закрываешь книгу, в комнате снова становится тихо.\n\nА затем в дальней стене что-то приходит в движение.",
+        text: "Ты закрываешь книгу и в комнате снова становится тихо.\n\nА затем в дальней стене что-то приходит в движение.",
       },
-      audio: audio.room,
+      audio: audio.music.room,
       nextScene: "chapter1-sound-2",
     },
 
@@ -497,7 +494,8 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Камни медленно расходятся, открывая узкий проход.",
       },
-      audio: audio.room,
+      audio: audio.music.room,
+      sfx: audio.sfx.doorRoomOpen,
       nextScene: "chapter1-sound-3",
     },
 
@@ -508,12 +506,10 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "В глубине прохода — небольшая тень.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       specialEffects: ["vignette-pulse"],
       effectDelay: 1600,
-      // Было: autoTransitionToNextScene: true — но у сцены нет своего
-      // nextScene (только actions), так что флаг ничего не делал.
-      // Убран как мёртвый код.
+
       actions: [
         {
           id: "chase",
@@ -547,7 +543,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты бросаешься к проходу.\n\nНо тень уже исчезла.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-chase-2",
     },
 
@@ -558,7 +554,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты видишь следы, уходящие вглубь тёмного коридора.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-chase-3",
     },
 
@@ -569,7 +565,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты бежишь напролом, ничего не видя перед собой.\n\nПлечом задеваешь стену — острый камень царапает кожу.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-chase-4",
     },
 
@@ -580,7 +576,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Следы продолжаются всё глубже.\n\nНо тени впереди больше нет.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-chase-5",
     },
 
@@ -591,7 +587,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты останавливаешься, чтобы отдышаться.\n\nИ тут замечаешь что-то на выступе стены рядом.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-chase-6",
     },
 
@@ -602,7 +598,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Клочок пряжи тёплого рыжеватого цвета зацепился за острый край камня.\n\nТот, кто бежал здесь, задел его второпях.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       actions: [
         {
           id: "take-thread-torn",
@@ -619,7 +615,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты снимаешь нитку с камня и продолжаешь путь.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-ending",
     },
 
@@ -634,7 +630,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты не двигаешься.\n\nПроходит секунда. Другая.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-wait-2",
     },
 
@@ -645,7 +641,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Тень в проходе тоже не двигается.\n\nА потом делает шаг вперёд.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-wait-3",
     },
 
@@ -656,7 +652,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Теперь ты видишь её чуть лучше.\n\nНебольшой силуэт смотрит на тебя несколько секунд.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-wait-4",
     },
 
@@ -667,7 +663,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Потом тень наклоняется и оставляет что-то на полу.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-wait-5",
     },
 
@@ -678,7 +674,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "И прежде чем ты успеваешь сделать шаг, она исчезает в проходе.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-wait-6",
     },
 
@@ -689,7 +685,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты подходишь ближе.\n\nНа полу лежит обрывок пряжи тёплого коричневого цвета.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-wait-7",
     },
 
@@ -700,7 +696,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты поднимаешь пряжу и идёшь дальше по коридору.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       actions: [
         {
           id: "take-thread-torn",
@@ -717,7 +713,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Впереди снова видны небольшие следы.",
       },
-      audio: audio.room,
+      audio: audio.music.shadow,
       nextScene: "chapter1-ending",
     },
 
@@ -732,7 +728,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "И вдруг свет в коридоре гаснет.\n\nСтены начинают дрожать.",
       },
-      audio: audio.destruction,
+      audio: audio.music.destruction,
       specialEffects: ["shake"],
       autoTransitionToNextScene: true,
       nextScene: "chapter1-ending-2",
@@ -745,7 +741,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Земля уходит из-под ног.\n\nБудто сам мир начинает разваливаться на части...",
       },
-      audio: audio.destruction,
+      audio: audio.music.destruction,
       specialEffects: ["shake"],
       effectDelay: 2000,
       autoTransitionDelay: 5000,
@@ -760,7 +756,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Внезапная вспышка яркого света ослепляет тебя.",
       },
-      audio: audio.destruction,
+      audio: audio.music.destruction,
       // specialEffects: ["flash"],
       // effectDelay: 1000,
       // autoTransitionToNextScene: true,
