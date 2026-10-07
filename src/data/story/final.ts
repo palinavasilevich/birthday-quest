@@ -18,7 +18,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Когда глаза привыкают к темноте, ты снова видишь знакомые деревья.\n\nТы вернулся в лес.\n\nНо он изменился.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       specialEffects: ["warp-in"],
       effectDelay: 2500,
       nextScene: "final-start-2",
@@ -31,7 +31,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Воздух наполнен дымом.\n\nНа земле лежит пепел.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       nextScene: "final-start-3",
     },
 
@@ -40,9 +40,12 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Где-то впереди раздаётся грохот.\n\nЗатем ещё раз.",
+        text: "Где-то впереди раздаётся грохот и рёв.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
+      sfx: audio.sfx.dragonRoar,
+      autoTransitionToNextScene: true,
+      autoTransitionDelay: 4000,
       nextScene: "final-start-4",
     },
 
@@ -51,21 +54,17 @@ export const finalChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Ты слышишь рёв.\n\nЧто за зверь может издавать такие звуки?..",
+        text: "Что за зверь может издавать такие звуки?..",
       },
-      audio: audio.forest,
-      nextScene: "final-start-5",
-    },
 
-    {
-      id: "final-start-5",
-      background: images.forest,
-      content: {
-        type: "text",
-        text: "Это что... дракон?!",
-      },
-      audio: audio.forest,
-      nextScene: "final-battlefield",
+      audio: audio.music.forest,
+      actions: [
+        {
+          id: "go-after",
+          label: "Follow the sound",
+          nextScene: "final-battlefield",
+        },
+      ],
     },
 
     // ─────────────────────────────
@@ -79,7 +78,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты идёшь на звук.\n\nДеревья редеют. Впереди открывается поле боя.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       nextScene: "final-battlefield-2",
     },
 
@@ -90,7 +89,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Земля изрыта следами огня.\n\nПовсюду лежат обломки.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       nextScene: "final-battlefield-3",
     },
 
@@ -99,11 +98,13 @@ export const finalChapter: ChapterData = {
       background: images.dragon,
       content: {
         type: "text",
-        text: "Над поляной кружит огромная тень.\n\nОн замечает тебя. Раздаётся рёв.",
+        text: "Над поляной кружит огромная тень дракона.\n\nОн замечает тебя. Раздаётся рёв.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
+      sfx: audio.sfx.dragonRoar,
       // Медленный наезд — тень дракона раскрывается игроку постепенно.
-      specialEffects: ["zoom-in"],
+      specialEffects: ["rumble", "vignette-pulse"],
+
       nextScene: "final-battlefield-4",
     },
 
@@ -114,7 +115,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Но ты замечаешь ещё кое-что.\n\nВ стороне, среди обломков, что-то движется.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       nextScene: "final-battlefield-5",
     },
 
@@ -125,7 +126,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Маленькая фигура.\n\nТы узнаёшь её.",
       },
-      audio: audio.forest,
+      audio: audio.music.forest,
       nextScene: "final-battlefield-6",
     },
 
@@ -136,11 +137,10 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Медвесыч?.. \n\nТак вот кто вёл тебя всё это время.",
       },
-      audio: audio.dragon,
-      // Тёплая вспышка узнавания — та же визуальная рифма, что у рун.
-      specialEffects: ["glow"],
+      audio: audio.music.dragon,
+
       autoTransitionToNextScene: true,
-      autoTransitionDelay: 3500,
+      autoTransitionDelay: 3600,
       nextScene: "final-battle",
     },
 
@@ -156,8 +156,9 @@ export const finalChapter: ChapterData = {
         text: "Дракон обрушивает огонь на обломки.\n\nМежду вами встаёт стена дыма.",
       },
       // Затемнение по краям читается и как дым, застилающий обзор.
-      audio: audio.dragon,
-      specialEffects: ["vignette-pulse"],
+      audio: audio.music.dragon,
+      sfx: audio.sfx.dragonFire,
+      specialEffects: ["rumble", "vignette-pulse"],
       nextScene: "final-battle-2",
     },
 
@@ -168,7 +169,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Секунду назад ты видел, где он. Теперь — нет.\n\nТебе нужен как-то ориентир.",
       },
-      audio: audio.dragon,
+      audio: audio.music.dragon,
       nextScene: "final-battle-3",
     },
     {
@@ -179,7 +180,7 @@ export const finalChapter: ChapterData = {
         text: "Вдруг в твоей сумке что-то начинает светиться.",
       },
       specialEffects: ["glow"],
-      audio: audio.book,
+      audio: audio.music.book,
       nextScene: "final-battle-4",
     },
 
@@ -190,7 +191,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты достаёшь книгу.\n\nОна сама раскрывается на той самой странице.",
       },
-      audio: audio.book,
+      audio: audio.music.book,
       nextScene: "final-battle-5",
     },
 
@@ -201,7 +202,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Там, где раньше фраза обрывалась, появились новые слова.",
       },
-      audio: audio.book,
+      audio: audio.music.book,
       nextScene: "final-battle-6",
     },
 
@@ -215,7 +216,7 @@ export const finalChapter: ChapterData = {
       showBackgroundOnly: true,
       autoTransitionToNextScene: true,
       autoTransitionDelay: 5000,
-      audio: audio.book,
+      audio: audio.music.book,
       nextScene: "final-battle-7",
     },
     {
@@ -225,7 +226,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "И ты понимаешь.\n\nВсё необходимое у тебя уже есть.",
       },
-      audio: audio.book,
+      audio: audio.music.book,
       nextScene: "final-battle-8",
     },
 
@@ -236,7 +237,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты открываешь коробку.\n\nЛатунные пластины. Шестерни. Винты.\n\nВсе эти детали должны сложиться в одно целое.",
       },
-      audio: audio.book,
+      audio: audio.music.book,
       nextScene: "final-battle-9",
     },
 
@@ -247,7 +248,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты собираешь устройство под рёв дракона.\n\nСреди дыма и огня.",
       },
-      audio: audio.book,
+      audio: audio.music.book,
       nextScene: "final-battle-10",
     },
     {
@@ -258,7 +259,7 @@ export const finalChapter: ChapterData = {
         text: "MI-OI лежит у тебя на ладони.\n\nНа мгновение — тишина.\n\nЗатем надкрылья раскрываются.\n\nОн оживает.",
       },
       // Механизм оживает так же, как ожили руны у стены.
-      audio: audio.book,
+      audio: audio.music.book,
       specialEffects: ["glow"],
       nextScene: "final-battle-11",
     },
@@ -270,7 +271,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты осторожно подбрасываешь его в воздух.\n\nОн раскрывает крылья и исчезает в густом дыму.",
       },
-      audio: audio.book,
+      audio: audio.music.book,
       nextScene: "final-battle-12",
     },
 
@@ -281,8 +282,8 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты ждёшь.\n\nСекунда. Другая.\n\nТолько огонь, дым и рёв дракона.",
       },
-      audio: audio.book,
-
+      audio: audio.music.book,
+      sfx: audio.sfx.crash,
       nextScene: "final-battle-13",
     },
     {
@@ -292,7 +293,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "И вдруг — в глубине поля боя появляется маленький огонёк.\n\nMI-OI пробивается сквозь дым. Он что-то нашёл.",
       },
-      audio: audio.book,
+      audio: audio.music.book,
       sfx: "/audio/test.mp3",
       nextScene: "final-battle-14",
     },
@@ -304,7 +305,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Дым рассеивается.\n\nИ ты видишь его.",
       },
-      audio: audio.battleWithDragon,
+      audio: audio.music.battleWithDragon,
       nextScene: "final-battle-15",
     },
 
@@ -313,22 +314,23 @@ export const finalChapter: ChapterData = {
       background: images.owlbearFound,
       content: {
         type: "text",
-        text: "Медвесыч жив.",
+        text: "Медвесыч жив.\n\nТеперь ты понимаешь, что нужно делать.\n\nСначала — спасти его.\n\nПотом — остановить дракона.",
       },
-      audio: audio.battleWithDragon,
-      nextScene: "final-battle-16",
-    },
 
-    {
-      id: "final-battle-16",
-      background: images.owlbearFound,
-      content: {
-        type: "text",
-        text: "Теперь ты знаешь, где он.\n\nСначала нужно добраться до Медвесыча.\n\nПотом — остановить дракона.",
-      },
-      audio: audio.battleWithDragon,
+      audio: audio.music.battleWithDragon,
       nextScene: "final-puzzle",
     },
+
+    // {
+    //   id: "final-battle-16",
+    //   background: images.owlbearFound,
+    //   content: {
+    //     type: "text",
+    //     text: "Теперь ты знаешь, где он.\n\nСначала нужно добраться до Медвесыча.\n\nПотом — остановить дракона.",
+    //   },
+    //   audio: audio.music.battleWithDragon,
+    //   nextScene: "final-puzzle",
+    // },
 
     // ─────────────────────────────
     // SCENE 04 — THE LAST STAND
@@ -341,7 +343,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "",
       },
-      audio: audio.battleWithDragon,
+      audio: audio.music.battleWithDragon,
       puzzle: {
         id: "final-battle-puzzle",
         type: "final",
@@ -362,7 +364,8 @@ export const finalChapter: ChapterData = {
       },
       // Один резкий толчок + тёплая вспышка — удар падения дракона,
       // который быстро гаснет в тишину.
-      audio: audio.victory,
+      audio: audio.music.victory,
+      // sfx: audio.sfx.dragonDeath,
       specialEffects: ["impact"],
       nextScene: "final-victory-2",
     },
@@ -374,7 +377,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Медвесыч рядом с тобой.\n\nОн не отходит ни на шаг с той секунды, как ты до него добрался.",
       },
-      audio: audio.victory,
+      audio: audio.music.victory,
       nextScene: "final-victory-3",
     },
 
@@ -385,7 +388,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "MI-OI возвращается сам.\n\nСадится рядом с Медвесычем и складывает надкрылья.",
       },
-      audio: audio.victory,
+      audio: audio.music.victory,
       nextScene: "final-companion",
     },
 
@@ -396,7 +399,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Где-то вдали звучит та мелодия, что ты слышал у каменной стены.",
       },
-      audio: audio.victory,
+      audio: audio.music.victory,
       nextScene: "final-companion-2",
     },
 
@@ -407,7 +410,8 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Медвесыч поднимает голову.\n\nОн узнаёт её и начинает тихо повторять мелодию.",
       },
-      audio: audio.victory,
+      audio: audio.music.victory,
+      sfx: audio.sfx.song,
       nextScene: "final-reveal",
     },
 
@@ -422,7 +426,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Поле боя стихло.\n\nТёмные облака начинают расходиться.",
       },
-      audio: audio.victory,
+      audio: audio.music.victory,
       nextScene: "final-reveal-2",
     },
     {
@@ -432,7 +436,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты закрываешь глаза.\n\nИ вспоминаешь, как всё начиналось.",
       },
-      audio: audio.victory,
+      audio: audio.music.victory,
       specialEffects: ["vignette-pulse"],
       effectDelay: 2500,
       nextScene: "final-recollection-1",
@@ -446,7 +450,7 @@ export const finalChapter: ChapterData = {
         text: "Книга на древнем пьедестале.\n\nПервая загадка — и первый шаг в неизвестность.",
       },
       // Лёгкий отблеск — вспышка памяти, а не полноценный переход.
-      audio: audio.victory,
+      audio: audio.music.victory,
       specialEffects: ["warp-in"],
       effectDelay: 0,
       nextScene: "final-recollection-2",
@@ -459,7 +463,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Потом неоновые улицы.\n\nТайная мастерская и устройство, которое ты собрал.",
       },
-      audio: audio.victory,
+      audio: audio.music.victory,
       specialEffects: ["warp-in"],
       effectDelay: 0,
       nextScene: "final-recollection-3",
@@ -472,7 +476,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Чертежи, детали и странная схема.\n\nКаждая находка вела тебя дальше.",
       },
-      audio: audio.victory,
+      audio: audio.music.victory,
       specialEffects: ["warp-in"],
       effectDelay: 0,
       nextScene: "final-reveal-5",
@@ -484,7 +488,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Теперь ты понимаешь.\n\nНичего из этого не было случайностью.",
       },
-      audio: audio.victory,
+      audio: audio.music.victory,
       nextScene: "final-thread",
     },
 
@@ -499,7 +503,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты открываешь глаза.\n\nМедвесыч возится с чем-то рядом.",
       },
-      audio: audio.final,
+      audio: audio.music.final,
       // specialEffects: ["glow"],
       // effectDelay: 1000,
       specialEffects: ["warp-in"],
@@ -514,7 +518,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты видишь клубок ниток.\n\nТёплый рыжеватый цвет. Тот же, что и его шерсть.",
       },
-      audio: audio.final,
+      audio: audio.music.final,
       nextScene: "final-thread-3",
     },
 
@@ -525,7 +529,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты вынимаешь свою нитку — ту самую, из тёмной комнаты в лесу.",
       },
-      audio: audio.final,
+      audio: audio.music.final,
       nextScene: "final-thread-4",
     },
 
@@ -536,7 +540,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Прикладываешь.\n\nТа же пряжа. Тот же клубок, что лежал на столе в мастерской.",
       },
-      audio: audio.final,
+      audio: audio.music.final,
       nextScene: "final-thread-5",
     },
 
@@ -547,7 +551,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Медвесыч смотрит на тебя, а потом...",
       },
-      audio: audio.final,
+      audio: audio.music.final,
       nextScene: "final-thread-6",
     },
     {
@@ -557,7 +561,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Толкает клубок лапой.",
       },
-      audio: audio.final,
+      audio: audio.music.final,
       nextScene: "final-thread-7",
     },
     {
@@ -567,7 +571,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Клубок катится.\n\nМимо обломков.\n\nЗа деревья.",
       },
-      audio: audio.final,
+      audio: audio.music.final,
       actions: [
         {
           id: "go-after",
@@ -583,7 +587,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Нитка тянется сквозь этот волшебный мир.\n\nИ уходит туда, где заканчивается эта история и начинается что-то другое.",
       },
-      audio: audio.final,
+      audio: audio.music.final,
       actions: [
         {
           id: "go-after",
@@ -600,7 +604,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты узнаёшь это место.\n\nТы дома.",
       },
-      audio: audio.final,
+      audio: audio.music.final,
       nextScene: "final-thread-10",
     },
     {
@@ -610,7 +614,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты прошёл долгий путь.\n\nНо самые важные приключения ждут тебя впереди.",
       },
-      audio: audio.final,
+      audio: audio.music.final,
       autoTransitionToNextScene: true,
       autoTransitionDelay: 5500,
       nextScene: "final-the-end",
@@ -624,7 +628,7 @@ export const finalChapter: ChapterData = {
         text: "",
       },
       showBackgroundOnly: true,
-      audio: audio.ending,
+      audio: audio.music.ending,
       isFinish: true,
     },
   ],

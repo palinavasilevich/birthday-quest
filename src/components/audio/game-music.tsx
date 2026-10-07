@@ -17,7 +17,7 @@ function clampVolume(value: number) {
 export function GameMusic({
   src,
   enabled = true,
-  volume = 0.25,
+  volume = 0.4,
 }: GameMusicProps) {
   const soundEnabled = useGameStore((state) => state.isSoundEnabled);
 
@@ -28,7 +28,7 @@ export function GameMusic({
   const fadeFrameRef = useRef<number | null>(null);
 
   const MUSIC_VOLUME = clampVolume(volume);
-  const DUCKED_VOLUME = 0.05;
+  const DUCKED_VOLUME = 0.15;
 
   const stopFade = () => {
     if (fadeFrameRef.current !== null) {

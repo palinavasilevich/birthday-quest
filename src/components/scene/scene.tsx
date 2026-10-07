@@ -97,6 +97,9 @@ export function Scene({ scene }: SceneProps) {
         showBackgroundOnly={scene.showBackgroundOnly}
         specialEffects={scene.specialEffects}
         effectDelay={scene.effectDelay}
+        classNameContentBlock={
+          scene.puzzle?.id === "final-battle-puzzle" ? "max-w-240" : ""
+        }
       >
         {!showBackgroundOnly && !isSpecialComponent && (
           <SceneContent
