@@ -372,10 +372,10 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-victory-2",
-      background: images.owlbearSaved,
+      background: images.dragonWin,
       content: {
         type: "text",
-        text: "Медвесыч рядом с тобой.\n\nОн не отходит ни на шаг с той секунды, как ты до него добрался.",
+        text: "Дракон превращается в пыль.\n\nОн исчезает в воздухе, оставляя после себя лишь дым и пепел.",
       },
       audio: audio.music.victory,
       nextScene: "final-victory-3",
@@ -383,6 +383,17 @@ export const finalChapter: ChapterData = {
 
     {
       id: "final-victory-3",
+      background: images.owlbearSaved,
+      content: {
+        type: "text",
+        text: "Медвесыч рядом с тобой.\n\nОн не отходит ни на шаг с той секунды, как ты до него добрался.",
+      },
+      audio: audio.music.victory,
+      nextScene: "final-victory-4",
+    },
+
+    {
+      id: "final-victory-4",
       background: images.owlbearAndBeetle,
       content: {
         type: "text",

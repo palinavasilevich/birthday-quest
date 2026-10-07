@@ -14,6 +14,7 @@ export const images = {
   owlbearSaved: "/images/final/owlbear-saved.png",
   owlbearAndBeetle: "/images/final/owlbear-and-beetle.png",
   finalVictory: "/images/final/final-victory.png",
+  dragonWin: "/images/final/dragon-win.png",
   book: "/images/final/book.png",
   cyberpunk: "/images/final/cyberpunk.png",
   workshopTraces: "/images/final/workshop-traces.png",
