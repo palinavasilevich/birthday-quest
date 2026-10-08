@@ -82,30 +82,25 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Ты пытаешься понять, где тот, кто привёл тебя сюда.\n\nНо среди тысяч людей, машин и огней его уже не найти.",
       },
+      actions: [
+        {
+          id: "look-around",
+          label: "Look around",
+          nextScene: "chapter2-night-city-6",
+        },
+      ],
       audio: audio.music.cyberpunk,
-      nextScene: "chapter2-night-city-6",
     },
 
     {
       id: "chapter2-night-city-6",
-      background: images.greenLightStreet,
+      background: images.street,
       content: {
         type: "text",
-        text: "И тут ты замечаешь странный зелёный свет.\n\nОн мерцает в глубине переулка.",
+        text: "Дождь, неон, чужие лица.\n\nМокрый асфальт покрыт десятками следов.\n\nНо знакомого среди них нет.",
       },
       audio: audio.music.cyberpunk,
-      actions: [
-        {
-          id: "approach-light",
-          label: "Approach the light",
-          nextScene: "chapter2-night-city-8",
-        },
-        {
-          id: "look-around",
-          label: "Look around first",
-          nextScene: "chapter2-night-city-7",
-        },
-      ],
+      nextScene: "chapter2-night-city-7",
     },
 
     {
@@ -113,13 +108,13 @@ export const secondChapter: ChapterData = {
       background: images.street,
       content: {
         type: "text",
-        text: "Дождь, неон, чужие лица.\n\nМокрый асфальт покрыт десятками следов.\n\nНо знакомого среди них нет.",
+        text: "Вдруг ты замечаешь движение.\n\nЧья-то тень быстро исчезает в узком переулке.",
       },
       audio: audio.music.cyberpunk,
       actions: [
         {
-          id: "approach-light-after",
-          label: "Approach the light",
+          id: "follow-shadow",
+          label: "Follow the shadow",
           nextScene: "chapter2-night-city-8",
         },
       ],
@@ -127,17 +122,34 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-night-city-8",
+      background: images.greenLightStreet,
+      content: {
+        type: "text",
+        text: "Ты заходишь в переулок.\n\nВ глубине мерцает странный зелёный свет.",
+      },
+      audio: audio.music.cyberpunk,
+      actions: [
+        {
+          id: "approach-light",
+          label: "Approach the light",
+          nextScene: "chapter2-night-city-9",
+        },
+      ],
+    },
+
+    {
+      id: "chapter2-night-city-9",
       background: images.signboard,
       content: {
         type: "text",
         text: "Ты подходишь ближе.\n\nСвет идёт от небольшой панели в стене.",
       },
       audio: audio.music.cyberpunk,
-      nextScene: "chapter2-night-city-9",
+      nextScene: "chapter2-night-city-10",
     },
 
     {
-      id: "chapter2-night-city-9",
+      id: "chapter2-night-city-10",
       background: images.signboard,
       content: {
         type: "text",
@@ -149,13 +161,13 @@ export const secondChapter: ChapterData = {
         {
           id: "touch-screen",
           label: "Inspect the panel",
-          nextScene: "chapter2-night-city-10",
+          nextScene: "chapter2-night-city-11",
         },
       ],
     },
 
     {
-      id: "chapter2-night-city-10",
+      id: "chapter2-night-city-11",
       background: images.terminal,
       content: {
         type: "text",

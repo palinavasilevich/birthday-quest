@@ -13,8 +13,8 @@ const SCENE_STORY_EVENTS: Partial<Record<string, StoryEvent>> = {
   "chapter1-forest": "forestEntered",
   "chapter1-footprints-2": "trailFound",
 
-  "chapter1-rune": "runeSolved",
-  "chapter1-door": "doorOpened",
+  "chapter1-door": "runeSolved",
+  "chapter1-door-3": "doorOpened",
 
   "chapter2-night-city": "nightCityEntered",
   "chapter2-workshop-3": "workshopEntered",
@@ -50,7 +50,8 @@ export const useGameStore = create<GameState>()(
     gameStartedAt: null,
     storyTimestamps: {},
     // currentSceneId: "final-victory",
-    currentSceneId: "chapter1-forest",
+    // currentSceneId: "chapter1-forest",
+    currentSceneId: "chapter2-night-city-3",
     completedPuzzles: [],
     completedActions: [],
     inventory: [],
