@@ -1,5 +1,13 @@
 import type { ButtonHTMLAttributes } from "react";
 
+type ActionButtonSize = "default" | "small";
+
+interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  text: string;
+  code?: string;
+  size?: ActionButtonSize;
+}
+
 interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
   code?: string;
@@ -8,9 +16,14 @@ interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export function ActionButton({
   text,
   code = "BDA249",
+  size = "default",
   disabled,
+  className = "",
   ...props
 }: ActionButtonProps) {
+  const sizeClasses =
+    size === "small" ? "px-12 py-4 text-xs" : "px-22.5 py-7 text-base";
+
   return (
     <button
       {...props}
@@ -21,9 +34,7 @@ export function ActionButton({
         cursor-pointer
         border-0
         bg-[#ff9b00]
-        px-22.5
-        py-7
-        text-base
+        ${sizeClasses}
         uppercase
         text-[#ff9b00]
         outline-none
@@ -37,6 +48,7 @@ export function ActionButton({
         focus-visible:outline-offset-4
         disabled:cursor-not-allowed
         disabled:opacity-40
+        ${className}
         ${disabled && "cursor-not-allowed opacity-40"}
       `}
     >
