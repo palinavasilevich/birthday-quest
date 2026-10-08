@@ -527,7 +527,7 @@ export const finalChapter: ChapterData = {
       background: images.yarn,
       content: {
         type: "text",
-        text: "Ты видишь клубок ниток.\n\nТёплый рыжеватый цвет. Тот же, что и его шерсть.",
+        text: "Ты видишь клубок ниток.\n\nТёплый коричневый цвет. Тот же, что и его шерсть.",
       },
       audio: audio.music.final,
       nextScene: "final-thread-3",

@@ -463,7 +463,7 @@ export const secondChapter: ChapterData = {
       background: images.knittingPatternYarn,
       content: {
         type: "text",
-        text: "А рядом со схемой лежит клубок.\n\nТого же тёплого рыжеватого цвета, что и нитка у тебя в кармане.",
+        text: "А рядом со схемой лежит клубок.\n\nТого же тёплого коричневого цвета, что и нитка у тебя в кармане.",
       },
       audio: audio.music.table,
       nextScene: "chapter2-table-7",

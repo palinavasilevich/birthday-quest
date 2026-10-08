@@ -596,7 +596,7 @@ export const firstChapter: ChapterData = {
       background: images.yarnWall,
       content: {
         type: "text",
-        text: "Клочок пряжи тёплого рыжеватого цвета зацепился за острый край камня.\n\nТот, кто бежал здесь, задел его второпях.",
+        text: "Клочок пряжи тёплого коричневого цвета зацепился за острый край камня.\n\nТот, кто бежал здесь, задел его второпях.",
       },
       audio: audio.music.shadow,
       actions: [

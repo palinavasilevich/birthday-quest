@@ -9,7 +9,7 @@ interface CyberpunkPuzzleProps {
   nextScene: string;
 }
 
-type ModuleId = "memory" | "logic" | "size";
+type ModuleId = "syntax" | "array" | "polymorph";
 
 interface Module {
   id: ModuleId;
@@ -19,45 +19,27 @@ interface Module {
 
 const MODULES: Module[] = [
   {
-    id: "memory",
-    title: "MEMORY MODULE",
-    description: "Восстановите значение, полученное через указатель.",
+    id: "syntax",
+    title: "SYNTAX MODULE",
+    description: "Определите, что на самом деле выведет компилятор.",
   },
   {
-    id: "logic",
-    title: "LOGIC MODULE",
-    description: "Определите результат выполнения выражения.",
+    id: "array",
+    title: "ARRAY MODULE",
+    description: "Найдите результат необычной индексации массива.",
   },
   {
-    id: "size",
-    title: "SIZE MODULE",
-    description: "Определите, что знает компилятор.",
+    id: "polymorph",
+    title: "POLYMORPH MODULE",
+    description: "Определите, какой метод вызовет компилятор.",
   },
 ];
 
-/*
- * size: was "array" — but the module deliberately places sizeof(data)
- * next to sizeof(p) to illustrate array-to-pointer decay: once an
- * array is assigned to a pointer, the compiler only knows it's an
- * address, not how many elements it originally pointed to. "array"
- * would teach the opposite of the classic lesson this code is set up
- * to demonstrate.
- */
 const ANSWERS: Record<ModuleId, string> = {
-  memory: "16",
-  logic: "6",
-  size: "address",
+  syntax: "No",
+  array: "20",
+  polymorph: "Base",
 };
-
-/*
- * ------------------------------------------------------------
- * Terminal sound effects
- * ------------------------------------------------------------
- *
- * Small, self-contained beeps — deliberately squarewave/8-bit in
- * character, distinct from any musical instrument elsewhere in the
- * game, since this is a computer terminal, not a magic rune.
- */
 
 let terminalAudioContext: AudioContext | null = null;
 
@@ -178,7 +160,7 @@ function Options({ values, selected, onSelect, labels }: OptionsProps) {
               "flex min-h-8 items-center gap-3 sm:min-h-9",
               "border px-3 py-1 sm:py-1.5",
               "font-mono text-left text-[10px]",
-              "transition-all duration-150",
+              "transition-all duration-150 cursor-pointer",
               isSelected
                 ? [
                     "border-[#d99b22]",
@@ -187,7 +169,7 @@ function Options({ values, selected, onSelect, labels }: OptionsProps) {
                     "shadow-[inset_0_0_18px_rgba(217,155,34,0.04)]",
                   ].join(" ")
                 : [
-                    "border-[#d99b22]/15",
+                    "border-[#494947]",
                     "bg-black/25",
                     "text-[#7d806e]",
                     "hover:border-[#d99b22]/50",
@@ -259,7 +241,7 @@ function ModuleStatus({
         {isComplete ? "●" : isActive ? "◆" : "○"}
       </span>
 
-      <span>{module.id === "size" ? "OUTPUT" : module.id.toUpperCase()}</span>
+      <span>{module.id.toUpperCase()}</span>
     </div>
   );
 }
@@ -477,10 +459,7 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
         `> MODULE 0${moduleIndex + 1} ............... ONLINE`,
         ">",
         ...MODULES.map((module) =>
-          logStatusLine(
-            module.id === "size" ? "OUTPUT" : module.id.toUpperCase(),
-            "OK",
-          ),
+          logStatusLine(module.id.toUpperCase(), "OK"),
         ),
         ">",
         "> SYSTEM RESTORED",
@@ -531,7 +510,9 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
             <div className="mb-2 border-l border-[#d99b22]/40 pl-4 font-mono text-[9px] leading-[1.5] sm:mb-3 sm:leading-[1.6]">
               <div className="text-[#d99b22]">&gt; SYSTEM REPAIR PROTOCOL</div>
 
-              <div className="text-[#8c8060]">&gt; MANUAL RECOVERY REQUIRED</div>
+              <div className="text-[#8c8060]">
+                &gt; MANUAL RECOVERY REQUIRED
+              </div>
 
               <div className="text-[#5b5d51]">&gt; 3 MODULES OFFLINE</div>
             </div>
@@ -601,47 +582,35 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
                   {currentModule.description}
                 </p>
 
-                {/* MEMORY */}
+                {/* syntax */}
 
-                {currentModule.id === "memory" && (
+                {currentModule.id === "syntax" && (
                   <div className="mt-2 sm:mt-3">
                     <pre className="overflow-x-auto border border-[#d99b22]/15 border-l-2 border-l-[#d99b22]/60 bg-black/35 p-2.5 font-mono text-[10px] leading-[1.55] text-[#aeb5a4] sm:p-3">
-                      {`int data[] = {4, 8, 15, 16, 23, 42};
+                      {`int x = 10;
+int y = 20;
 
-int* p = data + 2;
-
-std::cout << *(p + 1);`}
+if (x --> y) {
+    std::cout << "Yes";
+} else {
+    std::cout << "No";
+}`}
                     </pre>
 
-                    <div className="mt-2 grid grid-cols-6 gap-1 sm:mt-3">
-                      {[4, 8, 15, 16, 23, 42].map((value, index) => (
-                        <div
-                          key={value}
-                          className="relative border border-[#d99b22]/15 bg-[#090b09] px-1 py-1 text-center sm:py-1.5"
-                        >
-                          <strong className="block font-mono text-xs text-[#c8b879] sm:text-sm">
-                            {value}
-                          </strong>
+                    <div className="mt-3 border border-[#d99b22]/10 bg-black/25 p-3 font-mono text-[8px] leading-[1.6] text-[#696b5c]">
+                      <div className="text-[#756f5b]">
+                        &gt; WHAT DOES THE COMPILER SEE?
+                      </div>
 
-                          <span className="mt-0.5 block font-mono text-[6px] text-[#55594e]">
-                            data[{index}]
-                          </span>
-
-                          {index === 2 && (
-                            <b className="absolute -top-3 left-1/2 -translate-x-1/2 font-mono text-[7px] font-normal text-[#d99b22]">
-                              p
-                            </b>
-                          )}
-                        </div>
-                      ))}
+                      <div className="mt-2 text-[#aeb5a4]">x-- &gt; y</div>
                     </div>
 
-                    <div className="mb-1.5 mt-2 font-mono text-[8px] tracking-[0.08em] text-[#756f5b] sm:mt-3">
+                    <div className="mb-1.5 mt-3 font-mono text-[8px] tracking-[0.08em] text-[#756f5b]">
                       &gt; SELECT OUTPUT
                     </div>
 
                     <Options
-                      values={["15", "16", "23", "42"]}
+                      values={["Yes", "No", "10", "20"]}
                       selected={selected}
                       onSelect={handleSelectOption}
                     />
@@ -650,41 +619,32 @@ std::cout << *(p + 1);`}
                   </div>
                 )}
 
-                {/* LOGIC */}
+                {/*  */}
 
-                {currentModule.id === "logic" && (
+                {currentModule.id === "array" && (
                   <div className="mt-2 sm:mt-3">
                     <pre className="overflow-x-auto border border-[#d99b22]/15 border-l-2 border-l-[#d99b22]/60 bg-black/35 p-2.5 font-mono text-[10px] leading-[1.55] text-[#aeb5a4] sm:p-3">
-                      {`int power = 7;
-int core = 2;
+                      {`int arr[3] = {10, 20, 30};
 
-std::cout << power / core * 2;`}
+std::cout << 1[arr];`}
                     </pre>
 
-                    <div className="mt-2 flex items-center justify-center gap-3 border border-[#d99b22]/10 bg-black/25 p-2 font-mono sm:mt-3 sm:p-3">
-                      <span className="text-lg text-[#c8b879]">7</span>
+                    <div className="mt-3 border border-[#d99b22]/10 bg-black/25 p-3 font-mono text-[8px] leading-[1.6] text-[#696b5c]">
+                      <div className="text-[#756f5b]">&gt; ARRAY INDEX</div>
 
-                      <b className="text-[9px] font-normal text-[#d99b22]">/</b>
-
-                      <span className="text-lg text-[#c8b879]">2</span>
-
-                      <b className="text-[9px] font-normal text-[#d99b22]">*</b>
-
-                      <span className="text-lg text-[#c8b879]">2</span>
-
-                      <b className="text-[9px] font-normal text-[#d99b22]">=</b>
-
-                      <span className="text-lg text-[#d99b22] drop-shadow-[0_0_8px_rgba(217,155,34,0.4)]">
-                        ?
-                      </span>
+                      <div className="mt-2 flex items-center justify-center gap-2 text-[#aeb5a4]">
+                        <span>arr[1]</span>
+                        <span className="text-[#d99b22]">=</span>
+                        <span>1[arr]</span>
+                      </div>
                     </div>
 
-                    <div className="mb-1.5 mt-2 font-mono text-[8px] tracking-[0.08em] text-[#756f5b] sm:mt-3">
+                    <div className="mb-1.5 mt-3 font-mono text-[8px] tracking-[0.08em] text-[#756f5b]">
                       &gt; SELECT OUTPUT
                     </div>
 
                     <Options
-                      values={["3", "6", "7", "8"]}
+                      values={["10", "20", "30", "ERROR"]}
                       selected={selected}
                       onSelect={handleSelectOption}
                     />
@@ -693,70 +653,48 @@ std::cout << power / core * 2;`}
                   </div>
                 )}
 
-                {/* SIZE */}
+                {/* polymorph */}
 
-                {currentModule.id === "size" && (
+                {currentModule.id === "polymorph" && (
                   <div className="mt-2 sm:mt-3">
-                    <pre className="overflow-x-auto border border-[#d99b22]/15 border-l-2 border-l-[#d99b22]/60 bg-black/35 p-2.5 font-mono text-[10px] leading-[1.55] text-[#aeb5a4] sm:p-3">
-                      {`int data[8];
-int* p = data;
+                    <pre className="overflow-x-auto border border-[#d99b22]/15 border-l-2 border-l-[#d99b22]/60 bg-black/35 p-2.5 font-mono text-[9px] leading-[1.55] text-[#aeb5a4] sm:p-3">
+                      {`class Base {
+public:
+    Base() { foo(); }
 
-sizeof(data)
-sizeof(p)`}
+    virtual void foo() {
+        std::cout << "Base\\n";
+    }
+};
+
+class Derived : public Base {
+public:
+    void foo() override {
+        std::cout << "Derived\\n";
+    }
+};
+
+int main() {
+    Derived d;
+}`}
                     </pre>
 
-                    <div className="mt-2 grid grid-cols-1 gap-1 sm:mt-3 sm:grid-cols-2">
-                      {/* DATA */}
-
-                      <div className="border border-[#d99b22]/15 bg-[#090b09] p-3">
-                        <div className="mb-2 font-mono text-[9px] text-[#c8b879]">
-                          data
-                        </div>
-
-                        <div className="grid grid-cols-8 gap-0.5">
-                          {Array.from({ length: 8 }, (_, index) => (
-                            <span
-                              key={index}
-                              className="flex h-6 items-center justify-center border border-[#d99b22]/10 bg-[#11120f] font-mono text-[6px] text-[#77705a]"
-                            >
-                              {index}
-                            </span>
-                          ))}
-                        </div>
-
-                        <small className="mt-2 block font-mono text-[6px] text-[#55594e]">
-                          8 ELEMENTS
-                        </small>
+                    <div className="mt-3 border border-[#d99b22]/10 bg-black/25 p-3 font-mono text-[8px] leading-[1.6] text-[#696b5c]">
+                      <div className="text-[#756f5b]">
+                        &gt; CONSTRUCTOR TRACE
                       </div>
 
-                      {/* POINTER */}
-
-                      <div className="border border-[#d99b22]/15 bg-[#090b09] p-3">
-                        <div className="mb-2 font-mono text-[9px] text-[#c8b879]">
-                          p
-                        </div>
-
-                        <div className="flex min-h-6 items-center font-mono text-[7px] text-[#d99b22]">
-                          ────────► data[0]
-                        </div>
-
-                        <small className="mt-2 block font-mono text-[6px] text-[#55594e]">
-                          ADDRESS
-                        </small>
+                      <div className="mt-2 text-[#aeb5a4]">
+                        Derived → Base constructor → foo()
                       </div>
                     </div>
 
-                    <div className="mb-1.5 mt-2 font-mono text-[8px] tracking-[0.08em] text-[#756f5b] sm:mt-3">
-                      &gt; WHAT DOES THE COMPILER KNOW?
+                    <div className="mb-1.5 mt-3 font-mono text-[8px] tracking-[0.08em] text-[#756f5b]">
+                      &gt; SELECT OUTPUT
                     </div>
 
                     <Options
-                      values={["array", "address", "value"]}
-                      labels={{
-                        array: "Размер массива",
-                        address: "Только адрес",
-                        value: "Значение элемента",
-                      }}
+                      values={["Base", "Derived", "ERROR", "Nothing"]}
                       selected={selected}
                       onSelect={handleSelectOption}
                     />
@@ -785,7 +723,9 @@ sizeof(p)`}
 
                 <span>OUTPUT .............. OK</span>
 
-                <span className="text-[#55bfc3]">DOOR CONTROL ........ ONLINE</span>
+                <span className="text-[#55bfc3]">
+                  DOOR CONTROL ........ ONLINE
+                </span>
               </div>
 
               <div className="mt-6 font-mono text-[10px] tracking-[0.15em] text-[#78c98c] animate-[accessPulse_1.5s_ease-in-out_infinite]">

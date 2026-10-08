@@ -57,7 +57,7 @@ const DISCOVERY_START_DELAY = 900;
 
 const RICKROLL_VIDEO_ID = "dQw4w9WgXcQ";
 const RICKROLL_DURATION = 10_000;
-const AFTER_RICKROLL_DELAY = 1_800;
+const AFTER_RICKROLL_DELAY = 1_700;
 
 /**
  * Note -> Rune mapping
@@ -849,7 +849,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
             text-xs
             uppercase
             tracking-[0.2em]
-            text-white/40
+            text-white/55
             transition-colors
             hover:text-[#ff9b00]
             disabled:cursor-default
