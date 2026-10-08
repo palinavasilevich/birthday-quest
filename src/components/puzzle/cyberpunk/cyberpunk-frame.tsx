@@ -57,7 +57,7 @@ export function CyberpunkFrame({
 
       {/* SCREEN */}
 
-      <div className="relative overflow-hidden px-4 py-4 sm:px-6 sm:py-5">
+      <div className="relative max-h-[87vh] overflow-y-auto overflow-x-hidden px-4 py-4 sm:px-6 sm:py-5 scrollbar-thin scrollbar-track-black/20 scrollbar-thumb-[#d99b22]/30 hover:scrollbar-thumb-[#d99b22]/60">
         {/* scanlines */}
 
         <div className="pointer-events-none absolute inset-0 opacity-[0.06] [background:repeating-linear-gradient(to_bottom,transparent_0px,transparent_3px,rgba(255,255,255,0.25)_4px)]" />
