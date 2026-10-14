@@ -251,7 +251,7 @@ export const firstChapter: ChapterData = {
     {
       id: "chapter1-door-3",
 
-      background: images.room,
+      background: images.wallWithSymbolsDoor,
       content: {
         type: "text",
         text: "Раздаётся глубокий гул.\n\nКамень начинает двигаться.\n\nДревняя дверь медленно открывается.",
@@ -446,7 +446,7 @@ export const firstChapter: ChapterData = {
         text: "Кажется, последние слова фразы потерялись...",
       },
       audio: audio.music.book,
-      autoTransitionDelay: 4300,
+      autoTransitionDelay: 4400,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-sound",
     },
@@ -543,7 +543,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты бросаешься к проходу.\n\nНо тень уже исчезла.",
       },
-      audio: audio.music.shadow,
+      audio: audio.music.persecution,
       nextScene: "chapter1-chase-2",
     },
 
@@ -554,7 +554,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты видишь следы, уходящие вглубь тёмного коридора.",
       },
-      audio: audio.music.shadow,
+      audio: audio.music.persecution,
       nextScene: "chapter1-chase-3",
     },
 
@@ -565,7 +565,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты бежишь напролом, ничего не видя перед собой.\n\nПлечом задеваешь стену — острый камень царапает кожу.",
       },
-      audio: audio.music.shadow,
+      audio: audio.music.persecution,
       nextScene: "chapter1-chase-4",
     },
 
@@ -576,7 +576,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Следы продолжаются всё глубже.\n\nНо тени впереди больше нет.",
       },
-      audio: audio.music.shadow,
+      audio: audio.music.persecution,
       nextScene: "chapter1-chase-5",
     },
 
@@ -587,7 +587,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты останавливаешься, чтобы отдышаться.\n\nИ тут замечаешь что-то на выступе стены рядом.",
       },
-      audio: audio.music.shadow,
+      audio: audio.music.persecution,
       nextScene: "chapter1-chase-6",
     },
 
@@ -596,9 +596,9 @@ export const firstChapter: ChapterData = {
       background: images.yarnWall,
       content: {
         type: "text",
-        text: "Клочок пряжи тёплого коричневого цвета зацепился за острый край камня.\n\nТот, кто бежал здесь, задел его второпях.",
+        text: "Клочок пряжи тёплого коричневого цвета зацепился за острый край камня.",
       },
-      audio: audio.music.shadow,
+      audio: audio.music.persecution,
       actions: [
         {
           id: "take-thread-torn",
@@ -615,7 +615,7 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Ты снимаешь нитку с камня и продолжаешь путь.",
       },
-      audio: audio.music.shadow,
+      audio: audio.music.persecution,
       nextScene: "chapter1-ending",
     },
 
