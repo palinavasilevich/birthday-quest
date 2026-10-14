@@ -1,7 +1,6 @@
 import type Phaser from "phaser";
 
 export type GameStatus = "playing" | "won" | "lost";
-
 export type EndReason = "player" | "owlbear";
 
 export type AiState =
@@ -35,9 +34,7 @@ export interface GameHooks {
   onAnnounce: (text: string) => void;
 }
 
-export type Fireball = Phaser.Physics.Arcade.Sprite & {
-  life: number;
-};
+export type Fireball = Phaser.Physics.Arcade.Sprite & { life: number };
 
 export type FirePool = Phaser.GameObjects.Image & {
   life: number;

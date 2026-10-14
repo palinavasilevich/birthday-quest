@@ -1,83 +1,105 @@
-:root {
-  --ash: #12131a;
-  --slate: #21243a;
-  --edge: #4a3a62;
-  --ember: #c94b3e;
-  --gold: #e8c27a;
-  --steel: #8fa7c9;
-  --muted: #6b7694;
-
-  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-
-  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-}
-
-/* ============================================================
-   DRAGON FIGHT
-   ============================================================ */
-
 .dragon-fight {
-  /*
-   * Максимальная ширина игры.
-   * На маленьком экране уменьшается автоматически.
-   */
-  width: min(960px, calc(100vw - 32px));
+  --bg: #080a11;
+  --panel: rgba(8, 10, 17, 0.92);
+  --panel-2: rgba(19, 20, 31, 0.92);
+  --line: #604a67;
+  --line-soft: rgba(177, 133, 86, 0.42);
+  --gold: #e7bd78;
+  --gold-bright: #f2d49b;
+  --ember: #d84836;
+  --ember-bright: #ff7147;
+  --steel: #8fb9dd;
+  --muted: #7b7889;
+  --green: #55cf3b;
+  --mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  /*
-   * Всё содержимое находится в одном стабильном блоке.
-   */
+  width: min(100%, 1100px);
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-
-  gap: 10px;
-
-  padding: 12px 14px;
-
+  align-items: stretch;
+  gap: 8px;
+  padding: 8px;
   box-sizing: border-box;
-
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-
-  background: rgba(0, 0, 0, 0.6);
-
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-
-  contain: layout;
+  color: #e7e2d9;
+  background:
+    radial-gradient(circle at 50% 25%, rgba(99, 35, 32, 0.13), transparent 45%),
+    linear-gradient(180deg, rgba(15, 15, 24, 0.94), rgba(4, 5, 9, 0.97));
+  border: 1px solid rgba(174, 125, 80, 0.32);
+  border-radius: 7px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.68), inset 0 1px rgba(255, 255, 255, 0.04);
+  contain: layout paint;
 }
-
-/* ============================================================
-   TITLE
-   ============================================================ */
 
 .dragon-title {
-  margin: 0;
-
+  position: relative;
   flex: 0 0 auto;
-
-  font-size: clamp(20px, 3.4vw, 30px);
+  margin: 0;
+  padding: 2px 90px 3px;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: clamp(21px, 3vw, 34px);
+  line-height: 1.05;
   font-weight: 600;
-
-  letter-spacing: 0.04em;
-
-  color: var(--gold);
-
-  text-shadow: 0 0 24px rgba(224, 86, 44, 0.35);
+  letter-spacing: 0.025em;
+  color: var(--gold-bright);
+  text-shadow: 0 0 22px rgba(232, 194, 122, 0.18);
 }
 
-/* ============================================================
-   PLAYER HUD
-   ============================================================ */
+.dragon-title::before,
+.dragon-title::after {
+  content: "◆";
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  color: var(--gold);
+  font-family: var(--serif);
+  font-size: 8px;
+  line-height: 1px;
+  opacity: 0.8;
+}
 
-.hud-row {
+.dragon-title::before {
+  left: 1%;
+  text-align: left;
+  border-top: 1px solid var(--line-soft);
+  padding-left: 2px;
+}
+
+.dragon-title::after {
+  right: 1%;
+  text-align: right;
+  border-top: 1px solid var(--line-soft);
+  padding-right: 2px;
+}
+
+.battle-topbar {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.65fr) minmax(330px, 1fr);
+  align-items: center;
+  gap: 20px;
   width: 100%;
+  min-width: 0;
+  padding: 3px 10px 7px;
+  box-sizing: border-box;
+  border-top: 1px solid rgba(174, 125, 80, 0.24);
+  border-bottom: 1px solid rgba(174, 125, 80, 0.24);
+  background: rgba(7, 9, 15, 0.62);
+}
 
+.player-hud {
   display: flex;
   align-items: center;
+  gap: 20px;
+  min-width: 0;
+}
 
-  gap: 14px;
-
-  flex: 0 0 auto;
+.player-hud__health {
+  display: flex;
+  align-items: center;
 }
 
 .hearts {
@@ -85,377 +107,473 @@
   gap: 3px;
 }
 
-.dash-track {
-  width: 90px;
-  height: 5px;
-
+.hud-heart {
+  width: 21px;
+  height: 20px;
   flex: 0 0 auto;
+}
 
-  background: #2a2e42;
-  border-radius: 3px;
+.hud-heart path {
+  fill: #282d3e;
+  stroke: #52566a;
+  stroke-width: 1.4;
+}
 
+.hud-heart.is-filled path {
+  fill: #e64b3c;
+  stroke: #ff8271;
+  filter: drop-shadow(0 0 4px rgba(228, 72, 58, 0.32));
+}
+
+.dash-widget {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 150px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.dash-track {
+  position: relative;
+  width: 120px;
+  height: 6px;
   overflow: hidden;
+  border: 1px solid rgba(143, 185, 221, 0.36);
+  border-radius: 2px;
+  background: #1a2130;
 }
 
 .dash-fill {
+  width: 100%;
   height: 100%;
-
-  background: var(--steel);
-
   transform-origin: left;
-
-  animation-name: dash-refill;
+  background: linear-gradient(90deg, #68a9d6, #b4d9ef);
+  animation-name: dragon-dash-refill;
   animation-timing-function: linear;
 }
 
-@keyframes dash-refill {
-  from {
-    transform: scaleX(0);
-  }
-
-  to {
-    transform: scaleX(1);
-  }
+@keyframes dragon-dash-refill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
-.hud-label {
-  flex: 0 0 auto;
-
-  font-family: var(--sans);
-  font-size: 12px;
-
-  color: var(--muted);
+.boss-hud {
+  min-width: 0;
 }
 
-.hud-phase {
-  margin-left: auto;
-
-  flex: 0 0 auto;
-
-  font-family: ui-monospace, "SF Mono", monospace;
-  font-size: 13px;
-
-  color: #b07a6a;
+.boss-hud__meta {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-bottom: 4px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: #b17b70;
 }
 
-/* ============================================================
-   DRAGON HUD
-   ============================================================ */
-
-.boss-bar {
-  width: 100%;
-  flex: 0 0 auto;
+.boss-hud__meta strong {
+  color: var(--gold);
+  font-weight: 500;
 }
 
-.poise-track {
+.boss-hud__poise {
   height: 3px;
-
   margin-bottom: 3px;
-
-  background: #2a2e42;
-
-  border-radius: 2px;
-
   overflow: hidden;
+  border-radius: 2px;
+  background: #252736;
 }
 
-.poise-fill {
+.boss-hud__poise-fill {
   height: 100%;
-
-  background: var(--gold);
-
-  border-radius: 2px;
-
+  background: linear-gradient(90deg, #987146, #e9c87d);
   transition: width 120ms linear;
 }
 
-.hp-track {
+.boss-hud__track {
   position: relative;
-
-  height: 14px;
-
-  background: #0d0e16;
-
-  border: 1px solid var(--edge);
-
-  border-radius: 3px;
-
+  height: 10px;
   overflow: hidden;
+  border: 1px solid #5b3940;
+  border-radius: 2px;
+  background: #0c0c12;
 }
 
-.hp-fill {
+.boss-hud__fill {
   height: 100%;
-
-  background: var(--ember);
-
-  border-top: 3px solid rgba(255, 166, 61, 0.5);
-
+  background: linear-gradient(90deg, #8d202d, #d84939 72%, #f06d4a);
+  border-top: 2px solid rgba(255, 180, 80, 0.38);
   transition: width 180ms ease-out;
 }
 
-.hp-tick {
+.boss-hud__tick {
   position: absolute;
-
   top: 0;
   bottom: 0;
-
   width: 1px;
-
-  background: var(--edge);
+  background: rgba(107, 77, 87, 0.75);
 }
 
-/* ============================================================
-   MEDVESYCH
-   ============================================================ */
-
-.owlbear-status {
-  width: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  margin-top: -4px;
-
-  padding: 7px 10px;
-
-  border: 1px solid rgba(201, 75, 62, 0.35);
-
-  border-radius: 4px;
-
-  background: rgba(18, 19, 26, 0.5);
-
-  font-family: var(--sans);
-  font-size: 12px;
-
-  color: var(--muted);
-
-  transition:
-    border-color 180ms ease,
-    color 180ms ease,
-    background 180ms ease;
-}
-
-.owlbear-status.is-safe {
-  border-color: rgba(232, 194, 122, 0.45);
-
-  color: var(--gold);
-
-  background: rgba(232, 194, 122, 0.06);
-}
-
-.owlbear-status.is-critical {
-  border-color: rgba(201, 75, 62, 0.7);
-
-  color: #e98272;
-}
-
-.owlbear-label {
-  display: flex;
-  align-items: baseline;
-
-  gap: 8px;
-}
-
-.owlbear-label small {
-  font-size: 9px;
-
-  color: var(--muted);
-}
-
-.owlbear-hp {
-  display: flex;
-  align-items: center;
-
-  gap: 8px;
-
-  font-family: ui-monospace, "SF Mono", monospace;
-  font-size: 11px;
-}
-
-.owlbear-hp-track {
-  width: 90px;
-  height: 4px;
-
-  background: #2a2e42;
-
-  border-radius: 2px;
-
-  overflow: hidden;
-}
-
-.owlbear-hp-fill {
-  height: 100%;
-
-  background: var(--gold);
-
-  transition: width 180ms ease-out;
-}
-
-.owlbear-status.is-critical .owlbear-hp-fill {
-  background: var(--ember);
-}
-
-/* ============================================================
-   BATTLE STAGE
-   ============================================================ */
+.boss-hud__tick--one { left: 33%; }
+.boss-hud__tick--two { left: 66%; }
 
 .stage {
   position: relative;
-
-  /*
-   * Максимум:
-   * 960 × 600
-   *
-   * Но высота viewport тоже учитывается.
-   *
-   * 190px = место для:
-   * title + player HUD + dragon HUD +
-   * owlbear HUD + controls + gaps/padding
-   */
-  width: min(960px, calc(100vw - 32px), calc((100dvh - 190px) * 1.6));
-
-  /*
-   * Сохраняем оригинальные пропорции Phaser.
-   */
+  width: 100%;
+  max-width: 100%;
   aspect-ratio: 960 / 600;
-
+  min-width: 0;
   flex: 0 1 auto;
-
   overflow: hidden;
-
   box-sizing: border-box;
-
-  border: 1px solid #3a3050;
-
-  border-radius: 6px;
-
-  background: #12131a;
-
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-
+  border: 2px solid #4c3a62;
+  border-radius: 4px;
+  background: #0d1018;
+  box-shadow: inset 0 0 55px rgba(86, 38, 39, 0.2), 0 12px 35px rgba(0, 0, 0, 0.62);
   contain: layout paint;
 }
 
-/* ============================================================
-   PHASER CANVAS
-   ============================================================ */
+.stage::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  z-index: 4;
+  pointer-events: none;
+  border: 1px solid rgba(212, 164, 101, 0.22);
+}
+
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  box-shadow: inset 0 0 45px rgba(0, 0, 0, 0.45);
+}
 
 .canvas-host {
   position: absolute;
-
   inset: 0;
-
   width: 100%;
   height: 100%;
-
   overflow: hidden;
-
   line-height: 0;
 }
 
 .canvas-host canvas {
   display: block;
-
   width: 100% !important;
   height: 100% !important;
-
   max-width: none;
   max-height: none;
+  image-rendering: pixelated;
 }
-
-/* ============================================================
-   ANNOUNCEMENT
-   ============================================================ */
 
 .announce {
   position: absolute;
-
-  top: 16%;
-
-  left: 0;
-  right: 0;
-
+  z-index: 20;
+  top: 14%;
+  left: 7%;
+  right: 7%;
   margin: 0;
-
+  padding: 8px 14px;
   text-align: center;
-
-  font-size: 28px;
-
-  color: var(--gold);
-
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
-
+  font-family: var(--serif);
+  font-size: clamp(18px, 3vw, 30px);
+  color: var(--gold-bright);
+  text-shadow: 0 2px 20px #000;
   pointer-events: none;
-
-  animation: announce-in 1400ms ease-out forwards;
+  animation: dragon-announce 1400ms ease-out forwards;
 }
 
-@keyframes announce-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  20% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  to {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
+@keyframes dragon-announce {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  20% { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-10px) scale(1.02); }
 }
-
-/* ============================================================
-   LOADING
-   ============================================================ */
 
 .loading {
   position: absolute;
-
   inset: 0;
-
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: center;
-
   margin: 0;
-
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
   color: var(--muted);
-
   pointer-events: none;
 }
 
-/* ============================================================
-   END OVERLAY
-   ============================================================ */
+.battle-bottom {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.9fr) minmax(300px, 1.1fr) minmax(300px, 1.15fr);
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.owlbear-panel,
+.protect-panel {
+  min-width: 0;
+  min-height: 70px;
+  box-sizing: border-box;
+  border: 1px solid rgba(174, 125, 80, 0.38);
+  background: linear-gradient(180deg, rgba(20, 18, 23, 0.96), rgba(8, 9, 14, 0.97));
+  border-radius: 3px;
+}
+
+.owlbear-panel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  color: #cdb99e;
+}
+
+.owlbear-panel.is-safe {
+  border-color: rgba(174, 125, 80, 0.58);
+}
+
+.owlbear-panel.is-critical {
+  border-color: rgba(216, 72, 54, 0.78);
+}
+
+.owlbear-portrait {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  border: 1px solid rgba(174, 125, 80, 0.4);
+  border-radius: 3px;
+  background: #1a1415;
+  font-size: 25px;
+}
+
+.owlbear-copy {
+  min-width: 0;
+}
+
+.owlbear-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  font-family: var(--serif);
+  font-size: 16px;
+  color: #e5caa1;
+}
+
+.owlbear-title-row small {
+  font-family: var(--mono);
+  font-size: 7px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.owlbear-hp-row {
+  display: grid;
+  grid-template-columns: minmax(70px, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: #d6c7af;
+}
+
+.owlbear-hp-track {
+  height: 7px;
+  overflow: hidden;
+  border: 1px solid rgba(94, 129, 72, 0.45);
+  border-radius: 2px;
+  background: #20291e;
+}
+
+.owlbear-hp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #43a92e, #6be246);
+  transition: width 180ms ease-out;
+}
+
+.owlbear-panel.is-critical .owlbear-hp-fill {
+  background: linear-gradient(90deg, #9b2729, #e14c3f);
+}
+
+.battle-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(16px, 3vw, 36px);
+  min-width: 0;
+  color: #d1c5b3;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 50px;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 11px;
+  line-height: 1.05;
+}
+
+.control-group kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 25px;
+  padding: 0 5px;
+  box-sizing: border-box;
+  border: 1px solid #8d8790;
+  border-radius: 3px;
+  background: linear-gradient(#272a34, #151720);
+  color: #f0ece6;
+  font-family: var(--sans);
+  font-size: 11px;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12), 0 2px 0 #05060a;
+}
+
+.wasd {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.wasd > div {
+  display: flex;
+  gap: 2px;
+}
+
+.wasd kbd {
+  min-width: 25px;
+  height: 22px;
+  padding: 0 4px;
+}
+
+.mouse-icon {
+  position: relative;
+  width: 24px;
+  height: 32px;
+  border: 2px solid #b7b2ae;
+  border-radius: 11px;
+  box-sizing: border-box;
+}
+
+.mouse-icon::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 10px;
+  background: #b7b2ae;
+}
+
+.mouse-icon span {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 4px;
+  height: 6px;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  background: #d8d1c7;
+}
+
+.shift-key {
+  min-width: 62px !important;
+}
+
+.protect-panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  color: #dfc6a0;
+}
+
+.shield-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 44px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(232, 194, 122, 0.36);
+  border-radius: 4px;
+  color: var(--gold);
+  font-size: 25px;
+}
+
+.protect-panel p {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.protect-panel strong {
+  color: var(--gold-bright);
+  font-weight: 600;
+}
+
+.protect-panel span {
+  color: #c3a98c;
+}
 
 .overlay {
   position: absolute;
-
   inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  background: rgba(5, 6, 12, 0.78);
+  backdrop-filter: blur(2px);
+}
 
-  display: flex;
-  flex-direction: column;
+.overlay-frame {
+  width: min(90%, 430px);
+  padding: 28px 30px 25px;
+  box-sizing: border-box;
+  text-align: center;
+  border: 1px solid var(--line-soft);
+  border-radius: 5px;
+  background: linear-gradient(180deg, rgba(26, 25, 38, 0.97), rgba(8, 9, 15, 0.98));
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7), inset 0 0 35px rgba(103, 60, 116, 0.1);
+}
 
-  align-items: center;
-  justify-content: center;
-
-  gap: 18px;
-
-  border-radius: 6px;
-
-  background: rgba(11, 13, 21, 0.72);
+.overlay-kicker,
+.overlay-hint {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
 }
 
 .overlay-title {
-  margin: 0;
-
-  font-size: clamp(28px, 5vw, 42px);
-
-  color: var(--ember);
+  margin: 8px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(27px, 5vw, 40px);
+  font-weight: 600;
+  color: var(--ember-bright);
 }
 
 .overlay-title--won {
@@ -463,174 +581,112 @@
 }
 
 .overlay-note {
-  margin: -8px 0 0;
-
+  margin: 9px auto 18px;
   max-width: 34ch;
-
-  text-align: center;
-
   font-family: var(--sans);
-
-  font-size: 14px;
-
+  font-size: 12px;
   line-height: 1.5;
-
   color: var(--muted);
 }
 
 .overlay-button {
-  padding: 9px 24px;
-
-  border: none;
-
-  border-radius: 4px;
-
-  background: var(--gold);
-
-  color: var(--ash);
-
-  font-family: var(--sans);
-
-  font-size: 16px;
-
-  font-weight: 600;
-
+  padding: 9px 22px;
+  border: 1px solid rgba(232, 194, 122, 0.6);
+  border-radius: 3px;
+  background: rgba(232, 194, 122, 0.12);
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
   cursor: pointer;
-
-  transition:
-    background 150ms ease,
-    transform 150ms ease;
+  transition: background 150ms ease, transform 150ms ease, border-color 150ms ease;
 }
 
 .overlay-button:hover {
-  background: #f0d095;
-
+  background: rgba(232, 194, 122, 0.2);
+  border-color: var(--gold);
   transform: translateY(-1px);
 }
 
-.overlay-button:active {
-  transform: translateY(0);
-}
+.overlay-button:active { transform: translateY(0); }
 
 .overlay-button:focus-visible {
   outline: 2px solid #fff;
-
   outline-offset: 3px;
 }
 
-/* ============================================================
-   CONTROLS
-   ============================================================ */
-
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-
-  justify-content: center;
-
-  gap: 4px 20px;
-
-  flex: 0 0 auto;
-
-  font-family: var(--sans);
-
-  font-size: 13px;
-
-  color: var(--muted);
-}
-
-.controls b {
-  color: var(--gold);
-
-  font-weight: 600;
-}
-
-/* ============================================================
-   SMALL SCREENS
-   ============================================================ */
-
-@media (max-width: 640px) {
-  .dragon-fight {
-    width: calc(100vw - 20px);
-
-    gap: 7px;
-
-    padding: 8px;
-
-    border-radius: 12px;
-  }
-
-  .hud-row {
-    gap: 8px;
-  }
-
-  .dash-track {
-    width: 65px;
-  }
-
-  .hud-phase {
-    font-size: 11px;
-  }
-
-  .announce {
-    top: 12%;
-
-    font-size: 21px;
-  }
-
-  .controls {
-    gap: 5px 12px;
-
-    font-size: 11px;
-  }
-
-  .owlbear-hp-track {
-    width: 65px;
-  }
-}
-
-/* ============================================================
-   VERY SHORT SCREENS
-   ============================================================ */
-
-@media (max-height: 700px) {
-  .dragon-fight {
+@media (max-width: 820px) {
+  .battle-topbar {
+    grid-template-columns: 1fr;
     gap: 6px;
+  }
 
-    padding: 8px 10px;
+  .boss-hud__meta { justify-content: space-between; }
+
+  .battle-bottom {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .battle-controls { grid-column: 1 / -1; grid-row: 2; }
+  .protect-panel { grid-column: 1 / -1; grid-row: 3; }
+}
+
+@media (max-width: 560px) {
+  .dragon-fight {
+    width: 100%;
+    padding: 5px;
+    gap: 5px;
+    border-radius: 4px;
   }
 
   .dragon-title {
+    padding-inline: 40px;
     font-size: 20px;
   }
 
-  .hud-row {
-    gap: 8px;
+  .battle-topbar { padding-inline: 6px; }
+  .player-hud { gap: 10px; }
+  .hud-heart { width: 18px; height: 17px; }
+  .dash-track { width: 85px; }
+
+  .battle-bottom {
+    grid-template-columns: 1fr;
   }
 
-  .owlbear-status {
-    padding: 5px 8px;
+  .battle-controls,
+  .protect-panel,
+  .owlbear-panel {
+    grid-column: auto;
+    grid-row: auto;
   }
 
-  .controls {
-    font-size: 11px;
-  }
+  .battle-controls { gap: 22px; }
 }
 
-/* ============================================================
-   ACCESSIBILITY
-   ============================================================ */
+@media (max-height: 720px) and (min-width: 821px) {
+  .dragon-fight {
+    gap: 5px;
+    padding: 5px;
+  }
+
+  .dragon-title {
+    font-size: 22px;
+    padding-block: 0;
+  }
+
+  .battle-topbar { padding-bottom: 4px; }
+  .stage { aspect-ratio: 960 / 600; }
+  .owlbear-panel,
+  .protect-panel { min-height: 58px; }
+  .battle-controls { transform: scale(0.92); transform-origin: center; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .announce,
-  .dash-fill {
-    animation: none;
-  }
+  .dash-fill { animation: none; }
 
-  .hp-fill,
-  .poise-fill,
-  .owlbear-status,
-  .overlay-button {
-    transition: none;
-  }
+  .boss-hud__fill,
+  .boss-hud__poise-fill,
+  .owlbear-hp-fill,
+  .overlay-button { transition: none; }
 }

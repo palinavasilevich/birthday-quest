@@ -48,7 +48,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Тропа почти полностью скрыта под опавшими листьями.\n\nВдруг что-то привлекает твоё внимание.",
+        text: "Тропа ведёт дальше, вглубь леса.\n\nНо кое-что заставляет тебя остановиться.",
       },
       audio: audio.music.forest,
       actions: [
@@ -65,7 +65,7 @@ export const firstChapter: ChapterData = {
       background: images.forestTraces,
       content: {
         type: "text",
-        text: "Это следы.\n\nНебольшие, глубокие, с пятью пальцами.\n\nОпределённо не человеческие.",
+        text: "Ты останавливаешься у странных следов.\n\nНебольшие, глубокие, с пятью пальцами.\n\nКому они могут принадлежать?..",
       },
       audio: audio.music.forest,
       nextScene: "chapter1-footprints-3",
@@ -76,7 +76,7 @@ export const firstChapter: ChapterData = {
       background: images.forestTraces,
       content: {
         type: "text",
-        text: "Ты поднимаешь взгляд.\n\nВ нескольких метрах впереди — ещё один.\n\nИ ещё один, чуть дальше.\n\nКто-то прошёл здесь совсем недавно.\n\n🐾",
+        text: "Ты поднимаешь взгляд.\n\nСледы тянутся дальше, вглубь леса.\n\nОдин за другим исчезают среди деревьев.",
       },
       audio: audio.music.forest,
       actions: [

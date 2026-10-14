@@ -2,11 +2,11 @@ import { useEffect } from "react";
 
 import { useGameStore } from "@/store/game-store";
 
-import { usePhaserGame } from "../hooks/usePhaserGame";
+import { usePhaserGame } from "./use-phaser-game";
 import { DragonHud, PlayerHud } from "./hud";
 import { GameOverlay } from "./game-overlay";
 
-import "../styles.css";
+import "./styles.css";
 
 interface DragonFightProps {
   puzzleId?: string;
@@ -28,8 +28,6 @@ export function DragonFight({ puzzleId, nextScene }: DragonFightProps) {
     restart,
   } = usePhaserGame();
 
-  // Рестарт по R доступен только на экране конца боя,
-  // чтобы клавиша не срабатывала во время боя.
   useEffect(() => {
     if (status === "playing") return;
 
@@ -40,18 +38,11 @@ export function DragonFight({ puzzleId, nextScene }: DragonFightProps) {
     };
 
     window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, [status, restart]);
 
-  // Если битва запущена из основной истории,
-  // после победы завершаем puzzle и переходим к следующей сцене.
   useEffect(() => {
-    if (status !== "won" || !puzzleId || !nextScene) {
-      return;
-    }
+    if (status !== "won" || !puzzleId || !nextScene) return;
 
     completePuzzle(puzzleId);
 
@@ -59,14 +50,12 @@ export function DragonFight({ puzzleId, nextScene }: DragonFightProps) {
       setScene(nextScene);
     }, 1800);
 
-    return () => {
-      window.clearTimeout(timer);
-    };
+    return () => window.clearTimeout(timer);
   }, [status, puzzleId, nextScene, completePuzzle, setScene]);
 
   return (
     <div className="dragon-fight">
-      <h1 className="title">Fight with the Dragon</h1>
+      <h1 className="dragon-title">Fight with the Dragon</h1>
 
       <PlayerHud stats={stats} dashRun={dashRun} />
 
@@ -79,7 +68,7 @@ export function DragonFight({ puzzleId, nextScene }: DragonFightProps) {
           </p>
         )}
 
-        {!booted && <p className="loading">Загружаем арену...</p>}
+        {!booted && <p className="loading">Дракон готовится атаковать...</p>}
 
         <GameOverlay
           status={status}
@@ -89,24 +78,6 @@ export function DragonFight({ puzzleId, nextScene }: DragonFightProps) {
       </div>
 
       <DragonHud stats={stats} />
-
-      <div className="controls">
-        <span>
-          <b>WASD</b> двигаться
-        </span>
-
-        <span>
-          <b>Мышь</b> целиться
-        </span>
-
-        <span>
-          <b>Пробел / ЛКМ</b> удар
-        </span>
-
-        <span>
-          <b>Shift</b> рывок
-        </span>
-      </div>
     </div>
   );
 }

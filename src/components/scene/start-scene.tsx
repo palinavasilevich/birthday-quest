@@ -21,12 +21,13 @@ export function StartScreen({ onStart }: StartScreenProps) {
         transition={{ duration: 1.2, ease: "easeOut" }}
       >
         <motion.h1
-          className="text-2xl font-bold text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] mb-8 tracking-wide max-w-md"
+          className="text-3xl font-bold text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] mb-8 tracking-wide "
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.8 }}
         >
-          A journey through shadows, secrets and forgotten dreams.
+          Let us step out into the night and pursue that flighty temptress,
+          adventure.
         </motion.h1>
 
         <motion.div

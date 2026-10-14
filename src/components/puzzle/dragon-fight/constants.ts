@@ -1,7 +1,7 @@
 export const WORLD = {
   width: 960,
   height: 600,
-  padding: 40,
+  padding: 42,
 } as const;
 
 export const PLAYER = {
@@ -15,7 +15,7 @@ export const PLAYER = {
   attackRange: 96,
   attackDamage: 9,
   attackArc: 1.2,
-  scale: 1.15,
+  scale: 1,
 } as const;
 
 export const DRAGON = {
@@ -23,7 +23,7 @@ export const DRAGON = {
   poiseMax: 46,
   staggerTime: 1700,
   weakMultiplier: 1.7,
-  scale: 0.8,
+  scale: 0.55,
 } as const;
 
 export const OWLBEAR = {
@@ -33,11 +33,14 @@ export const OWLBEAR = {
   followDistance: 54,
   followSpeed: 125,
   damageCooldown: 650,
-  scale: 0.62,
+  scale: 0.72,
 } as const;
 
 export const TEXTURES = {
-  knight: "knight",
+  playerDown: "player-down",
+  playerUp: "player-up",
+  playerRight: "player-right",
+
   sword: "sword",
   dragon: "dragon",
   owlbear: "owlbear",

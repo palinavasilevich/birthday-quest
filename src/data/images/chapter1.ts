@@ -1,5 +1,5 @@
 export const images = {
-  forest: "/images/chapter1/forest.png",
+  forest: "/images/chapter1/forest_3.jpg",
   forestTraces: "/images/chapter1/forest-traces.png",
   wall: "/images/chapter1/wall.png",
   wallWithSymbols: "/images/chapter1/wall-with-symbols.png",
