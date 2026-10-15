@@ -50,7 +50,7 @@ export const useGameStore = create<GameState>()(
     gameStartedAt: null,
     storyTimestamps: {},
     // currentSceneId: "final-victory",
-    currentSceneId: "chapter1-sound-3",
+    currentSceneId: "chapter2-code-puzzle",
     // currentSceneId: "chapter2-code-puzzle",
     completedPuzzles: [],
     completedActions: [],

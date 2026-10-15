@@ -42,6 +42,98 @@ const ANSWERS: Record<ModuleId, string> = {
   polymorph: "Base",
 };
 
+let terminalAudioContext: AudioContext | null = null;
+
+function getTerminalAudioContext(): AudioContext | null {
+  if (terminalAudioContext) {
+    return terminalAudioContext;
+  }
+
+  const Ctor =
+    window.AudioContext ||
+    (
+      window as typeof window & {
+        webkitAudioContext?: typeof window.AudioContext;
+      }
+    ).webkitAudioContext;
+
+  if (!Ctor) {
+    return null;
+  }
+
+  terminalAudioContext = new Ctor();
+
+  return terminalAudioContext;
+}
+
+function playTerminalTone(
+  frequency: number,
+  duration = 0.08,
+  type: OscillatorType = "square",
+  gain = 0.05,
+  enabled = true,
+): void {
+  if (!enabled || typeof window === "undefined") return;
+
+  const context = getTerminalAudioContext();
+  if (!context) return;
+
+  if (context.state === "suspended") {
+    void context.resume();
+  }
+
+  const now = context.currentTime;
+  const oscillator = context.createOscillator();
+  const gainNode = context.createGain();
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, now);
+
+  gainNode.gain.setValueAtTime(gain, now);
+  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+  oscillator.connect(gainNode);
+  gainNode.connect(context.destination);
+
+  oscillator.onended = () => {
+    oscillator.disconnect();
+    gainNode.disconnect();
+  };
+
+  oscillator.start(now);
+  oscillator.stop(now + duration + 0.02);
+}
+
+function playSelectTone(enabled: boolean) {
+  playTerminalTone(720, 0.045, "square", 0.035, enabled);
+}
+
+function playMismatchTone(enabled: boolean) {
+  playTerminalTone(160, 0.2, "sawtooth", 0.06, enabled);
+}
+
+function playModuleOnlineTone(enabled: boolean) {
+  playTerminalTone(660, 0.08, "square", 0.05, enabled);
+
+  if (enabled) {
+    window.setTimeout(
+      () => playTerminalTone(880, 0.14, "square", 0.05, enabled),
+      90,
+    );
+  }
+}
+
+function playAccessGrantedTone(enabled: boolean) {
+  if (!enabled) return;
+
+  [523.25, 659.25, 783.99].forEach((frequency, index) => {
+    window.setTimeout(
+      () => playTerminalTone(frequency, 0.24, "square", 0.05, enabled),
+      index * 110,
+    );
+  });
+}
+
 interface OptionsProps {
   values: string[];
   selected: string | null;
@@ -414,14 +506,16 @@ function ModuleStatus({
 
 export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
   const setScene = useGameStore((state) => state.setScene);
-
   const completePuzzle = useGameStore((state) => state.completePuzzle);
+  const soundEnabled = useGameStore((state) => state.isSoundEnabled);
 
   const [moduleIndex, setModuleIndex] = useState(0);
 
   const [selected, setSelected] = useState<string | null>(null);
 
   const [solved, setSolved] = useState(false);
+
+  const [isMismatch, setIsMismatch] = useState(false);
 
   const [log, setLog] = useState<string[]>([
     "> WORKSHOP CONTROL SYSTEM",
@@ -451,6 +545,11 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
     setLog((previous) => [...previous, ...lines]);
   }
 
+  function handleSelectOption(value: string) {
+    playSelectTone(soundEnabled);
+    setSelected(value);
+  }
+
   function checkAnswer() {
     if (!selected) {
       return;
@@ -459,9 +558,15 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
     pushLog(`> INPUT: ${selected}`);
 
     if (selected !== ANSWERS[currentModule.id]) {
+      playMismatchTone(soundEnabled);
+
       pushLog("> MISMATCH", "> RECOVERY ATTEMPT FAILED", "> ROLLBACK...");
 
       setSelected(null);
+
+      setIsMismatch(true);
+
+      window.setTimeout(() => setIsMismatch(false), 400);
 
       return;
     }
@@ -472,6 +577,7 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
     );
 
     if (moduleIndex === MODULES.length - 1) {
+      playAccessGrantedTone(soundEnabled);
       pushLog(
         "> MODULE 03 ............... ONLINE",
         ">",
@@ -494,8 +600,9 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
       return;
     }
 
-    setModuleIndex((index) => index + 1);
+    playModuleOnlineTone(soundEnabled);
 
+    setModuleIndex((index) => index + 1);
     setSelected(null);
   }
 
@@ -504,7 +611,11 @@ export function CyberpunkPuzzle({ puzzleId, nextScene }: CyberpunkPuzzleProps) {
       title="WORKSHOP CONTROL SYSTEM"
       status="RECOVERY INTERFACE"
       date="21/11/2026"
-      className="max-w-3xl"
+      className={[
+        "max-w-3xl",
+        isMismatch ? "animate-[mismatchShake_400ms_ease-in-out]" : "",
+        solved ? "animate-[screenGlitch_220ms_steps(2)_4]" : "",
+      ].join(" ")}
     >
       {/* CONSOLE LABEL */}
 
@@ -592,7 +703,7 @@ int main() {
                   <Options
                     values={["-25", "25", "4294967271", "0"]}
                     selected={selected}
-                    onSelect={setSelected}
+                    onSelect={handleSelectOption}
                   />
                 </div>
               </div>
@@ -641,7 +752,7 @@ int main() {
                   <Options
                     values={["Equal", "Not Equal", "0", "ERROR"]}
                     selected={selected}
-                    onSelect={setSelected}
+                    onSelect={handleSelectOption}
                   />
                 </div>
               </div>
@@ -709,7 +820,7 @@ int main() {
                   <Options
                     values={["Base", "Derived", "ERROR", "Nothing"]}
                     selected={selected}
-                    onSelect={setSelected}
+                    onSelect={handleSelectOption}
                   />
                 </div>
               </div>
@@ -717,35 +828,6 @@ int main() {
 
             {/* EXECUTE */}
 
-            {/* <div className="mt-5 flex justify-center">
-              <button
-                type="button"
-                disabled={!selected}
-                onClick={checkAnswer}
-                className={[
-                  "border px-5 py-2",
-                  "font-mono text-[8px]",
-                  "tracking-[0.14em]",
-                  "transition-all duration-150",
-                  selected
-                    ? [
-                        "border-[#d99b22]/60",
-                        "bg-[#d99b22]/5",
-                        "text-[#d99b22]",
-                        "hover:bg-[#d99b22]/10",
-                        "hover:border-[#d99b22]",
-                      ].join(" ")
-                    : [
-                        "cursor-not-allowed",
-                        "border-[#d99b22]/10",
-                        "bg-black/20",
-                        "text-[#444a43]",
-                      ].join(" "),
-                ].join(" ")}
-              >
-                EXECUTE
-              </button>
-            </div> */}
             <ActionButton
               disabled={!selected}
               onClick={checkAnswer}
@@ -837,6 +919,14 @@ int main() {
         </div>
       </div>
 
+      {solved && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-50
+      animate-[successFlash_700ms_ease-out_forwards]"
+        />
+      )}
+
       <style>{`
         @keyframes terminalCursor {
           0%,
@@ -850,6 +940,29 @@ int main() {
           }
         }
 
+        @keyframes mismatchShake {
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+
+          20% {
+            transform: translateX(-4px);
+          }
+
+          40% {
+            transform: translateX(4px);
+          }
+
+          60% {
+            transform: translateX(-3px);
+          }
+
+          80% {
+            transform: translateX(3px);
+          }
+      }
+
         @keyframes accessPulse {
           0%,
           100% {
@@ -858,6 +971,69 @@ int main() {
 
           50% {
             opacity: 1;
+          }
+        }
+
+      @keyframes systemRestored {
+      0% {
+        filter: brightness(1);
+      }
+      15% {
+        filter: brightness(1.8) saturate(1.5);
+      }
+      30% {
+        filter: brightness(0.75);
+      }
+      55% {
+        filter: brightness(1.5) saturate(1.3);
+      }
+      100% {
+        filter: brightness(1);
+      }
+    }
+
+    @keyframes successFlash {
+      0% {
+        background: rgba(120, 201, 140, 0.35);
+        opacity: 1;
+      }
+      25% {
+        background: rgba(120, 201, 140, 0.12);
+        opacity: 0.7;
+      }
+      100% {
+        background: rgba(120, 201, 140, 0);
+        opacity: 0;
+      }
+    }
+
+           @keyframes screenGlitch {
+          0% {
+            transform: translate(0);
+            filter: none;
+          }
+
+          20% {
+            transform: translate(-1px, 1px);
+            filter: hue-rotate(8deg);
+          }
+
+          40% {
+            transform: translate(1px, -1px);
+            filter: hue-rotate(-8deg);
+          }
+
+          60% {
+            transform: translate(-1px, 0);
+          }
+
+          80% {
+            transform: translate(1px, 0);
+          }
+
+          100% {
+            transform: translate(0);
+            filter: none;
           }
         }
       `}</style>
