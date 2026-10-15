@@ -513,26 +513,6 @@ export const secondChapter: ChapterData = {
       nextScene: "chapter2-open-2",
     },
 
-    // {
-    //   id: "chapter2-open-4",
-    //   background: images.cyberpunk,
-    //   content: {
-    //     type: "text",
-    //     text: "РЕЛИКВИЯ II — ПОЛУЧЕНА\n\nMI-01 — CYBERPUNK BEETLE",
-    //   },
-    //   nextScene: "chapter2-open-5",
-    // },
-
-    // {
-    //   id: "chapter2-open-5",
-    //   background: images.cyberpunk,
-    //   content: {
-    //     type: "text",
-    //     text: "Тип: Механизм. В разобранном виде.\n\nРедкость: ★★★★★",
-    //   },
-    //   nextScene: "chapter2-open-6",
-    // },
-
     {
       id: "chapter2-open-2",
       background: images.workshopTraces,

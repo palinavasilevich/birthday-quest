@@ -388,13 +388,24 @@ export const firstChapter: ChapterData = {
       specialEffects: ["impact"],
       nextScene: "chapter1-relic-2",
     },
+    // {
+    //   id: "chapter1-relic",
+    //   background: images.bookInHands,
+    //   content: {
+    //     type: "text",
+    //     text: "Стоит тебе коснуться обложки, как по комнате пробегает едва ощутимая дрожь.\n\nГде-то за спиной раздаётся глухой щелчок. Дверь запирается.",
+    //   },
+    //   audio: audio.music.book,
+    //   sfx: audio.sfx.doorClose,
+    //   nextScene: "chapter1-relic-2",
+    // },
 
     {
       id: "chapter1-relic-2",
       background: images.bookOpen,
       content: {
         type: "text",
-        text: "Книга в твоих руках начинает сама перелистывать страницы.",
+        text: "Книга раскрывается у тебя в руках, и пожелтевшие страницы начинают переворачиваться без единого дуновения ветра.",
       },
       audio: audio.music.book,
       nextScene: "chapter1-relic-3",
@@ -405,7 +416,7 @@ export const firstChapter: ChapterData = {
       background: images.bookOpen,
       content: {
         type: "text",
-        text: "Страницы одна за другой переворачиваются на ветру.\n\nПока книга не останавливается на одной из них.",
+        text: "Страницы мелькают одна за другой. На мгновение ты различаешь выцветшие рисунки, странные символы и записи на незнакомом языке.\n\nНаконец книга замирает на пустой странице.",
       },
       audio: audio.music.book,
       nextScene: "chapter1-relic-4",
@@ -416,7 +427,7 @@ export const firstChapter: ChapterData = {
       background: images.bookOpen,
       content: {
         type: "text",
-        text: "Книга начинает светиться и на странице проступает надпись.",
+        text: "По бумаге расползается мягкое золотистое свечение.\n\nНа пустой странице проступают символы. Они складываются в слова, словно кто-то невидимый выводит их прямо у тебя на глазах.",
       },
       audio: audio.music.book,
       specialEffects: ["glow"],
@@ -428,12 +439,11 @@ export const firstChapter: ChapterData = {
       background: images.bookText,
       content: {
         type: "text",
-        // text: "«Каждое великое приключение начинается с мира, который существует лишь в чьём-то воображении.»",
         text: "«То, что существует лишь в воображении, однажды может стать настоящим...»",
       },
       audio: audio.music.book,
       showBackgroundOnly: true,
-      autoTransitionDelay: 3000,
+      autoTransitionDelay: 3200,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-relic-6",
     },
@@ -443,34 +453,13 @@ export const firstChapter: ChapterData = {
       background: images.bookText,
       content: {
         type: "text",
-        text: "Кажется, последние слова фразы потерялись...",
+        text: "Ты ждёшь продолжения, но страница остаётся неизменной.",
       },
       audio: audio.music.book,
       autoTransitionDelay: 4400,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-sound",
     },
-
-    // {
-    //   id: "chapter1-relic-4",
-    //   background: images.forest,
-    //   content: {
-    //     type: "text",
-    //     text: "РЕЛИКВИЯ I — ПОЛУЧЕНА\n\nTHE ART OF JOHN HARRIS — Beyond the Horizon",
-    //   },
-    //   audio: audio.music.forest,
-    //   nextScene: "chapter1-relic-5",
-    // },
-
-    // {
-    //   id: "chapter1-relic-5",
-    //   background: images.forest,
-    //   content: {
-    //     type: "text",
-    //     text: "Тип: Вдохновение.\n\nРедкость: ★★★★☆",
-    //   },
-    //   nextScene: "chapter1-sound",
-    // },
 
     // ============================================================
     // THE SOUND
@@ -481,9 +470,9 @@ export const firstChapter: ChapterData = {
       background: images.bookInHands,
       content: {
         type: "text",
-        text: "Ты закрываешь книгу и в комнате снова становится тихо.\n\nА затем в дальней стене что-то приходит в движение.",
+        text: "Книга внезапно захлопывается.\n\nЗолотое свечение гаснет. Комната погружается в полумрак.\n\nНесколько секунд ничего не происходит.\n\nЗатем из глубины комнаты доносится глухой щелчок.",
       },
-      audio: audio.music.room,
+      audio: audio.music.book,
       nextScene: "chapter1-sound-2",
     },
 
@@ -492,9 +481,9 @@ export const firstChapter: ChapterData = {
       background: images.roomDoor,
       content: {
         type: "text",
-        text: "Камни медленно расходятся, открывая узкий проход.",
+        text: "В дальней стене дрожит каменная кладка. По швам пробегает тонкая золотая линия.\n\nРаздаётся скрежет древнего механизма. Каменные плиты медленно расходятся, открывая узкий проход.",
       },
-      audio: audio.music.room,
+      audio: audio.music.book,
       sfx: audio.sfx.doorRoomOpen,
       nextScene: "chapter1-sound-3",
     },
@@ -504,7 +493,7 @@ export const firstChapter: ChapterData = {
       background: images.roomDoorShadow,
       content: {
         type: "text",
-        text: "В глубине прохода — небольшая тень.",
+        text: "В глубине прохода мелькает небольшая тень.",
       },
       audio: audio.music.shadow,
       specialEffects: ["vignette-pulse"],

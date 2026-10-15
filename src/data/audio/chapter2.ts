@@ -6,7 +6,7 @@ export const audio = {
     // workshop: "/audio/chapter2/music/emmraan-space-adventure.mp3",
     workshop: "/audio/chapter2/music/workshop.mp3",
     table: "/audio/chapter2/music/dark-cyberpunk-cinematic.mp3",
-    wait: "/audio/chapter2/music/wait.mp3",
+    wait: "/audio/chapter2/music/senormusica81-cinematic-dark-synthwave-cyberpunk-atmosphere-508557.mp3",
   },
   sfx: {
     // terminal: "/audio/chapter2/terminal.mp3",
