@@ -130,6 +130,9 @@ export class ArenaScene extends Phaser.Scene {
   // ===============================================================
 
   preload(): void {
+    const arenaUrl = new URL("./forest-arena.png", import.meta.url).href;
+    this.load.image("forest-arena", arenaUrl);
+
     const dragonUrl = new URL("./dragon.svg", import.meta.url).href;
 
     this.load.svg(TEXTURES.dragon, dragonUrl, {
@@ -175,7 +178,10 @@ export class ArenaScene extends Phaser.Scene {
 
     this.physics.world.setBounds(PAD, PAD, W - PAD * 2, H - PAD * 2);
 
-    this.drawFloor();
+    this.add
+      .image(W / 2, H / 2, "forest-arena")
+      .setDisplaySize(W, H)
+      .setDepth(0);
 
     // -------------------------------------------------------------
     // Игрок

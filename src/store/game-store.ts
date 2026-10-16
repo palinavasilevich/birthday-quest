@@ -52,7 +52,7 @@ export const useGameStore = create<GameState>()(
     // currentSceneId: "final-victory",
     // currentSceneId: "chapter2-code-puzzle",
     // currentSceneId: "chapter1-door",
-    currentSceneId: "chapter2-open-2",
+    currentSceneId: "final-puzzle",
     completedPuzzles: [],
     completedActions: [],
     inventory: [],
