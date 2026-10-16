@@ -405,7 +405,7 @@ export const firstChapter: ChapterData = {
       background: images.bookOpen,
       content: {
         type: "text",
-        text: "Книга раскрывается у тебя в руках, и пожелтевшие страницы начинают переворачиваться без единого дуновения ветра.",
+        text: "Книга раскрывается у тебя в руках, и пожелтевшие страницы начинают переворачиваться.",
       },
       audio: audio.music.book,
       nextScene: "chapter1-relic-3",
@@ -416,7 +416,7 @@ export const firstChapter: ChapterData = {
       background: images.bookOpen,
       content: {
         type: "text",
-        text: "Страницы мелькают одна за другой. На мгновение ты различаешь выцветшие рисунки, странные символы и записи на незнакомом языке.\n\nНаконец книга замирает на пустой странице.",
+        text: "Страницы мелькают одна за другой. На мгновение ты различаешь выцветшие рисунки, странные символы и записи на незнакомом языке.",
       },
       audio: audio.music.book,
       nextScene: "chapter1-relic-4",
@@ -424,18 +424,29 @@ export const firstChapter: ChapterData = {
 
     {
       id: "chapter1-relic-4",
-      background: images.bookOpen,
+      background: images.bookOpenWithoutText,
+      content: {
+        type: "text",
+        text: "Наконец книга замирает на пустой странице.",
+      },
+      audio: audio.music.book,
+      nextScene: "chapter1-relic-5",
+    },
+
+    {
+      id: "chapter1-relic-5",
+      background: images.bookOpenWithoutText,
       content: {
         type: "text",
         text: "По бумаге расползается мягкое золотистое свечение.\n\nНа пустой странице проступают символы. Они складываются в слова, словно кто-то невидимый выводит их прямо у тебя на глазах.",
       },
       audio: audio.music.book,
       specialEffects: ["glow"],
-      nextScene: "chapter1-relic-5",
+      nextScene: "chapter1-relic-6",
     },
 
     {
-      id: "chapter1-relic-5",
+      id: "chapter1-relic-6",
       background: images.bookText,
       content: {
         type: "text",
@@ -445,11 +456,11 @@ export const firstChapter: ChapterData = {
       showBackgroundOnly: true,
       autoTransitionDelay: 3200,
       autoTransitionToNextScene: true,
-      nextScene: "chapter1-relic-6",
+      nextScene: "chapter1-relic-7",
     },
 
     {
-      id: "chapter1-relic-6",
+      id: "chapter1-relic-7",
       background: images.bookText,
       content: {
         type: "text",

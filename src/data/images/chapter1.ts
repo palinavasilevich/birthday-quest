@@ -14,6 +14,7 @@ export const images = {
   bookNearThePedestal: "/images/chapter1/book-near-the-pedestal.png",
   bookInHands: "/images/chapter1/book-in-hands.png",
   bookOpen: "/images/chapter1/book-open.png",
+  bookOpenWithoutText: "/images/chapter1/book-open-without-text.png",
   bookText: "/images/chapter1/book-text.png",
   roomDoor: "/images/chapter1/room-door.png",
   roomDoorShadow: "/images/chapter1/room-door-shadow.png",
