@@ -15,7 +15,7 @@ interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export function ActionButton({
   text,
-  code = "BDA249",
+  code = "bda249",
   size = "default",
   disabled,
   className = "",
@@ -60,6 +60,7 @@ export function ActionButton({
           flex
           items-center
           justify-center
+          font-bold
           bg-[radial-gradient(circle,rgb(0,0,0)_0%,rgb(0,0,0)_0%,rgba(0,0,20,1)_50%)]
           text-[#ff9b00]
           transition-colors
@@ -74,14 +75,16 @@ export function ActionButton({
       <span
         className="
           absolute
-          bottom-[-1.2px]
+           -bottom-0.75
           right-[8%]
           z-5
-          h-2.5
+          h-3
           bg-[radial-gradient(circle,rgb(0,0,0)_0%,rgb(0,0,0)_0%,rgba(0,0,20,1)_50%)]
           px-1.25
-          text-[0.4rem]
+          text-[0.5rem]
           leading-none
+          font-bold
+          lowercase
           text-[#ff9b00]
           transition-colors
           duration-200

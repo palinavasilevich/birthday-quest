@@ -13,6 +13,23 @@ export interface TerminalContent {
   actionLabel?: string;
 }
 
+export interface DiceOutcome {
+  min: number;
+  max: number;
+  title: string;
+  text: string;
+  nextScene: string;
+}
+
+export interface DiceCheckContent {
+  type: "diceCheck";
+  title: string;
+  description: string;
+  skill: string;
+  difficulty: number;
+  outcomes: DiceOutcome[];
+}
+
 export type SceneContent =
   | {
       type: "text";
@@ -23,7 +40,8 @@ export type SceneContent =
       src: string;
       alt: string;
     }
-  | TerminalContent;
+  | TerminalContent
+  | DiceCheckContent;
 
 type PuzzleTypeData = "runes" | "cyberpunk" | "final";
 

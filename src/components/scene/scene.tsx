@@ -12,6 +12,7 @@ import type { SceneData } from "@/types/game";
 
 import { WorkshopLog } from "../cyberpunk/workshop-log";
 import { EndingOverlay } from "./ending-overlay";
+import { DiceCheck } from "./dice-check";
 
 interface SceneProps {
   scene: SceneData;
@@ -101,18 +102,22 @@ export function Scene({ scene }: SceneProps) {
           scene.puzzle?.id === "final-battle-puzzle" ? "max-w-240" : ""
         }
       >
-        {!showBackgroundOnly && !isSpecialComponent && (
-          <SceneContent
-            sceneId={scene.id}
-            content={scene.content}
-            onTypingComplete={handleTypingComplete}
-            onAction={() => {
-              if (scene.nextScene) {
-                setScene(scene.nextScene);
-              }
-            }}
-          />
-        )}
+        {!showBackgroundOnly &&
+          !isSpecialComponent &&
+          (scene.content.type === "diceCheck" ? (
+            <DiceCheck content={scene.content} />
+          ) : (
+            <SceneContent
+              sceneId={scene.id}
+              content={scene.content}
+              onTypingComplete={handleTypingComplete}
+              onAction={() => {
+                if (scene.nextScene) {
+                  setScene(scene.nextScene);
+                }
+              }}
+            />
+          ))}
 
         {!showBackgroundOnly &&
           (isTypingComplete || isTerminal || isSpecialComponent) && (

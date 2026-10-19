@@ -555,6 +555,27 @@ export const firstChapter: ChapterData = {
     // mid-flight, found only because the player pushed forward
     // instead of holding still.
     // ============================================================
+    // {
+    //   id: "chapter1-chase",
+    //   background: images.roomDoor,
+    //   content: {
+    //     type: "text",
+    //     text: "Ты бросаешься к проходу.\n\nНо тень уже исчезла.",
+    //   },
+    //   audio: audio.music.persecution,
+    //   nextScene: "chapter1-chase-2",
+    // },
+    // {
+    //   id: "chapter1-chase-2",
+    //   background: images.corridorTraces,
+    //   content: {
+    //     type: "text",
+    //     text: "Ты видишь следы, уходящие вглубь коридора.",
+    //   },
+    //   audio: audio.music.persecution,
+    //   nextScene: "chapter1-chase-3",
+    // },
+
     {
       id: "chapter1-chase",
       background: images.roomDoor,
@@ -563,7 +584,50 @@ export const firstChapter: ChapterData = {
         text: "Ты бросаешься к проходу.\n\nНо тень уже исчезла.",
       },
       audio: audio.music.persecution,
-      nextScene: "chapter1-chase-2",
+      nextScene: "chapter1-chase-roll",
+    },
+    {
+      id: "chapter1-chase-roll",
+      background: images.corridorTraces,
+      content: {
+        type: "diceCheck",
+        title: "Не упустить след",
+        description:
+          "Впереди мелькает тень. Ты ускоряешь шаг, пытаясь разглядеть, куда она свернула.",
+        skill: "Ловкость",
+        difficulty: 12,
+        outcomes: [
+          {
+            min: 1,
+            max: 1,
+            title: "Критический провал",
+            text: "Ты спотыкаешься о выступающий камень. Когда поднимаешься, коридор уже пуст.",
+            nextScene: "chapter1-chase-2",
+          },
+          {
+            min: 2,
+            max: 11,
+            title: "Неудача",
+            text: "Ты почти догоняешь тень, но она исчезает за поворотом. На камнях остаются едва заметные следы.",
+            nextScene: "chapter1-chase-2",
+          },
+          {
+            min: 12,
+            max: 19,
+            title: "Успех",
+            text: "Ты замечаешь, куда свернула тень, и успеваешь разглядеть следы, ведущие дальше по коридору.",
+            nextScene: "chapter1-chase-2",
+          },
+          {
+            min: 20,
+            max: 20,
+            title: "Критический успех",
+            text: "Ты почти настигаешь незнакомца. На мгновение замечаешь что-то знакомое в его руке — прежде чем он исчезает за поворотом.",
+            nextScene: "chapter1-chase-2",
+          },
+        ],
+      },
+      audio: audio.music.persecution,
     },
     {
       id: "chapter1-chase-2",
