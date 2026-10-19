@@ -3,6 +3,7 @@ export const audio = {
     forest: "/audio/chapter1/music/forest-ambience.mp3",
     room: "/audio/chapter1/music/forgotten-hero-records-dreams-of-the-forgotten-realm.mp3",
     book: "/audio/chapter1/music/book.mp3",
+    door: "/audio/chapter1/music/nature.mp3",
     shadow: "/audio/chapter1/music/shadow.mp3",
     persecution: "/audio/chapter1/music/destruction.mp3",
     destruction: "/audio/chapter1/music/darkness-whisper.mp3",

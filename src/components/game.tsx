@@ -6,7 +6,7 @@ import { GameSfx } from "@/components/audio/game-sfx";
 import { Scene } from "@/components/scene/scene";
 
 import { finalChapter } from "@/data/story/final";
-import { firstChapter } from "@/data/story/first-chapter";
+import { firstChapter } from "@/data/story/chapter1";
 import { secondChapter } from "@/data/story/second-chapter";
 
 import { useGameStore } from "@/store/game-store";
