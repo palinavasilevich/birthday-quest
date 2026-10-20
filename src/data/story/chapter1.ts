@@ -320,7 +320,7 @@ export const firstChapter: ChapterData = {
       background: images.roomTraces,
       content: {
         type: "diceCheck",
-        title: "Анализ следов",
+        title: "Анализ",
         description:
           "Ты приседаешь рядом с пьедесталом и внимательно изучаешь след. Пыль, царапины и потёртости могут подсказать, что здесь происходило.",
         skill: "Анализ",
@@ -695,7 +695,7 @@ export const firstChapter: ChapterData = {
       background: images.yarnWall,
       content: {
         type: "diceCheck",
-        title: "Анализ нити",
+        title: "Анализ",
         description: "Ты поднимаешь нить и внимательно рассматриваешь её.",
         skill: "Анализ",
         difficulty: 12,
@@ -743,7 +743,7 @@ export const firstChapter: ChapterData = {
         text: "Ты убираешь нитку в карман и идёшь дальше по коридору.",
       },
       itemsToCollect: ["brown-yarn"],
-      audio: audio.music.shadow,
+      audio: audio.music.persecution,
       nextScene: "chapter1-ending",
     },
 
@@ -822,7 +822,7 @@ export const firstChapter: ChapterData = {
       background: images.yarn,
       content: {
         type: "diceCheck",
-        title: "Анализ нити",
+        title: "Анализ",
         description: "Ты поднимаешь нить и внимательно рассматриваешь её.",
         skill: "Анализ",
         difficulty: 12,

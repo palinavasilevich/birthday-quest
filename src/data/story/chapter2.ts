@@ -519,7 +519,7 @@ export const secondChapter: ChapterData = {
       background: images.knittingPattern,
       content: {
         type: "diceCheck",
-        title: "Анализ схемы",
+        title: "Анализ",
         description:
           "Ты внимательно изучаешь рисунок. Простые линии складываются в маленькую фигуру, но почему-то она кажется тебе знакомой.",
         skill: "Анализ",
@@ -608,6 +608,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Ты уже собираешься закрыть коробку.\n\nНо рядом, в пыли на столе, замечаешь маленький след.",
       },
+      itemsToCollect: ["mechanical-beetle"],
       audio: audio.music.table,
       actions: [
         {
@@ -632,6 +633,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Ты садишься прямо на пол и ждёшь.\n\nМинуту. Две.",
       },
+
       audio: audio.music.wait,
       nextScene: "chapter2-wait-2",
     },
@@ -687,8 +689,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Ты выходишь обратно в переулок.\n\nСвет мастерской гаснет за спиной.",
       },
-      // Было: audio.music.table — явный хвост от соседних table-сцен, хотя
-      // герой уже покинул стол и выходит из мастерской в переулок.
+
       audio: audio.music.wait,
       nextScene: "chapter2-transition-back-2",
     },

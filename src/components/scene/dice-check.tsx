@@ -9,26 +9,22 @@ interface DiceCheckProps {
   content: DiceCheckContent;
 }
 
+type RollMode = "game" | "physical";
+
 export function DiceCheck({ content }: DiceCheckProps) {
   const setScene = useGameStore((state) => state.setScene);
   const inventory = useGameStore((state) => state.inventory);
 
-  const [isSettled, setIsSettled] = useState(false);
-
+  const [mode, setMode] = useState<RollMode | null>(null);
+  const [manualRoll, setManualRoll] = useState("");
   const [roll, setRoll] = useState<number | null>(null);
   const [outcome, setOutcome] = useState<DiceOutcome | null>(null);
+  const [isSettled, setIsSettled] = useState(false);
 
-  const handleRoll = () => {
-    if (roll !== null) return;
-
-    setIsSettled(false);
-
-    const result = Math.floor(Math.random() * 20) + 1;
-
+  const resolveRoll = (result: number) => {
     const itemBonus = content.tag
       ? inventory.reduce((total, itemId) => {
           const item = ITEMS[itemId];
-
           return total + (item?.situationalBonuses?.[content.tag!] ?? 0);
         }, 0)
       : 0;
@@ -68,10 +64,42 @@ export function DiceCheck({ content }: DiceCheckProps) {
 
     setRoll(result);
     setOutcome(resultOutcome);
+    setIsSettled(mode === "physical");
+  };
+
+  const handleGameRoll = () => {
+    setMode("game");
+
+    if (roll !== null) return;
+
+    resolveRoll(Math.floor(Math.random() * 20) + 1);
+  };
+
+  const handlePhysicalRoll = () => {
+    const result = Number(manualRoll);
+
+    if (
+      manualRoll.trim() === "" ||
+      !Number.isInteger(result) ||
+      result < 1 ||
+      result > 20
+    ) {
+      return;
+    }
+
+    resolveRoll(result);
+  };
+
+  const resetCheck = () => {
+    setMode(null);
+    setManualRoll("");
+    setRoll(null);
+    setOutcome(null);
+    setIsSettled(false);
   };
 
   return (
-    <div className="mt-8 w-full max-w-xl mx-auto space-y-6 text-center">
+    <div className="mx-auto mt-8 w-full max-w-xl space-y-6 text-center">
       <div className="space-y-2">
         <p className="text-sm uppercase tracking-[0.3em] text-amber-400/80">
           Проверка характеристики
@@ -88,35 +116,120 @@ export function DiceCheck({ content }: DiceCheckProps) {
         )}
       </div>
 
-      <div className="flex justify-center gap-8 text-lg text-stone-300">
-        <div>
-          <p className="text-stone-500">Характеристика</p>
-          <p className="mt-1 text-amber-200">{content.skill}</p>
-        </div>
+      {roll === null && mode === null && (
+        <div className="space-y-3">
+          <p className="text-stone-400">Как ты хочешь бросить кубик?</p>
 
-        <div>
-          <p className="text-stone-500">Сложность</p>
-          <p className="mt-1 text-amber-200">{content.difficulty}</p>
-        </div>
-      </div>
-
-      {roll === null ? (
-        <ActionButton
-          text="Пройти проверку"
-          onClick={handleRoll}
-          className="cursor-pointer"
-        />
-      ) : (
-        <div className="space-y-2">
-          <Dice3D result={roll} onSettled={() => setIsSettled(true)} />
-
-          {roll === null ? (
+          <div className="flex gap-2 justify-center">
             <ActionButton
-              text="Пройти проверку"
-              onClick={handleRoll}
+              text="Бросить D20 в игре"
+              onClick={handleGameRoll}
               className="cursor-pointer"
             />
-          ) : isSettled ? (
+
+            <ActionButton
+              text="Бросить настоящий D20"
+              onClick={() => setMode("physical")}
+              className="cursor-pointer"
+            />
+          </div>
+          {/* 
+          <button
+            type="button"
+            onClick={() => setMode("physical")}
+            className="w-full rounded-md border border-amber-700/60
+              px-4 py-3 text-amber-200 transition
+              hover:bg-amber-950/40"
+          >
+            Бросить настоящий D20
+          </button> */}
+        </div>
+      )}
+
+      {/* {roll === null && mode === "game" && (
+        <div className="space-y-4">
+          <p className="text-sm text-stone-400">
+            Игра бросит двадцатигранный кубик за тебя.
+          </p>
+
+          <ActionButton
+            text="Бросить кубик"
+            onClick={handleGameRoll}
+            className="cursor-pointer"
+          />
+
+          <button
+            type="button"
+            onClick={resetCheck}
+            className="text-sm text-stone-500 hover:text-stone-300"
+          >
+            Назад
+          </button>
+        </div>
+      )} */}
+
+      {roll === null && mode === "physical" && (
+        <form
+          className="space-y-4"
+          onSubmit={(event) => {
+            event.preventDefault();
+            handlePhysicalRoll();
+          }}
+        >
+          <label htmlFor="physical-roll" className="block text-stone-300">
+            Какое число выпало на кубике?
+          </label>
+
+          <input
+            id="physical-roll"
+            type="number"
+            min={1}
+            max={20}
+            step={1}
+            required
+            value={manualRoll}
+            onChange={(event) => setManualRoll(event.target.value)}
+            // placeholder="От 1 до 20"
+            className="mx-auto block w-32 rounded-md border border-amber-700/60
+              bg-zinc-900 px-4 py-3 text-center text-2xl text-amber-100
+              outline-none focus:border-amber-400"
+          />
+
+          <ActionButton
+            text="Подтвердить результат"
+            onClick={handlePhysicalRoll}
+            className="cursor-pointer"
+          />
+
+          {/* <button
+            type="button"
+            onClick={resetCheck}
+            className="block w-full text-sm text-stone-500
+              hover:text-stone-300"
+          >
+            Назад
+          </button> */}
+        </form>
+      )}
+
+      {roll !== null && (
+        <div className="space-y-4">
+          {mode === "game" ? (
+            <Dice3D result={roll} onSettled={() => setIsSettled(true)} />
+          ) : (
+            <div className="flex flex-col items-center gap-2">
+              <div
+                className="flex h-24 w-24 items-center justify-center
+            rounded-2xl border border-amber-500/50 bg-zinc-900
+            text-5xl font-bold text-amber-300 shadow-lg"
+              >
+                {roll}
+              </div>
+              <p className="text-sm text-stone-400">Твой результат</p>
+            </div>
+          )}
+
+          {isSettled && (
             <div className="space-y-4">
               <div className="text-2xl font-semibold text-amber-300">
                 {roll} — {outcome?.title}
@@ -134,8 +247,6 @@ export function DiceCheck({ content }: DiceCheckProps) {
                 className="cursor-pointer"
               />
             </div>
-          ) : (
-            <p className="text-sm text-amber-200/80"></p>
           )}
         </div>
       )}

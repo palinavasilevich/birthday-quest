@@ -66,6 +66,7 @@ export interface ItemDefinition {
   name: string;
   description: string;
   type: ItemType;
+  image?: string;
   bonuses?: Partial<Record<Characteristic, number>>;
   situationalBonuses?: Partial<Record<CheckTag, number>>;
 }

@@ -161,6 +161,7 @@ export function Scene({ scene }: SceneProps) {
           itemId={notifiedItem.id}
           name={notifiedItem.name}
           description={notifiedItem.description}
+          image={notifiedItem.image}
           onClose={dismissItemNotification}
         />
       )}

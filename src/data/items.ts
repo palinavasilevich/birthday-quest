@@ -4,6 +4,7 @@ export const ITEMS: Record<string, ItemDefinition> = {
   "ancient-book": {
     id: "ancient-book",
     name: "Древняя книга",
+    image: "/images/items/ancient-book.png",
     description:
       "Книга, связывающая воображение с реальностью. Её истинная природа пока неизвестна.",
     type: "story",
@@ -15,6 +16,7 @@ export const ITEMS: Record<string, ItemDefinition> = {
     description:
       "Тонкая нить, которая словно ведёт куда-то. Её значение раскроется позже.",
     type: "story",
+    image: "/images/items/brown-yarn.png",
     situationalBonuses: {
       chase: 2,
       navigation: 2,
@@ -27,6 +29,7 @@ export const ITEMS: Record<string, ItemDefinition> = {
     description:
       "Набор деталей для сборки механического жука. В коробке лежит инструкция.",
     type: "story",
+    image: "/images/items/mechanical-beetle.png",
     situationalBonuses: {
       repair: 2,
       assembly: 2,
