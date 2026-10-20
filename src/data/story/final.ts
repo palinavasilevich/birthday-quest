@@ -45,7 +45,7 @@ export const finalChapter: ChapterData = {
       audio: audio.music.forest,
       sfx: audio.sfx.dragonRoar,
       autoTransitionToNextScene: true,
-      autoTransitionDelay: 4000,
+      autoTransitionDelay: 1000,
       nextScene: "final-start-4",
     },
 
@@ -140,7 +140,7 @@ export const finalChapter: ChapterData = {
       audio: audio.music.dragon,
 
       autoTransitionToNextScene: true,
-      autoTransitionDelay: 3600,
+      autoTransitionDelay: 1600,
       nextScene: "final-battle",
     },
 
@@ -167,7 +167,7 @@ export const finalChapter: ChapterData = {
       background: images.owlbearFire,
       content: {
         type: "text",
-        text: "Секунду назад ты видел, где он. Теперь — нет.\n\nТебе нужен как-то ориентир.",
+        text: "Секунду назад ты видел, где он. Теперь его не видно.\n\nДым скрывает всё вокруг — тебе нужен ориентир.",
       },
       audio: audio.music.dragon,
       nextScene: "final-battle-3",
@@ -238,7 +238,51 @@ export const finalChapter: ChapterData = {
         text: "Ты открываешь коробку.\n\nЛатунные пластины. Шестерни. Винты.\n\nВсе эти детали должны сложиться в одно целое.",
       },
       audio: audio.music.book,
-      nextScene: "final-battle-9",
+      nextScene: "final-battle-9-check",
+    },
+
+    {
+      id: "final-battle-9-check",
+      background: images.deviceAssembly,
+      content: {
+        type: "diceCheck",
+        title: "Мастерство",
+        description:
+          "Дракон ревёт совсем рядом. У тебя есть только несколько мгновений, чтобы собрать механизм. Детали должны встать на свои места.",
+        skill: "Мастерство",
+        difficulty: 12,
+        outcomes: [
+          {
+            min: 1,
+            max: 1,
+            title: "Критический провал",
+            text: "Одна из пластин срывается с места, а маленькая шестерня падает в пыль. Ты едва успеваешь найти её и закончить сборку. Времени на проверку уже нет.",
+            nextScene: "final-battle-10",
+          },
+          {
+            min: 2,
+            max: 11,
+            title: "Неудача",
+            text: "Один из механизмов заедает. Ты вынужден разобрать соединение и попробовать снова. Наконец детали встают на место.",
+            nextScene: "final-battle-10",
+          },
+          {
+            min: 12,
+            max: 19,
+            title: "Успех",
+            text: "Ты быстро соединяешь пластины, закрепляешь шестерни и проверяешь шарниры. Последняя деталь встаёт на место.",
+            nextScene: "final-battle-10",
+          },
+          {
+            min: 20,
+            max: 20,
+            title: "Критический успех",
+            text: "Твои руки словно сами знают, что делать. Ты замечаешь правильное положение каждой детали и собираешь механизм одним точным движением. Он готов раньше, чем дракон успевает ударить снова.",
+            nextScene: "final-battle-10",
+          },
+        ],
+      },
+      audio: audio.music.book,
     },
 
     {
@@ -374,7 +418,7 @@ export const finalChapter: ChapterData = {
       background: images.dragonWin,
       content: {
         type: "text",
-        text: "Дракон превращается в пыль.\n\nОн исчезает в воздухе, оставляя после себя лишь дым и пепел.",
+        text: "Дракон исчезает в вихре пепла.\n\nВетер уносит его остатки, оставляя после себя лишь дым и пепел.",
       },
       audio: audio.music.victory,
       nextScene: "final-victory-3",
@@ -418,7 +462,7 @@ export const finalChapter: ChapterData = {
       background: images.owlbearAndBeetle,
       content: {
         type: "text",
-        text: "Медвесыч поднимает голову.\n\nОн узнаёт её и начинает тихо повторять мелодию.",
+        text: "Медвесыч поднимает голову.\n\nОн узнаёт мелодию и тихо подхватывает её.",
       },
       audio: audio.music.victory,
       sfx: audio.sfx.song,
@@ -537,7 +581,7 @@ export const finalChapter: ChapterData = {
       background: images.yarnInHands,
       content: {
         type: "text",
-        text: "Ты вынимаешь свою нитку — ту самую, из тёмной комнаты в лесу.",
+        text: "Ты достаёшь из кармана обрывок нитки — тот самый, который нашёл в древнем коридоре.",
       },
       audio: audio.music.final,
       nextScene: "final-thread-4",
@@ -548,7 +592,7 @@ export const finalChapter: ChapterData = {
       background: images.yarnInHands,
       content: {
         type: "text",
-        text: "Прикладываешь.\n\nТа же пряжа. Тот же клубок, что лежал на столе в мастерской.",
+        text: "Та же нить, что вела тебя через этот мир.\n\nИ та самая, что лежала на столе в мастерской.",
       },
       audio: audio.music.final,
       nextScene: "final-thread-5",
@@ -569,7 +613,7 @@ export const finalChapter: ChapterData = {
       background: images.yarnInBattleField,
       content: {
         type: "text",
-        text: "Толкает клубок лапой.",
+        text: "Он осторожно толкает клубок лапой.",
       },
       audio: audio.music.final,
       nextScene: "final-thread-7",
@@ -579,7 +623,7 @@ export const finalChapter: ChapterData = {
       background: images.yarnInForest,
       content: {
         type: "text",
-        text: "Клубок катится.\n\nМимо обломков.\n\nЗа деревья.",
+        text: "Клубок катится по земле — мимо обломков, между деревьями.\n\nВслед за ним тянется нитка.",
       },
       audio: audio.music.final,
       actions: [
@@ -595,7 +639,7 @@ export const finalChapter: ChapterData = {
       background: images.yarnDisappeared,
       content: {
         type: "text",
-        text: "Нитка тянется сквозь этот волшебный мир.\n\nИ уходит туда, где заканчивается эта история и начинается что-то другое.",
+        text: "Нитка уходит всё дальше — сквозь лес, сквозь границу волшебного мира.\n\nТуда, где заканчивается эта история и начинается другая.",
       },
       audio: audio.music.final,
       actions: [
@@ -626,7 +670,7 @@ export const finalChapter: ChapterData = {
       },
       audio: audio.music.final,
       autoTransitionToNextScene: true,
-      autoTransitionDelay: 5500,
+      autoTransitionDelay: 4500,
       nextScene: "final-the-end",
     },
 

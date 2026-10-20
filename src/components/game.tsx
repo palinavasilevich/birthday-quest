@@ -7,7 +7,7 @@ import { Scene } from "@/components/scene/scene";
 
 import { finalChapter } from "@/data/story/final";
 import { firstChapter } from "@/data/story/chapter1";
-import { secondChapter } from "@/data/story/second-chapter";
+import { secondChapter } from "@/data/story/chapter2";
 
 import { useGameStore } from "@/store/game-store";
 

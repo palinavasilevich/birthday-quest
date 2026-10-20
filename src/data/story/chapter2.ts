@@ -100,25 +100,69 @@ export const secondChapter: ChapterData = {
         text: "Дождь, неон, чужие лица.\n\nМокрый асфальт покрыт десятками следов.\n\nНо знакомого среди них нет.",
       },
       audio: audio.music.cyberpunk,
-      nextScene: "chapter2-night-city-7",
+      nextScene: "chapter2-shadow-check",
     },
 
     {
-      id: "chapter2-night-city-7",
+      id: "chapter2-shadow-check",
       background: images.street,
       content: {
-        type: "text",
-        text: "Вдруг ты замечаешь движение.\n\nЧья-то тень быстро исчезает в узком переулке.",
+        type: "diceCheck",
+        title: "Восприятие",
+        description:
+          "Вдруг ты замечаешь движение в толпе. Чья-то тень быстро исчезает в узком переулке.",
+        skill: "Восприятие",
+        difficulty: 12,
+        outcomes: [
+          {
+            min: 1,
+            max: 1,
+            title: "Критический провал",
+            text: "Ты слишком поздно замечаешь движение. Когда добираешься до переулка, тень уже исчезла.",
+            nextScene: "chapter2-night-city-8",
+          },
+          {
+            min: 2,
+            max: 11,
+            title: "Неудача",
+            text: "Ты успеваешь заметить лишь силуэт, мелькнувший между людьми. Кто это был и куда направился незнакомец, остаётся загадкой.",
+            nextScene: "chapter2-night-city-8",
+          },
+          {
+            min: 12,
+            max: 19,
+            title: "Успех",
+            text: "Перед тем как скрыться в переулке, тень на мгновение оглядывается. Кажется, незнакомец проверяет, следуешь ли ты за ним.",
+            nextScene: "chapter2-night-city-8",
+          },
+          {
+            min: 20,
+            max: 20,
+            title: "Критический успех",
+            text: "Ты замечаешь, что тень не просто движется сквозь толпу. Она заранее выбирает путь, избегая освещённых участков и людных мест. Будто незнакомец точно знает, куда направляется, и рассчитывает, что ты пойдёшь следом.",
+            nextScene: "chapter2-night-city-8",
+          },
+        ],
       },
       audio: audio.music.cyberpunk,
-      actions: [
-        {
-          id: "follow-shadow",
-          label: "Follow the shadow",
-          nextScene: "chapter2-night-city-8",
-        },
-      ],
     },
+
+    // {
+    //   id: "chapter2-night-city-7",
+    //   background: images.street,
+    //   content: {
+    //     type: "text",
+    //     text: "Вдруг ты замечаешь движение.\n\nЧья-то тень быстро исчезает в узком переулке.",
+    //   },
+    //   audio: audio.music.cyberpunk,
+    //   actions: [
+    //     {
+    //       id: "follow-shadow",
+    //       label: "Follow the shadow",
+    //       nextScene: "chapter2-night-city-8",
+    //     },
+    //   ],
+    // },
 
     {
       id: "chapter2-night-city-8",
@@ -177,7 +221,7 @@ export const secondChapter: ChapterData = {
       specialEffects: ["static"],
       effectDelay: 1500,
       autoTransitionToNextScene: true,
-      autoTransitionDelay: 8000,
+      autoTransitionDelay: 1000,
       nextScene: "chapter2-terminal",
     },
 
@@ -467,7 +511,51 @@ export const secondChapter: ChapterData = {
         text: "Но эта схема совсем другая.\n\nЗдесь нет шестерён и механизмов — только простые линии.\n\nМаленькая фигура с круглыми ушами и четырьмя лапами.",
       },
       audio: audio.music.table,
-      nextScene: "chapter2-table-6",
+      nextScene: "chapter2-pattern-check",
+    },
+
+    {
+      id: "chapter2-pattern-check",
+      background: images.knittingPattern,
+      content: {
+        type: "diceCheck",
+        title: "Анализ схемы",
+        description:
+          "Ты внимательно изучаешь рисунок. Простые линии складываются в маленькую фигуру, но почему-то она кажется тебе знакомой.",
+        skill: "Анализ",
+        difficulty: 12,
+        outcomes: [
+          {
+            min: 1,
+            max: 1,
+            title: "Критический провал",
+            text: "Ты долго всматриваешься в рисунок, пытаясь найти скрытый смысл. Но чем дольше смотришь, тем меньше понимаешь. В конце концов ты решаешь, что это всего лишь схема для вязания.",
+            nextScene: "chapter2-table-6",
+          },
+          {
+            min: 2,
+            max: 11,
+            title: "Неудача",
+            text: "Ты замечаешь, что линии образуют силуэт небольшого существа. Однако понять, почему кто-то оставил этот рисунок среди чертежей механизмов, не удаётся.",
+            nextScene: "chapter2-table-6",
+          },
+          {
+            min: 12,
+            max: 19,
+            title: "Успех",
+            text: "Ты замечаешь детали, которые раньше ускользали от внимания: круглые уши, короткие лапы и компактное туловище. Фигура напоминает маленькое существо, чьи следы ты видел в лесу.",
+            nextScene: "chapter2-table-6",
+          },
+          {
+            min: 20,
+            max: 20,
+            title: "Критический успех",
+            text: "Теперь ты видишь сходство совершенно ясно. Пропорции фигуры, округлые уши и короткие лапы напоминают того, кто оставил маленькие следы в лесу и у пьедестала. Это не случайный рисунок: кто-то старательно пытался передать знакомый силуэт.",
+            nextScene: "chapter2-table-6",
+          },
+        ],
+      },
+      audio: audio.music.table,
     },
 
     {
