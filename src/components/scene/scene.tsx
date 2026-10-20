@@ -79,6 +79,17 @@ export function Scene({ scene }: SceneProps) {
       return;
     }
 
+    const requiresTyping =
+      !showBackgroundOnly &&
+      !isSpecialComponent &&
+      !scene.puzzle &&
+      scene.content.type !== "diceCheck" &&
+      scene.content.type !== "terminal";
+
+    if (requiresTyping && !isTypingComplete) {
+      return;
+    }
+
     const delay = scene.autoTransitionDelay ?? 3000;
 
     const timer = window.setTimeout(() => {
@@ -93,6 +104,11 @@ export function Scene({ scene }: SceneProps) {
     scene.autoTransitionToNextScene,
     scene.autoTransitionDelay,
     scene.nextScene,
+    scene.content.type,
+    isTypingComplete,
+    showBackgroundOnly,
+    isSpecialComponent,
+    scene.puzzle,
     setScene,
   ]);
 

@@ -199,7 +199,7 @@ export const firstChapter: ChapterData = {
         text: "Ты подходишь ближе и осторожно касаешься знака.",
       },
       audio: audio.music.forest,
-      autoTransitionDelay: 3100,
+      autoTransitionDelay: 1000,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-rune-puzzle",
     },
@@ -211,7 +211,7 @@ export const firstChapter: ChapterData = {
         text: "Ты не находишь подсказки и решаешь действовать наугад.\n\nОстаётся только выбрать один из знаков и посмотреть, что произойдёт.",
       },
       audio: audio.music.forest,
-      autoTransitionDelay: 6100,
+      autoTransitionDelay: 1000,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-rune-puzzle",
     },
@@ -538,7 +538,7 @@ export const firstChapter: ChapterData = {
         text: "Ты ждёшь продолжения, но страница остаётся неизменной.",
       },
       audio: audio.music.book,
-      autoTransitionDelay: 4400,
+      autoTransitionDelay: 1000,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-sound",
     },
@@ -547,7 +547,7 @@ export const firstChapter: ChapterData = {
     // ============================================================
     {
       id: "chapter1-sound",
-      background: images.bookInHands,
+      background: images.bookInHandsWithoutLight,
       content: {
         type: "text",
         text: "Книга внезапно захлопывается. Золотое свечение гаснет, и комната погружается в полумрак.",
@@ -559,7 +559,7 @@ export const firstChapter: ChapterData = {
     },
     {
       id: "chapter1-sound-part-2",
-      background: images.bookInHands,
+      background: images.bookInHandsWithoutLight,
       content: {
         type: "text",
         text: "Несколько секунд ничего не происходит.\n\nЗатем из глубины комнаты доносится странный шум.",
@@ -910,7 +910,7 @@ export const firstChapter: ChapterData = {
       audio: audio.music.destruction,
       specialEffects: ["shake"],
       effectDelay: 2000,
-      autoTransitionDelay: 5000,
+      autoTransitionDelay: 2000,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-ending-3",
     },
