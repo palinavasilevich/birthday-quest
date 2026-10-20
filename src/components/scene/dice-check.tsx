@@ -3,6 +3,7 @@ import { useGameStore } from "@/store/game-store";
 import type { DiceCheckContent, DiceOutcome } from "@/types/game";
 import { Dice3D } from "./dice-3d";
 import { ActionButton } from "./action-button";
+import { ITEMS } from "@/data/items";
 
 interface DiceCheckProps {
   content: DiceCheckContent;
@@ -10,6 +11,7 @@ interface DiceCheckProps {
 
 export function DiceCheck({ content }: DiceCheckProps) {
   const setScene = useGameStore((state) => state.setScene);
+  const inventory = useGameStore((state) => state.inventory);
 
   const [isSettled, setIsSettled] = useState(false);
 
@@ -22,11 +24,47 @@ export function DiceCheck({ content }: DiceCheckProps) {
     setIsSettled(false);
 
     const result = Math.floor(Math.random() * 20) + 1;
-    const resultOutcome = content.outcomes.find(
-      (item) => result >= item.min && result <= item.max,
-    );
 
-    if (!resultOutcome) return;
+    const itemBonus = content.tag
+      ? inventory.reduce((total, itemId) => {
+          const item = ITEMS[itemId];
+
+          return total + (item?.situationalBonuses?.[content.tag!] ?? 0);
+        }, 0)
+      : 0;
+
+    const total = result + itemBonus;
+
+    let resultOutcome: DiceOutcome | undefined;
+
+    if (result === 1) {
+      resultOutcome = content.outcomes.find(
+        (item) => item.min === 1 && item.max === 1,
+      );
+    } else if (result === 20) {
+      resultOutcome = content.outcomes.find(
+        (item) => item.min === 20 && item.max === 20,
+      );
+    } else {
+      const success = total >= content.difficulty;
+
+      resultOutcome = content.outcomes.find((item) => {
+        if (item.min === 1 && item.max === 1) return false;
+        if (item.min === 20 && item.max === 20) return false;
+
+        return success ? item.title === "Успех" : item.title === "Неудача";
+      });
+    }
+
+    if (!resultOutcome) {
+      console.error("Не найден подходящий исход проверки", {
+        result,
+        total,
+        difficulty: content.difficulty,
+        tag: content.tag,
+      });
+      return;
+    }
 
     setRoll(result);
     setOutcome(resultOutcome);

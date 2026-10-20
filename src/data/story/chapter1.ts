@@ -139,49 +139,94 @@ export const firstChapter: ChapterData = {
       },
       audio: audio.music.forest,
       actions: [
-        {
-          id: "touch-rune",
-          label: "Touch the rune",
-          nextScene: "chapter1-signs",
-        },
+        // {
+        //   id: "touch-rune",
+        //   label: "Touch the rune",
+        //   nextScene: "chapter1-signs",
+        // },
         {
           id: "clear-moss",
-          label: "Clear the moss at the base",
-          nextScene: "chapter1-moss",
+          label: "Examine the base of the wall",
+          nextScene: "chapter1-perception-check",
         },
       ],
     },
+
+    {
+      id: "chapter1-perception-check",
+      background: images.wallWithTraces,
+      content: {
+        type: "diceCheck",
+        title: "Природа",
+        description:
+          "Ты внимательно изучаешь основание стены. Царапины, следы и трещины могут рассказать больше, чем кажется на первый взгляд.",
+        skill: "Внимательность",
+        difficulty: 12,
+        outcomes: [
+          {
+            min: 1,
+            max: 1,
+            title: "Критический провал",
+            text: "Ты слишком увлекаешься поисками и случайно сдвигаешь камешек. Он падает тебе на ногу.",
+            nextScene: "chapter1-signs",
+          },
+          {
+            min: 2,
+            max: 11,
+            title: "Неудача",
+            text: "Ты осматриваешь стену, но мох и трещины скрывают мелкие детали. Ничего необычного обнаружить не удаётся.",
+            nextScene: "chapter1-signs",
+          },
+          {
+            min: 12,
+            max: 19,
+            title: "Успех",
+            text: "У самого основания стены ты замечаешь свежие царапины. Под слоем мха проступает знакомый знак — QUEN. Кто-то маленького роста оставил его здесь совсем недавно.",
+            nextScene: "chapter1-moss-3",
+          },
+          {
+            min: 20,
+            max: 20,
+            title: "Критический успех",
+            text: "Ты замечаешь QUEN у самого основания стены. Царапины свежие и совсем низко над землёй. Тот, кто оставил его, явно хотел подсказать, с чего начинать.",
+            nextScene: "chapter1-moss-3",
+          },
+        ],
+      },
+      audio: audio.music.forest,
+    },
+
     // ── Ветка: счистить мох ──
-    {
-      id: "chapter1-moss",
-      background: images.wallWithSymbolsHint,
-      content: {
-        type: "text",
-        text: "Ты счищаешь мох у самого низа стены. \n\nИ видишь, что под ним проступает знакомый символ.",
-      },
-      audio: audio.music.forest,
-      nextScene: "chapter1-moss-2",
-    },
-    {
-      id: "chapter1-moss-2",
-      background: images.wallWithSymbolsHint,
-      content: {
-        type: "text",
-        text: "Царапины свежие и совсем низко над землёй.\n\nТот, кто их оставил, был невысокого роста.",
-      },
-      audio: audio.music.forest,
-      nextScene: "chapter1-moss-3",
-    },
-    {
-      id: "chapter1-moss-3",
-      background: images.wallWithSymbolsHint,
-      content: {
-        type: "text",
-        text: "QUEN.\n\nТеперь ты знаешь, с чего начинать.",
-      },
-      audio: audio.music.forest,
-      nextScene: "chapter1-signs",
-    },
+    // {
+    //   id: "chapter1-moss",
+    //   background: images.wallWithSymbolsHint,
+    //   content: {
+    //     type: "text",
+    //     text: "Ты счищаешь мох у самого низа стены. \n\nИ видишь, что под ним проступает знакомый символ.",
+    //   },
+    //   audio: audio.music.forest,
+    //   nextScene: "chapter1-moss-2",
+    // },
+    // {
+    //   id: "chapter1-moss-2",
+    //   background: images.wallWithSymbolsHint,
+    //   content: {
+    //     type: "text",
+    //     text: "Царапины свежие и совсем низко над землёй.\n\nТот, кто их оставил, был невысокого роста.",
+    //   },
+    //   audio: audio.music.forest,
+    //   nextScene: "chapter1-moss-3",
+    // },
+    // {
+    //   id: "chapter1-moss-3",
+    //   background: images.wallWithSymbolsHint,
+    //   content: {
+    //     type: "text",
+    //     text: "QUEN.\n\nТеперь ты знаешь, с чего начинать.",
+    //   },
+    //   audio: audio.music.forest,
+    //   nextScene: "chapter1-signs",
+    // },
     // ============================================================
     // THE SIGNS
     // ============================================================
@@ -496,6 +541,9 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Книга внезапно захлопывается. Золотое свечение гаснет, и комната погружается в полумрак.",
       },
+
+      itemsToCollect: ["ancient-book"],
+
       audio: audio.music.door,
       nextScene: "chapter1-sound-part-2",
     },
@@ -547,13 +595,7 @@ export const firstChapter: ChapterData = {
     // ============================================================
     // CHASE
     // ============================================================
-    //
-    // Mirrors "wait" in weight (10 scenes) rather than being the
-    // short, reward-less branch it used to be. Same emotional beat
-    // as wait — the player still ends up with the yarn — but earned
-    // differently: not a gift left on purpose, but a scrap torn off
-    // mid-flight, found only because the player pushed forward
-    // instead of holding still.
+
     // ============================================================
     // {
     //   id: "chapter1-chase",
@@ -584,67 +626,15 @@ export const firstChapter: ChapterData = {
         text: "Ты бросаешься к проходу.\n\nНо тень уже исчезла.",
       },
       audio: audio.music.persecution,
-      nextScene: "chapter1-chase-roll",
-    },
-    {
-      id: "chapter1-chase-roll",
-      background: images.corridorTraces,
-      content: {
-        type: "diceCheck",
-        title: "Не упустить след",
-        description:
-          "Впереди мелькает тень. Ты ускоряешь шаг, пытаясь разглядеть, куда она свернула.",
-        skill: "Ловкость",
-        difficulty: 12,
-        outcomes: [
-          {
-            min: 1,
-            max: 1,
-            title: "Критический провал",
-            text: "Ты спотыкаешься о выступающий камень. Когда поднимаешься, коридор уже пуст.",
-            nextScene: "chapter1-chase-2",
-          },
-          {
-            min: 2,
-            max: 11,
-            title: "Неудача",
-            text: "Ты почти догоняешь тень, но она исчезает за поворотом. На камнях остаются едва заметные следы.",
-            nextScene: "chapter1-chase-2",
-          },
-          {
-            min: 12,
-            max: 19,
-            title: "Успех",
-            text: "Ты замечаешь, куда свернула тень, и успеваешь разглядеть следы, ведущие дальше по коридору.",
-            nextScene: "chapter1-chase-2",
-          },
-          {
-            min: 20,
-            max: 20,
-            title: "Критический успех",
-            text: "Ты почти настигаешь незнакомца. На мгновение замечаешь что-то знакомое в его руке — прежде чем он исчезает за поворотом.",
-            nextScene: "chapter1-chase-2",
-          },
-        ],
-      },
-      audio: audio.music.persecution,
-    },
-    {
-      id: "chapter1-chase-2",
-      background: images.corridorTraces,
-      content: {
-        type: "text",
-        text: "Ты видишь следы, уходящие вглубь коридора.",
-      },
-      audio: audio.music.persecution,
       nextScene: "chapter1-chase-3",
     },
+
     {
       id: "chapter1-chase-3",
       background: images.corridorTracesFinal,
       content: {
         type: "text",
-        text: "Ты бросаешься вперёд, едва различая дорогу.\n\nПлечом задеваешь стену — острый камень царапает кожу.",
+        text: "Ты бежишь вперёд, едва различая дорогу.\n\nПлечом задеваешь стену и острый камень царапает кожу.",
       },
       audio: audio.music.persecution,
       nextScene: "chapter1-chase-4",
@@ -654,7 +644,8 @@ export const firstChapter: ChapterData = {
       background: images.corridorTracesFinal,
       content: {
         type: "text",
-        text: "Следы продолжаются всё глубже.\n\nНо тени впереди больше нет.",
+        // text: "Следы продолжаются всё глубже.\n\nНо тени впереди больше нет.",
+        text: "Следы уходят всё глубже.\n\nТень больше не появляется, и ты начинаешь сомневаться, удастся ли тебе её найти.",
       },
       audio: audio.music.persecution,
       nextScene: "chapter1-chase-5",
@@ -674,27 +665,63 @@ export const firstChapter: ChapterData = {
       background: images.yarnWall,
       content: {
         type: "text",
-        text: "Клочок пряжи тёплого коричневого цвета зацепился за острый край камня.",
+        text: "Нитка тёплого коричневого цвета зацепился за острый край камня.",
       },
       audio: audio.music.persecution,
       actions: [
         {
           id: "take-thread-torn",
-          label: "Take the thread",
-          nextScene: "chapter1-chase-7",
+          label: "Inspect the thread",
+          nextScene: "chapter1-yarn-chase-analysis",
         },
       ],
     },
+
     {
-      id: "chapter1-chase-7",
+      id: "chapter1-yarn-chase-analysis",
       background: images.yarnWall,
       content: {
-        type: "text",
-        text: "Ты снимаешь нитку с камня.\n\nОна мягкая и почему-то кажется знакомой. Ты убираешь её в карман и продолжаешь путь.",
+        type: "diceCheck",
+        title: "Анализ нити",
+        description: "Ты поднимаешь нить и внимательно рассматриваешь её.",
+        skill: "Анализ",
+        difficulty: 12,
+        tag: "navigation",
+        outcomes: [
+          {
+            min: 1,
+            max: 1,
+            title: "Критический провал",
+            text: "Это просто коричневая нитка. Ничего примечательного.",
+            nextScene: "chapter1-wait-7",
+          },
+          {
+            min: 2,
+            max: 11,
+            title: "Неудача",
+            text: "Нить выглядит обычной. Ты не можешь понять, как она связана с владельцем.",
+            nextScene: "chapter1-wait-7",
+          },
+          {
+            min: 12,
+            max: 19,
+            title: "Успех",
+            text: "Ты понимаешь, что это пряжа, состоящая из нескольких переплетённых волокон. Похоже, она предназначена для вязания.",
+            nextScene: "chapter1-wait-7",
+          },
+          {
+            min: 20,
+            max: 20,
+            title: "Критический успех",
+            text: "Ты внимательно изучаешь пряжу и замечаешь, насколько равномерно скручены её мягкие волокна. Это качественная пряжа, предназначенная для вязания. Почему-то её цвет кажется тебе знакомым, хотя ты не можешь вспомнить, где видел его раньше.",
+            nextScene: "chapter1-wait-7",
+          },
+        ],
       },
-      audio: audio.music.persecution,
-      nextScene: "chapter1-ending",
+
+      audio: audio.music.shadow,
     },
+
     // ============================================================
     // WAIT
     // ============================================================
@@ -753,31 +780,85 @@ export const firstChapter: ChapterData = {
       background: images.yarn,
       content: {
         type: "text",
-        text: "Ты подходишь ближе.\n\nНа полу лежит обрывок пряжи тёплого коричневого цвета.",
+        text: "Ты подходишь ближе.\n\nНа полу лежит нитка тёплого коричневого цвета.",
       },
       audio: audio.music.shadow,
-      nextScene: "chapter1-wait-7",
+      actions: [
+        {
+          id: "take-thread-torn",
+          label: "Inspect the thread",
+          nextScene: "chapter1-yarn-wait-analysis",
+        },
+      ],
     },
+
+    {
+      id: "chapter1-yarn-wait-analysis",
+      background: images.yarn,
+      content: {
+        type: "diceCheck",
+        title: "Анализ нити",
+        description: "Ты поднимаешь нить и внимательно рассматриваешь её.",
+        skill: "Анализ",
+        difficulty: 12,
+        tag: "navigation",
+        outcomes: [
+          {
+            min: 1,
+            max: 1,
+            title: "Критический провал",
+            text: "Это просто коричневая нитка. Ничего примечательного.",
+            nextScene: "chapter1-wait-7",
+          },
+          {
+            min: 2,
+            max: 11,
+            title: "Неудача",
+            text: "Нить выглядит обычной. Ты не можешь понять, как она связана с владельцем.",
+            nextScene: "chapter1-wait-7",
+          },
+          {
+            min: 12,
+            max: 19,
+            title: "Успех",
+            text: "Ты понимаешь, что это пряжа, состоящая из нескольких переплетённых волокон. Похоже, она предназначена для вязания.",
+            nextScene: "chapter1-wait-7",
+          },
+          {
+            min: 20,
+            max: 20,
+            title: "Критический успех",
+            text: "Ты внимательно изучаешь пряжу и замечаешь, насколько равномерно скручены её мягкие волокна. Это качественная пряжа, предназначенная для вязания. Почему-то её цвет кажется тебе знакомым, хотя ты не можешь вспомнить, где видел его раньше.",
+            nextScene: "chapter1-wait-7",
+          },
+        ],
+      },
+
+      audio: audio.music.shadow,
+    },
+
     {
       id: "chapter1-wait-7",
       background: images.yarn,
       content: {
         type: "text",
-        text: "Ты поднимаешь нитку и осторожно сжимаешь её в пальцах.\n\nОна мягкая и почему-то кажется знакомой. Ты убираешь её в карман.",
+        text: "Ты убираешь нитку в карман и идёшь дальше по коридору.",
       },
-      audio: audio.music.shadow,
-      nextScene: "chapter1-wait-8",
-    },
-    {
-      id: "chapter1-wait-8",
-      background: images.corridorTracesFinal,
-      content: {
-        type: "text",
-        text: "Впереди снова видны небольшие следы.",
-      },
+      itemsToCollect: ["brown-yarn"],
       audio: audio.music.shadow,
       nextScene: "chapter1-ending",
     },
+    // {
+    //   id: "chapter1-wait-8",
+    //   background: images.corridorTracesFinal,
+    //   content: {
+    //     type: "text",
+    //     text: "Впереди снова видны небольшие следы.",
+    //   },
+    //   audio: audio.music.shadow,
+    //   nextScene: "chapter1-ending",
+    // },
+
     // ============================================================
     // THE ENDING
     // ============================================================

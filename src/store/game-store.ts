@@ -32,6 +32,8 @@ interface GameState {
   isSoundEnabled: boolean;
   isSfxPlaying: boolean;
 
+  itemNotification: string | null;
+
   setScene: (sceneId: string) => void;
   addItem: (itemId: string) => void;
   completePuzzle: (puzzleId: string) => void;
@@ -42,6 +44,9 @@ interface GameState {
 
   startGame: () => void;
   markStoryEvent: (event: StoryEvent) => void;
+
+  showItemNotification: (itemId: string) => void;
+  dismissItemNotification: () => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -58,6 +63,7 @@ export const useGameStore = create<GameState>()(
     inventory: [],
     isSoundEnabled: true,
     isSfxPlaying: false,
+    itemNotification: null,
 
     startGame: () =>
       set({
@@ -92,11 +98,16 @@ export const useGameStore = create<GameState>()(
       }),
 
     addItem: (itemId) =>
-      set((state) => ({
-        inventory: state.inventory.includes(itemId)
-          ? state.inventory
-          : [...state.inventory, itemId],
-      })),
+      set((state) => {
+        if (state.inventory.includes(itemId)) {
+          return state;
+        }
+
+        return {
+          inventory: [...state.inventory, itemId],
+          itemNotification: itemId,
+        };
+      }),
 
     completePuzzle: (puzzleId) =>
       set((state) => ({
@@ -118,6 +129,10 @@ export const useGameStore = create<GameState>()(
       set((state) => ({
         isSoundEnabled: !state.isSoundEnabled,
       })),
+
+    showItemNotification: (itemId) => set({ itemNotification: itemId }),
+
+    dismissItemNotification: () => set({ itemNotification: null }),
   }),
 
   // {

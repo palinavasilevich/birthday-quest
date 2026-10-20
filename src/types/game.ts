@@ -28,6 +28,7 @@ export interface DiceCheckContent {
   skill: string;
   difficulty: number;
   outcomes: DiceOutcome[];
+  tag?: CheckTag;
 }
 
 export type SceneContent =
@@ -51,6 +52,23 @@ export type PuzzleData = {
   nextScene: string;
   mode?: "discovery" | "puzzle";
 };
+
+export type ItemType = "equipment" | "tool" | "story";
+
+export type Characteristic = "dexterity" | "intelligence" | "mastery";
+
+// export type Characteristic = "Ловкость" | "Интеллект" | "Мастерство";
+
+export type CheckTag = "chase" | "navigation" | "repair" | "assembly";
+
+export interface ItemDefinition {
+  id: string;
+  name: string;
+  description: string;
+  type: ItemType;
+  bonuses?: Partial<Record<Characteristic, number>>;
+  situationalBonuses?: Partial<Record<CheckTag, number>>;
+}
 
 export interface SceneAction {
   id: string;
@@ -91,6 +109,7 @@ export interface SceneData {
   showBackgroundOnly?: boolean;
   autoTransitionDelay?: number;
   specialComponent?: "workshop-log";
+  itemsToCollect?: string[];
   isFinish?: boolean;
 }
 

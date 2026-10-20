@@ -7,19 +7,26 @@ import { SceneContent } from "@/components/scene/scene-content";
 import { SceneActions } from "@/components/scene/scene-actions";
 import { ActionButton } from "@/components/scene/action-button";
 import { Puzzle } from "@/components/puzzle/puzzle";
-
-import type { SceneData } from "@/types/game";
-
 import { WorkshopLog } from "../cyberpunk/workshop-log";
 import { EndingOverlay } from "./ending-overlay";
 import { DiceCheck } from "./dice-check";
-
+import { ItemNotification } from "@/components/scene/item-notification";
+import { ITEMS } from "@/data/items";
+import type { SceneData } from "@/types/game";
 interface SceneProps {
   scene: SceneData;
 }
 
 export function Scene({ scene }: SceneProps) {
   const setScene = useGameStore((state) => state.setScene);
+  const addItem = useGameStore((state) => state.addItem);
+
+  const itemNotification = useGameStore((state) => state.itemNotification);
+  const dismissItemNotification = useGameStore(
+    (state) => state.dismissItemNotification,
+  );
+
+  const notifiedItem = itemNotification ? ITEMS[itemNotification] : null;
 
   const [completedSceneId, setCompletedSceneId] = useState<string | null>(null);
 
@@ -89,6 +96,12 @@ export function Scene({ scene }: SceneProps) {
     setScene,
   ]);
 
+  useEffect(() => {
+    scene.itemsToCollect?.forEach((itemId) => {
+      addItem(itemId);
+    });
+  }, [scene.id, scene.itemsToCollect, addItem]);
+
   return (
     <div className="relative h-full w-full">
       <GameLayout
@@ -126,6 +139,15 @@ export function Scene({ scene }: SceneProps) {
       </GameLayout>
 
       {scene.isFinish && <EndingOverlay />}
+
+      {notifiedItem && (
+        <ItemNotification
+          itemId={notifiedItem.id}
+          name={notifiedItem.name}
+          description={notifiedItem.description}
+          onClose={dismissItemNotification}
+        />
+      )}
     </div>
   );
 }
