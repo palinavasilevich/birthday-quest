@@ -266,15 +266,15 @@ export const secondChapter: ChapterData = {
             text: "> CORE MODULES: 03",
           },
           {
-            text: "> MEMORY ................. FAILED",
+            text: "> UNSIGNED ................. FAILED",
             type: "error",
           },
           {
-            text: "> LOGIC .................. FAILED",
+            text: "> FLOAT .................. FAILED",
             type: "error",
           },
           {
-            text: "> OUTPUT ................. FAILED",
+            text: "> POLYMORPH ................. FAILED",
             type: "error",
           },
           {

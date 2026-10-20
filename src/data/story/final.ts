@@ -294,7 +294,6 @@ export const finalChapter: ChapterData = {
         text: "И вдруг — в глубине поля боя появляется маленький огонёк.\n\nMI-OI пробивается сквозь дым. Он что-то нашёл.",
       },
       audio: audio.music.book,
-      sfx: "/audio/test.mp3",
       nextScene: "final-battle-14",
     },
 
