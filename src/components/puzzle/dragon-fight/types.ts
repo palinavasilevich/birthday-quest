@@ -17,6 +17,13 @@ export type AiState =
 
 export type AttackName = "volley" | "ring" | "breath" | "charge" | "rain";
 
+export interface BattleBonuses {
+  extraPlayerHp: number;
+  extraOwlbearHp: number;
+  damageMultiplier: number;
+  mi01InterruptAvailable: boolean;
+}
+
 export interface GameStats {
   hp: number;
   dragonHp: number;
@@ -32,9 +39,12 @@ export interface GameHooks {
   onEnd: (won: boolean, reason?: EndReason) => void;
   onDash: (cooldownMs: number) => void;
   onAnnounce: (text: string) => void;
+  onMi01Interrupt: () => void;
 }
 
-export type Fireball = Phaser.Physics.Arcade.Sprite & { life: number };
+export type Fireball = Phaser.Physics.Arcade.Sprite & {
+  life: number;
+};
 
 export type FirePool = Phaser.GameObjects.Image & {
   life: number;

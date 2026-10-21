@@ -11,6 +11,7 @@ import { makeTextures } from "./textures";
 import type {
   AiState,
   AttackName,
+  BattleBonuses,
   Fireball,
   FirePool,
   GameHooks,
@@ -25,6 +26,10 @@ const { width: W, height: H, padding: PAD } = WORLD;
  */
 export class ArenaScene extends Phaser.Scene {
   private readonly hooks: GameHooks;
+  private bonuses: BattleBonuses;
+  private mi01StunUsed = false;
+  private mi01HealUsed = false;
+  private mi01AvailableAt = 0;
 
   private player!: Phaser.Physics.Arcade.Sprite;
   private dragon!: Phaser.Physics.Arcade.Sprite;
@@ -113,6 +118,10 @@ export class ArenaScene extends Phaser.Scene {
   private shotTimer = 0;
   private breathBase = 0;
 
+  private mi01!: Phaser.GameObjects.Image;
+  private attackWarnings!: Phaser.GameObjects.Group;
+  // private mi01Trail!: Phaser.GameObjects.Particles.ParticleEmitter;
+
   // ---------------------------------------------------------------
   // Состояние игры
   // ---------------------------------------------------------------
@@ -120,9 +129,14 @@ export class ArenaScene extends Phaser.Scene {
   private gameOver = false;
   private lastStats: GameStats | null = null;
 
-  constructor(hooks: GameHooks) {
+  constructor(hooks: GameHooks, bonuses: BattleBonuses) {
     super(SCENE_KEYS.arena);
     this.hooks = hooks;
+    this.bonuses = bonuses;
+  }
+
+  setBonuses(bonuses: BattleBonuses): void {
+    this.bonuses = bonuses;
   }
 
   // ===============================================================
@@ -139,6 +153,9 @@ export class ArenaScene extends Phaser.Scene {
       width: 520,
       height: 323,
     });
+
+    const mi01Url = new URL("./mi01.png", import.meta.url).href;
+    this.load.image("mi01", mi01Url);
 
     // -------------------------------------------------------------
     // Player — fixed visual directions.
@@ -231,12 +248,18 @@ export class ArenaScene extends Phaser.Scene {
       .setFillStyle(0xff4d2f, 0.08)
       .setDepth(1);
 
+    this.mi01 = this.add
+      .image(0, 0, "mi01")
+      .setScale(0.075)
+      .setDepth(12)
+      .setVisible(false);
     // -------------------------------------------------------------
     // Снаряды
     // -------------------------------------------------------------
 
     this.fires = this.physics.add.group();
     this.pools = this.add.group();
+    this.attackWarnings = this.add.group();
 
     // -------------------------------------------------------------
     // Коллизии
@@ -296,7 +319,7 @@ export class ArenaScene extends Phaser.Scene {
    * поэтому состояние сбрасываем вручную.
    */
   private resetState(): void {
-    this.playerHp = PLAYER.maxHp;
+    this.playerHp = PLAYER.maxHp + this.bonuses.extraPlayerHp;
 
     this.facing = -Math.PI / 2;
     this.moveAngle = 0;
@@ -318,14 +341,18 @@ export class ArenaScene extends Phaser.Scene {
     this.poise = 0;
 
     this.phase = 1;
-    this.owlbearHp = OWLBEAR.initialMaxHp;
-    this.owlbearMaxHp = OWLBEAR.initialMaxHp;
+    this.owlbearMaxHp = OWLBEAR.initialMaxHp + this.bonuses.extraOwlbearHp;
+    this.owlbearHp = this.owlbearMaxHp;
     this.owlbearSafe = false;
     this.owlbearInvulnerableUntil = 0;
     this.owlbearNextAttackAt = 0;
     this.owlbearNeedsHelp = false;
     this.owlbearAidProgress = 0;
     this.owlbearAidAnnounced = false;
+
+    this.mi01StunUsed = false;
+    this.mi01HealUsed = false;
+    this.mi01AvailableAt = 0;
 
     this.attackQueue = [];
     this.dragonGuardUntil = 0;
@@ -414,296 +441,6 @@ export class ArenaScene extends Phaser.Scene {
   }
 
   // ===============================================================
-  // FLOOR
-  // ===============================================================
-
-  private drawFloor(): void {
-    const g = this.add.graphics().setDepth(0);
-
-    // -------------------------------------------------------------
-    // Dark stone floor
-    // -------------------------------------------------------------
-
-    g.fillStyle(0x070910, 1);
-    g.fillRect(0, 0, W, H);
-
-    g.fillStyle(0x171922, 1);
-    g.fillRect(PAD, PAD, W - PAD * 2, H - PAD * 2);
-
-    const stones: Array<[number, number, number, number]> = [
-      [70, 75, 115, 58],
-      [190, 70, 105, 62],
-      [305, 76, 126, 57],
-      [440, 70, 105, 62],
-      [555, 76, 125, 57],
-      [690, 70, 105, 62],
-      [805, 76, 105, 57],
-
-      [72, 140, 130, 68],
-      [210, 137, 120, 70],
-      [338, 145, 128, 64],
-      [474, 138, 118, 72],
-      [600, 145, 130, 63],
-      [738, 138, 118, 70],
-      [865, 145, 50, 65],
-
-      [70, 215, 118, 68],
-      [198, 220, 128, 61],
-      [335, 212, 110, 72],
-      [455, 220, 135, 61],
-      [600, 210, 112, 72],
-      [720, 218, 132, 62],
-      [858, 215, 55, 70],
-
-      [68, 292, 128, 62],
-      [205, 286, 112, 70],
-      [326, 295, 132, 59],
-      [468, 285, 116, 73],
-      [595, 294, 130, 61],
-      [735, 286, 116, 70],
-      [858, 292, 55, 60],
-
-      [70, 370, 122, 70],
-      [204, 365, 125, 63],
-      [338, 374, 112, 69],
-      [460, 365, 135, 62],
-      [605, 372, 112, 70],
-      [725, 364, 135, 64],
-      [862, 370, 50, 68],
-
-      [72, 446, 126, 66],
-      [208, 438, 115, 72],
-      [332, 450, 130, 61],
-      [470, 440, 118, 70],
-      [598, 450, 132, 60],
-      [738, 440, 116, 70],
-      [858, 446, 55, 64],
-
-      [70, 515, 130, 60],
-      [210, 512, 120, 64],
-      [340, 518, 125, 57],
-      [475, 512, 112, 63],
-      [598, 518, 130, 57],
-      [738, 512, 118, 63],
-      [860, 515, 50, 58],
-    ];
-
-    stones.forEach(([x, y, width, height]) => {
-      g.fillStyle(0x1d202d, 1);
-
-      g.fillRoundedRect(x, y, width, height, 3);
-
-      g.lineStyle(1, 0x303344, 0.55);
-
-      g.strokeRoundedRect(x, y, width, height, 3);
-    });
-
-    // -------------------------------------------------------------
-    // Cracks
-    // -------------------------------------------------------------
-
-    const cracks: Array<[number, number, number, number, number, number]> = [
-      [112, 118, 125, 130, 116, 141],
-      [270, 160, 283, 151, 292, 164],
-      [390, 110, 401, 122, 394, 136],
-      [515, 182, 527, 171, 538, 181],
-      [650, 118, 664, 132, 658, 145],
-      [780, 188, 793, 177, 806, 191],
-      [152, 334, 165, 346, 158, 359],
-      [295, 404, 307, 393, 320, 405],
-      [520, 350, 533, 363, 525, 378],
-      [674, 402, 688, 390, 701, 402],
-      [812, 326, 823, 338, 817, 352],
-      [420, 495, 435, 485, 445, 498],
-    ];
-
-    cracks.forEach(([x1, y1, x2, y2, x3, y3]) => {
-      g.lineStyle(2, 0x343748, 0.75);
-
-      g.lineBetween(x1, y1, x2, y2);
-
-      g.lineBetween(x2, y2, x3, y3);
-    });
-
-    // -------------------------------------------------------------
-    // Lava
-    // -------------------------------------------------------------
-
-    const lava = [
-      [42, 80, 58, 120, 48, 155],
-      [42, 470, 57, 430, 48, 392],
-      [918, 95, 902, 133, 912, 166],
-      [918, 462, 902, 425, 913, 388],
-      [145, 558, 180, 548, 205, 559],
-      [750, 559, 780, 548, 815, 559],
-    ];
-
-    lava.forEach(([x1, y1, x2, y2, x3, y3]) => {
-      g.lineStyle(8, 0x5f1c1a, 0.9);
-
-      g.lineBetween(x1, y1, x2, y2);
-
-      g.lineBetween(x2, y2, x3, y3);
-
-      g.lineStyle(2, 0xff5425, 0.75);
-
-      g.lineBetween(x1, y1, x2, y2);
-
-      g.lineBetween(x2, y2, x3, y3);
-    });
-
-    // -------------------------------------------------------------
-    // Ritual pillars
-    // -------------------------------------------------------------
-
-    const pillars: Array<[number, number]> = [
-      [72, 105],
-      [888, 105],
-      [72, 458],
-      [888, 458],
-    ];
-
-    pillars.forEach(([x, y]) => {
-      g.fillStyle(0x0d1018, 1);
-      g.fillRect(x - 17, y - 9, 34, 70);
-
-      g.fillStyle(0x272b3a, 1);
-      g.fillRect(x - 13, y - 7, 26, 66);
-
-      g.fillStyle(0x3a3d4d, 1);
-      g.fillRect(x - 10, y - 4, 20, 58);
-
-      g.fillStyle(0x151821, 1);
-      g.fillRect(x - 20, y - 12, 40, 8);
-
-      g.fillRect(x - 20, y + 56, 40, 8);
-
-      g.lineStyle(2, 0xff5b2b, 0.72);
-
-      g.lineBetween(x, y + 2, x, y + 45);
-
-      g.lineStyle(1, 0xe8a15b, 0.55);
-
-      g.lineBetween(x - 4, y + 12, x + 4, y + 20);
-
-      g.lineBetween(x + 4, y + 20, x - 4, y + 29);
-    });
-
-    // -------------------------------------------------------------
-    // Central ritual seal
-    // -------------------------------------------------------------
-
-    const cx = W * 0.5;
-    const cy = H * 0.57;
-
-    g.lineStyle(3, 0x3f3448, 0.72);
-
-    g.strokeCircle(cx, cy, 103);
-
-    g.lineStyle(1, 0x6c4650, 0.58);
-
-    g.strokeCircle(cx, cy, 88);
-
-    g.strokeCircle(cx, cy, 58);
-
-    g.lineStyle(2, 0x6d373b, 0.58);
-
-    g.lineBetween(cx - 72, cy, cx + 72, cy);
-
-    g.lineBetween(cx, cy - 72, cx, cy + 72);
-
-    g.lineBetween(cx - 52, cy - 52, cx + 52, cy + 52);
-
-    g.lineBetween(cx + 52, cy - 52, cx - 52, cy + 52);
-
-    // -------------------------------------------------------------
-    // Sigils
-    // -------------------------------------------------------------
-
-    const sigils: Array<[number, number, number]> = [
-      [145, 250, 34],
-      [815, 255, 34],
-      [480, 505, 34],
-    ];
-
-    sigils.forEach(([x, y, r]) => {
-      g.lineStyle(3, 0xff5a27, 0.88);
-
-      g.strokeCircle(x, y, r);
-
-      g.lineStyle(1, 0xffa33f, 0.8);
-
-      g.lineBetween(x - r, y, x + r, y);
-
-      g.lineBetween(x, y - r, x, y + r);
-
-      g.lineBetween(x - r * 0.7, y - r * 0.7, x + r * 0.7, y + r * 0.7);
-
-      g.lineBetween(x + r * 0.7, y - r * 0.7, x - r * 0.7, y + r * 0.7);
-    });
-
-    // -------------------------------------------------------------
-    // Chains
-    // -------------------------------------------------------------
-
-    g.lineStyle(3, 0x161820, 0.95);
-
-    const chains = [
-      [48, 44, 85, 83],
-      [912, 44, 875, 83],
-      [48, 556, 82, 521],
-      [912, 556, 878, 521],
-    ];
-
-    chains.forEach(([x1, y1, x2, y2]) => {
-      g.lineBetween(x1, y1, x2, y2);
-
-      g.lineStyle(1, 0x4c4650, 0.75);
-
-      g.lineBetween(x1 + 2, y1, x2 + 2, y2);
-
-      g.lineStyle(3, 0x161820, 0.95);
-    });
-
-    // -------------------------------------------------------------
-    // Frame
-    // -------------------------------------------------------------
-
-    g.lineStyle(5, 0x352844, 1);
-
-    g.strokeRect(PAD, PAD, W - PAD * 2, H - PAD * 2);
-
-    g.lineStyle(2, 0x8b6849, 0.52);
-
-    g.strokeRect(PAD + 5, PAD + 5, W - PAD * 2 - 10, H - PAD * 2 - 10);
-
-    g.lineStyle(1, 0xd0a26a, 0.18);
-
-    g.strokeRect(PAD + 9, PAD + 9, W - PAD * 2 - 18, H - PAD * 2 - 18);
-
-    // -------------------------------------------------------------
-    // Corner ornaments
-    // -------------------------------------------------------------
-
-    const corners: Array<[number, number, number]> = [
-      [PAD + 12, PAD + 12, 1],
-      [W - PAD - 12, PAD + 12, -1],
-      [PAD + 12, H - PAD - 12, 1],
-      [W - PAD - 12, H - PAD - 12, -1],
-    ];
-
-    corners.forEach(([x, y, direction]) => {
-      g.lineStyle(2, 0xc09159, 0.52);
-
-      g.lineBetween(x, y, x + 15 * direction, y);
-
-      g.lineBetween(x, y, x, y + 15);
-
-      g.lineBetween(x + 5 * direction, y + 5, x + 12 * direction, y + 12);
-    });
-  }
-
-  // ===============================================================
   // MAIN UPDATE
   // ===============================================================
 
@@ -719,6 +456,9 @@ export class ArenaScene extends Phaser.Scene {
       this.constrainDragonToArena();
 
       this.updateOwlbear(time, delta);
+      // Проверяем HP каждый кадр: после первого оглушения MI-01
+      // автоматически лечит Медвесыча, как только у него < 2 HP.
+      this.tryMi01Heal();
     }
 
     this.updateProjectiles(delta);
@@ -1021,6 +761,220 @@ export class ArenaScene extends Phaser.Scene {
     }
   }
 
+  private animateMi01Interrupt(): void {
+    if (!this.mi01?.active || !this.dragon?.active) return;
+
+    // Если предыдущая анимация ещё не завершилась,
+    // прекращаем её перед новым запуском.
+    this.tweens.killTweensOf(this.mi01);
+
+    const startX = this.dragon.x - 150;
+    const startY = this.dragon.y + 80;
+
+    this.mi01
+      .setPosition(startX, startY)
+      .setRotation(0)
+      .setAlpha(0)
+      .setVisible(true);
+
+    // Быстрый влёт.
+    this.tweens.add({
+      targets: this.mi01,
+      alpha: 1,
+      x: this.dragon.x - 65,
+      y: this.dragon.y - 35,
+      duration: 220,
+      ease: "Cubic.Out",
+      onComplete: () => {
+        if (!this.mi01.active || !this.dragon.active) return;
+
+        const centerX = this.dragon.x;
+        const centerY = this.dragon.y;
+        const radiusX = 95;
+        const radiusY = 55;
+        const startAngle = Math.PI;
+
+        // Облёт головы дракона.
+        const orbit = { angle: startAngle };
+
+        this.tweens.add({
+          targets: orbit,
+          angle: startAngle + Math.PI * 2,
+          duration: 720,
+          ease: "Sine.easeInOut",
+
+          onUpdate: () => {
+            if (!this.mi01.active) return;
+
+            const progress = orbit.angle;
+
+            this.mi01.setPosition(
+              centerX + Math.cos(progress) * radiusX,
+              centerY + Math.sin(progress) * radiusY,
+            );
+
+            this.mi01.setRotation(progress + Math.PI / 2);
+
+            // Золотистые искры позади жука.
+            if (Math.random() > 0.45) {
+              const spark = this.add
+                .circle(
+                  this.mi01.x,
+                  this.mi01.y,
+                  Phaser.Math.Between(1, 3),
+                  0xffc66d,
+                  0.9,
+                )
+                .setDepth(11);
+
+              this.tweens.add({
+                targets: spark,
+                alpha: 0,
+                scale: 0.2,
+                duration: 260,
+                onComplete: () => spark.destroy(),
+              });
+            }
+          },
+
+          onComplete: () => {
+            if (!this.mi01.active) return;
+
+            // Резкий уход из кадра.
+            this.tweens.add({
+              targets: this.mi01,
+              x: W + 70,
+              y: this.mi01.y - 100,
+              alpha: 0,
+              rotation: this.mi01.rotation + Math.PI,
+              duration: 300,
+              ease: "Cubic.In",
+              onComplete: () => this.mi01.setVisible(false),
+            });
+          },
+        });
+      },
+    });
+  }
+
+  private tryMi01Interrupt(): boolean {
+    const interruptibleAttacks: AttackName[] = [
+      "volley",
+      "ring",
+      "charge",
+      "breath",
+      "rain",
+    ];
+
+    if (
+      !this.bonuses.mi01InterruptAvailable ||
+      !this.owlbearSafe ||
+      this.time.now < this.mi01AvailableAt ||
+      this.mi01StunUsed ||
+      this.gameOver ||
+      !interruptibleAttacks.includes(this.pendingAttack)
+    ) {
+      return false;
+    }
+
+    this.mi01StunUsed = true;
+    this.attackQueue = [];
+    this.shotsLeft = 0;
+
+    this.getFires().forEach((fire) => fire.destroy());
+    this.attackWarnings?.clear(true, true);
+    this.dragon.setVelocity(0, 0);
+    this.setAi("stagger", 2500);
+
+    this.animateMi01Interrupt();
+
+    this.hooks.onMi01Interrupt();
+    this.hooks.onAnnounce(
+      "MI-01 отвлекает дракона! Действуйте, пока он оглушён!",
+    );
+
+    this.spawnBurst(this.dragon.x, this.dragon.y, 0x77b88a, 18);
+
+    this.cameras.main.shake(180, 0.008);
+
+    return true;
+  }
+
+  /**
+   * Второе вмешательство MI-01: если после оглушения дракона
+   * у Медвесыча остаётся меньше 2 HP, жук один раз лечит его.
+   */
+  private tryMi01Heal(): void {
+    if (
+      !this.bonuses.mi01InterruptAvailable ||
+      !this.owlbearSafe ||
+      this.time.now < this.mi01AvailableAt ||
+      !this.mi01StunUsed ||
+      this.mi01HealUsed ||
+      this.owlbearHp >= 2 ||
+      this.owlbearHp <= 0 ||
+      this.gameOver
+    ) {
+      return;
+    }
+
+    this.mi01HealUsed = true;
+    this.owlbearHp = Math.min(this.owlbearMaxHp, this.owlbearHp + 3);
+    this.owlbearNeedsHelp = false;
+    this.owlbearAidProgress = 0;
+    this.owlbearAidAnnounced = false;
+    this.owlbearInvulnerableUntil = this.time.now + 2_000;
+
+    this.owlbear.clearTint();
+    this.owlbear.setTint(0xffd59a);
+
+    this.animateMi01Heal();
+    this.spawnBurst(this.owlbear.x, this.owlbear.y, 0xe8c27a, 18);
+    this.cameras.main.flash(180, 232, 194, 122);
+
+    this.hooks.onAnnounce(
+      `MI-01 лечит Медвесыча! ${this.owlbearHp}/${this.owlbearMaxHp} HP`,
+    );
+    this.pushStats(true);
+  }
+
+  /** Жук подлетает к Медвесычу и оставляет золотистый лечебный импульс. */
+  private animateMi01Heal(): void {
+    if (!this.mi01?.active || !this.owlbear?.active) return;
+
+    this.tweens.killTweensOf(this.mi01);
+
+    this.mi01
+      .setPosition(this.owlbear.x - 110, this.owlbear.y - 75)
+      .setRotation(0)
+      .setAlpha(0)
+      .setVisible(true);
+
+    this.tweens.add({
+      targets: this.mi01,
+      x: this.owlbear.x,
+      y: this.owlbear.y - 28,
+      alpha: 1,
+      duration: 280,
+      ease: "Cubic.Out",
+      onComplete: () => {
+        if (!this.mi01.active) return;
+
+        this.spawnBurst(this.owlbear.x, this.owlbear.y, 0x9ee7a2, 14);
+        this.tweens.add({
+          targets: this.mi01,
+          x: this.owlbear.x + 90,
+          y: this.owlbear.y - 80,
+          alpha: 0,
+          rotation: Math.PI,
+          duration: 360,
+          ease: "Cubic.In",
+          onComplete: () => this.mi01.setVisible(false),
+        });
+      },
+    });
+  }
+
   // ===============================================================
   // DRAGON DAMAGE
   // ===============================================================
@@ -1057,7 +1011,8 @@ export class ArenaScene extends Phaser.Scene {
     const multiplier =
       (weak ? DRAGON.weakMultiplier : 1) *
       (counter ? 1.35 : 1) *
-      (guarded ? 0.55 : 1);
+      (guarded ? 0.55 : 1) *
+      this.bonuses.damageMultiplier;
 
     this.dragonHp -= damage * multiplier;
 
@@ -1075,7 +1030,7 @@ export class ArenaScene extends Phaser.Scene {
       this.hooks.onAnnounce("Дракон поднимает чешую!");
     }
 
-    this.dragon.setTintFill();
+    this.dragon.setTint();
 
     this.time.delayedCall(70, () => {
       if (!this.dragon.active) {
@@ -1652,6 +1607,10 @@ export class ArenaScene extends Phaser.Scene {
   // ===============================================================
 
   private startAttack(): void {
+    if (this.tryMi01Interrupt()) {
+      return;
+    }
+
     const { dragon, player } = this;
 
     this.shotTimer = 0;
@@ -1943,9 +1902,9 @@ export class ArenaScene extends Phaser.Scene {
     }
 
     this.owlbearSafe = true;
+    this.mi01AvailableAt = this.time.now + 10_000;
 
-    this.owlbearMaxHp = OWLBEAR.rescuedMaxHp;
-
+    this.owlbearMaxHp = OWLBEAR.rescuedMaxHp + this.bonuses.extraOwlbearHp;
     this.owlbearHp = this.owlbearMaxHp;
 
     this.owlbearInvulnerableUntil = this.time.now + OWLBEAR.damageCooldown;
@@ -2151,6 +2110,8 @@ export class ArenaScene extends Phaser.Scene {
       .setDepth(2);
 
     const fill = this.add.circle(x, y, 6, 0xffa63d, 0.35).setDepth(2);
+    this.attackWarnings.add(ring);
+    this.attackWarnings.add(fill);
 
     this.tweens.add({
       targets: fill,
@@ -2158,6 +2119,9 @@ export class ArenaScene extends Phaser.Scene {
       duration: delay,
 
       onComplete: () => {
+        // MI-01 can cancel the warning before it becomes a fire pool.
+        if (!ring.active || !fill.active) return;
+
         ring.destroy();
         fill.destroy();
 

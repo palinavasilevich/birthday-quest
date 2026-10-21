@@ -1,3 +1,4 @@
+import type { GameAchievement } from "@/types/game";
 import { create } from "zustand";
 // import { persist } from "zustand/middleware";
 
@@ -20,6 +21,13 @@ const SCENE_STORY_EVENTS: Partial<Record<string, StoryEvent>> = {
   "chapter2-workshop-3": "workshopEntered",
 };
 
+export interface BattleBonuses {
+  extraPlayerHp: number;
+  extraOwlbearHp: number;
+  damageMultiplier: number;
+  mi01InterruptAvailable: boolean;
+}
+
 interface GameState {
   currentSceneId: string;
   inventory: string[];
@@ -29,9 +37,10 @@ interface GameState {
   gameStartedAt: number | null;
   storyTimestamps: Partial<Record<StoryEvent, number>>;
 
+  achievements: GameAchievement[];
+
   isSoundEnabled: boolean;
   isSfxPlaying: boolean;
-
   itemNotification: string | null;
 
   setScene: (sceneId: string) => void;
@@ -45,22 +54,33 @@ interface GameState {
   startGame: () => void;
   markStoryEvent: (event: StoryEvent) => void;
 
+  unlockAchievement: (achievement: GameAchievement) => void;
+  getBattleBonuses: () => BattleBonuses;
+
   showItemNotification: (itemId: string) => void;
   dismissItemNotification: () => void;
 }
 
+// const INITIAL_BATTLE_BONUSES: BattleBonuses = {
+//   extraPlayerHp: 0,
+//   extraOwlbearHp: 0,
+//   damageMultiplier: 1,
+//   mi01InterruptAvailable: false,
+// };
+
 export const useGameStore = create<GameState>()(
   // persist(
-  (set) => ({
+  (set, get) => ({
     gameStartedAt: null,
     storyTimestamps: {},
     // currentSceneId: "final-victory",
     // currentSceneId: "chapter2-code-puzzle",
-    currentSceneId: "chapter1-yarn-chase-analysis",
+    currentSceneId: "final-puzzle",
     // currentSceneId: "chapter1-forest",
     completedPuzzles: [],
     completedActions: [],
     inventory: [],
+    achievements: ["mi01Master"],
     isSoundEnabled: true,
     isSfxPlaying: false,
     itemNotification: null,
@@ -122,6 +142,49 @@ export const useGameStore = create<GameState>()(
           ? state.completedActions
           : [...state.completedActions, actionId],
       })),
+
+    unlockAchievement: (achievement) =>
+      set((state) => ({
+        achievements: state.achievements.includes(achievement)
+          ? state.achievements
+          : [...state.achievements, achievement],
+      })),
+
+    getBattleBonuses: () => {
+      const { achievements } = get();
+
+      let extraPlayerHp = 0;
+      let extraOwlbearHp = 0;
+      let damageMultiplier = 1;
+      let mi01InterruptAvailable = true;
+
+      if (achievements.includes("keenEye")) {
+        extraPlayerHp += 1;
+      }
+
+      if (achievements.includes("owlbearClues")) {
+        extraOwlbearHp += 1;
+      }
+
+      if (achievements.includes("runeKnowledge")) {
+        extraPlayerHp += 1;
+      }
+
+      if (achievements.includes("dragonWeakness")) {
+        damageMultiplier = 1.1;
+      }
+
+      if (achievements.includes("mi01Master")) {
+        mi01InterruptAvailable = true;
+      }
+
+      return {
+        extraPlayerHp: Math.min(extraPlayerHp, 2),
+        extraOwlbearHp: Math.min(extraOwlbearHp, 2),
+        damageMultiplier,
+        mi01InterruptAvailable,
+      };
+    },
 
     setSfxPlaying: (playing) => set({ isSfxPlaying: playing }),
 

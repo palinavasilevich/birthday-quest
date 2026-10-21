@@ -4,7 +4,6 @@ import { audio } from "@/data/audio/chapter1";
 export const firstChapter: ChapterData = {
   id: "chapter1",
   title: "СЛЕД",
-
   scenes: [
     // ============================================================
     // THE FOREST
@@ -24,7 +23,7 @@ export const firstChapter: ChapterData = {
       background: images.forest,
       content: {
         type: "text",
-        text: "Впереди виднеется узкая тропа.\n\nТы бывал здесь много раз, но этой тропы раньше не было.",
+        text: "Впереди виднеется узкая тропа.\n\nТы бывал здесь много раз, но этой тропы точно раньше не было.",
       },
       audio: audio.music.forest,
       actions: [
@@ -34,9 +33,7 @@ export const firstChapter: ChapterData = {
           nextScene: "chapter1-footprints",
         },
       ],
-    },
-
-    // ============================================================
+    }, // ============================================================
     // THE FOOTPRINTS
     // ============================================================
     {
@@ -70,7 +67,7 @@ export const firstChapter: ChapterData = {
       background: images.forestTraces,
       content: {
         type: "text",
-        text: "Следы выглядят свежими. Земля ещё не успела осыпаться по краям.\n\nНо вокруг — ни звука, ни движения. Кто бы их ни оставил, его уже не видно.",
+        text: "Следы выглядят свежими. Земля ещё не успела осыпаться по краям.\n\nНо вокруг — ни звука, ни движения. Кто бы их ни оставил, он уже скрылся из виду.",
       },
       audio: audio.music.forest,
       nextScene: "chapter1-footprints-3",
@@ -90,9 +87,7 @@ export const firstChapter: ChapterData = {
           nextScene: "chapter1-stone",
         },
       ],
-    },
-
-    // ============================================================
+    }, // ============================================================
     // THE STONE
     // ============================================================
     {
@@ -137,7 +132,7 @@ export const firstChapter: ChapterData = {
       background: images.wallWithTraces,
       content: {
         type: "text",
-        text: "У самого основания стены ты замечаешь знакомые маленькие следы.\n\nОни заканчиваются прямо перед каменной кладкой.",
+        text: "У самого основания стены ты замечаешь знакомые маленькие следы.\n\nСледы обрываются у самой стены.",
       },
       audio: audio.music.forest,
       actions: [
@@ -158,6 +153,7 @@ export const firstChapter: ChapterData = {
           "Ты внимательно изучаешь основание стены. Царапины, следы и трещины могут рассказать больше, чем кажется на первый взгляд.",
         skill: "Восприятие",
         difficulty: 12,
+        achievement: "keenEye",
         outcomes: [
           {
             min: 1,
@@ -170,14 +166,14 @@ export const firstChapter: ChapterData = {
             min: 2,
             max: 11,
             title: "Неудача",
-            text: "Ты осматриваешь стену, но мох и трещины скрывают мелкие детали. Ничего необычного обнаружить не удаётся.",
+            text: "Ты осматриваешь стену, но ничего необычного обнаружить не удаётся.",
             nextScene: "chapter1-signs-fail",
           },
           {
             min: 12,
             max: 19,
             title: "Успех",
-            text: "У самого основания стены ты замечаешь свежие царапины. Под слоем мха проступает знак QUEN. Кто-то маленького роста оставил его здесь совсем недавно.",
+            text: "У самого основания стены ты замечаешь свежие царапины. Под слоем мха проступает знак QUEN. Кто-то оставил его здесь совсем недавно.",
             nextScene: "chapter1-signs-success",
           },
           {
@@ -214,9 +210,7 @@ export const firstChapter: ChapterData = {
       autoTransitionDelay: 1000,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-rune-puzzle",
-    },
-
-    // ============================================================
+    }, // ============================================================
     // THE SIGNS
     // ============================================================
     {
@@ -231,9 +225,7 @@ export const firstChapter: ChapterData = {
         type: "runes",
         nextScene: "chapter1-door",
       },
-    },
-
-    // ============================================================
+    }, // ============================================================
     // THE DOOR
     // ============================================================
     {
@@ -241,7 +233,7 @@ export const firstChapter: ChapterData = {
       background: images.wallWithTraces,
       content: {
         type: "text",
-        text: "Последняя нота затихает.\n\nНа несколько секунд лес и древние руины погружаются в полную тишину.",
+        text: "Последняя нота затихает.\n\nНа несколько секунд лес погружается в полную тишину.",
       },
       audio: audio.music.room,
       nextScene: "chapter1-door-2",
@@ -251,7 +243,7 @@ export const firstChapter: ChapterData = {
       background: images.wallWithSymbolsFinal,
       content: {
         type: "text",
-        text: "Затем руны вспыхивают одновременно.\n\nПо стене пробегает золотистая линия света, очерчивая скрытые контуры.",
+        text: "Затем руны вспыхивают одновременно.\n\nПо стене пробегает золотистая линия света.",
       },
       audio: audio.music.room,
       specialEffects: ["glow"],
@@ -274,9 +266,7 @@ export const firstChapter: ChapterData = {
           nextScene: "chapter1-chamber",
         },
       ],
-    },
-
-    // ============================================================
+    }, // ============================================================
     // THE CHAMBER
     // ============================================================
     {
@@ -351,7 +341,7 @@ export const firstChapter: ChapterData = {
             min: 20,
             max: 20,
             title: "Критический успех",
-            text: "Теперь ты видишь больше. Следы принадлежат тому же маленькому существу, которое прошло через лес. Они ведут к пьедесталу и обрываются у его основания. Значит, незнакомец не просто проходил мимо — он подходил к книге. Может, он её и оставил?..",
+            text: "Теперь ты видишь больше. По размеру и форме след почти не отличается от тех, что ты видел в лесу. Он ведёт к пьедесталу и обрывается у самого основания. Возможно, маленькое существо подходило к книге, но по одному следу нельзя сказать наверняка, зачем оно здесь было.",
             nextScene: "chapter1-chamber-4",
           },
         ],
@@ -369,7 +359,6 @@ export const firstChapter: ChapterData = {
       sfx: audio.sfx.doorRoomOpen,
       nextScene: "chapter1-chamber-5",
     },
-
     {
       id: "chapter1-chamber-5",
       background: images.book,
@@ -390,8 +379,7 @@ export const firstChapter: ChapterData = {
           nextScene: "chapter1-leave",
         },
       ],
-    },
-    // ── Ветка: не трогать чужое ──
+    }, // ── Ветка: не трогать чужое ──
     {
       id: "chapter1-leave",
       background: images.book,
@@ -449,11 +437,9 @@ export const firstChapter: ChapterData = {
           nextScene: "chapter1-relic",
         },
       ],
-    },
-    // ============================================================
+    }, // ============================================================
     // THE RELIC
     // ============================================================
-
     {
       id: "chapter1-relic",
       background: images.bookInHands,
@@ -464,7 +450,6 @@ export const firstChapter: ChapterData = {
       audio: audio.music.book,
       nextScene: "chapter1-relic-2",
     },
-
     {
       id: "chapter1-relic-2",
       background: images.bookOpen,
@@ -507,16 +492,6 @@ export const firstChapter: ChapterData = {
       nextScene: "chapter1-relic-6",
     },
 
-    // {
-    //   id: "chapter1-relic-6",
-    //   background: images.bookOpenWithoutText,
-    //   content: {
-    //     type: "text",
-    //     text: "Один за другим они складываются в слова, словно невидимая рука выводит их прямо у тебя на глазах.",
-    //   },
-    //   audio: audio.music.book,
-    //   nextScene: "chapter1-relic-7",
-    // },
     {
       id: "chapter1-relic-6",
       background: images.bookText,
@@ -541,8 +516,7 @@ export const firstChapter: ChapterData = {
       autoTransitionDelay: 1000,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-sound",
-    },
-    // ============================================================
+    }, // ============================================================
     // THE SOUND
     // ============================================================
     {
@@ -552,7 +526,6 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "Книга внезапно захлопывается. Золотое свечение гаснет, и комната погружается в полумрак.",
       },
-
       itemsToCollect: ["ancient-book"],
       audio: audio.music.door,
       nextScene: "chapter1-sound-part-2",
@@ -574,14 +547,11 @@ export const firstChapter: ChapterData = {
         type: "text",
         text: "На противоположной стене дрожит каменная кладка.\n\nРаздаётся скрежет древнего механизма. Каменные плиты медленно расходятся, открывая узкий проход.",
       },
-      audio: audio.music.door,
-      // sfx: audio.sfx.doorRoomOpen,
+      audio: audio.music.door, // sfx: audio.sfx.doorRoomOpen,
       sfx: audio.sfx.door,
       specialEffects: ["rumble"],
-
       nextScene: "chapter1-sound-3",
     },
-
     {
       id: "chapter1-sound-3",
       background: images.roomDoorShadow,
@@ -604,32 +574,10 @@ export const firstChapter: ChapterData = {
           nextScene: "chapter1-wait",
         },
       ],
-    },
-    // ============================================================
+    }, // ============================================================
     // CHASE
     // ============================================================
-
     // ============================================================
-    // {
-    //   id: "chapter1-chase",
-    //   background: images.roomDoor,
-    //   content: {
-    //     type: "text",
-    //     text: "Ты бросаешься к проходу.\n\nНо тень уже исчезла.",
-    //   },
-    //   audio: audio.music.persecution,
-    //   nextScene: "chapter1-chase-2",
-    // },
-    // {
-    //   id: "chapter1-chase-2",
-    //   background: images.corridorTraces,
-    //   content: {
-    //     type: "text",
-    //     text: "Ты видишь следы, уходящие вглубь коридора.",
-    //   },
-    //   audio: audio.music.persecution,
-    //   nextScene: "chapter1-chase-3",
-    // },
 
     {
       id: "chapter1-chase",
@@ -641,7 +589,6 @@ export const firstChapter: ChapterData = {
       audio: audio.music.persecution,
       nextScene: "chapter1-chase-3",
     },
-
     {
       id: "chapter1-chase-3",
       background: images.corridorTracesFinal,
@@ -656,8 +603,7 @@ export const firstChapter: ChapterData = {
       id: "chapter1-chase-4",
       background: images.corridorTracesFinal,
       content: {
-        type: "text",
-        // text: "Следы продолжаются всё глубже.\n\nНо тени впереди больше нет.",
+        type: "text", // text: "Следы продолжаются всё глубже.\n\nНо тени впереди больше нет.",
         text: "Следы уходят всё глубже.\n\nНо тени впереди больше нет, и ты начинаешь сомневаться, удастся ли тебе её найти.",
       },
       audio: audio.music.persecution,
@@ -689,7 +635,6 @@ export const firstChapter: ChapterData = {
         },
       ],
     },
-
     {
       id: "chapter1-yarn-chase-analysis",
       background: images.yarnWall,
@@ -699,7 +644,6 @@ export const firstChapter: ChapterData = {
         description: "Ты поднимаешь нить и внимательно рассматриваешь её.",
         skill: "Анализ",
         difficulty: 12,
-        tag: "navigation",
         outcomes: [
           {
             min: 1,
@@ -712,29 +656,27 @@ export const firstChapter: ChapterData = {
             min: 2,
             max: 11,
             title: "Неудача",
-            text: "Нить выглядит обычной. Ты не можешь понять, как она связана с владельцем.",
+            text: "Нить кажется обычной. Её назначение и связь с незнакомцем остаются загадкой.",
             nextScene: "chapter1-chase-7",
           },
           {
             min: 12,
             max: 19,
             title: "Успех",
-            text: "Ты понимаешь, что это пряжа, состоящая из нескольких переплетённых волокон. Похоже, она предназначена для вязания.",
+            text: "При внимательном осмотре ты замечаешь, что это пряжа из нескольких переплетённых волокон. Похоже, её использовали для вязания.",
             nextScene: "chapter1-chase-7",
           },
           {
             min: 20,
             max: 20,
             title: "Критический успех",
-            text: "Ты внимательно изучаешь пряжу и замечаешь, насколько равномерно скручены её мягкие волокна. Это качественная пряжа, предназначенная для вязания. Почему-то её цвет кажется тебе знакомым, хотя ты не можешь вспомнить, где видел его раньше.",
+            text: "ы внимательно изучаешь пряжу и замечаешь, насколько равномерно скручены её мягкие волокна. Это качественная пряжа, предназначенная для вязания. Её тёплый коричневый оттенок кажется тебе знакомым, хотя ты не можешь вспомнить почему.",
             nextScene: "chapter1-chase-7",
           },
         ],
       },
-
       audio: audio.music.persecution,
     },
-
     {
       id: "chapter1-chase-7",
       background: images.yarnWall,
@@ -745,9 +687,7 @@ export const firstChapter: ChapterData = {
       itemsToCollect: ["brown-yarn"],
       audio: audio.music.persecution,
       nextScene: "chapter1-ending",
-    },
-
-    // ============================================================
+    }, // ============================================================
     // WAIT
     // ============================================================
     {
@@ -816,17 +756,15 @@ export const firstChapter: ChapterData = {
         },
       ],
     },
-
     {
       id: "chapter1-yarn-wait-analysis",
       background: images.yarn,
       content: {
         type: "diceCheck",
-        title: "Восприятие",
+        title: "Анализ",
         description: "Ты поднимаешь нить и внимательно рассматриваешь её.",
-        skill: "Восприятие",
+        skill: "Анализ",
         difficulty: 12,
-        tag: "navigation",
         outcomes: [
           {
             min: 1,
@@ -839,29 +777,27 @@ export const firstChapter: ChapterData = {
             min: 2,
             max: 11,
             title: "Неудача",
-            text: "Нить выглядит обычной. Ты не можешь понять, как она связана с владельцем.",
+            text: "Нить кажется обычной. Её назначение и связь с незнакомцем остаются загадкой.",
             nextScene: "chapter1-wait-7",
           },
           {
             min: 12,
             max: 19,
             title: "Успех",
-            text: "Ты понимаешь, что это пряжа, состоящая из нескольких переплетённых волокон. Похоже, она предназначена для вязания.",
+            text: "При внимательном осмотре ты замечаешь, что это пряжа из нескольких переплетённых волокон. Похоже, её использовали для вязания.",
             nextScene: "chapter1-wait-7",
           },
           {
             min: 20,
             max: 20,
             title: "Критический успех",
-            text: "Ты внимательно изучаешь пряжу и замечаешь, насколько равномерно скручены её мягкие волокна. Это качественная пряжа, предназначенная для вязания. Почему-то её цвет кажется тебе знакомым, хотя ты не можешь вспомнить, где видел его раньше.",
+            text: "Ты внимательно изучаешь пряжу и замечаешь, насколько равномерно скручены её мягкие волокна. Это качественная пряжа, предназначенная для вязания. Её тёплый коричневый оттенок кажется тебе знакомым, хотя ты не можешь вспомнить почему.",
             nextScene: "chapter1-wait-7",
           },
         ],
       },
-
       audio: audio.music.shadow,
     },
-
     {
       id: "chapter1-wait-7",
       background: images.yarn,
@@ -873,16 +809,6 @@ export const firstChapter: ChapterData = {
       audio: audio.music.shadow,
       nextScene: "chapter1-ending",
     },
-    // {
-    //   id: "chapter1-wait-8",
-    //   background: images.corridorTracesFinal,
-    //   content: {
-    //     type: "text",
-    //     text: "Впереди снова видны небольшие следы.",
-    //   },
-    //   audio: audio.music.shadow,
-    //   nextScene: "chapter1-ending",
-    // },
 
     // ============================================================
     // THE ENDING
@@ -899,7 +825,6 @@ export const firstChapter: ChapterData = {
       autoTransitionToNextScene: true,
       nextScene: "chapter1-ending-2",
     },
-
     {
       id: "chapter1-ending-2",
       background: images.corridor,
@@ -914,7 +839,6 @@ export const firstChapter: ChapterData = {
       autoTransitionToNextScene: true,
       nextScene: "chapter1-ending-3",
     },
-
     {
       id: "chapter1-ending-3",
       background: images.corridor,
@@ -923,10 +847,6 @@ export const firstChapter: ChapterData = {
         text: "Внезапная вспышка яркого света ослепляет тебя.",
       },
       audio: audio.music.destruction,
-      // specialEffects: ["flash"],
-      // effectDelay: 1000,
-      // autoTransitionToNextScene: true,
-
       specialEffects: ["signal"],
       effectDelay: 0,
       showBackgroundOnly: true,

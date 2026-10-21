@@ -29,6 +29,7 @@ export interface DiceCheckContent {
   difficulty: number;
   outcomes: DiceOutcome[];
   tag?: CheckTag;
+  achievement?: GameAchievement;
 }
 
 export type SceneContent =
@@ -94,6 +95,13 @@ export type SpecialEffect =
   | "fade-in"
   | "impact"
   | "shimmer";
+
+export type GameAchievement =
+  | "keenEye"
+  | "runeKnowledge"
+  | "owlbearClues"
+  | "mi01Master"
+  | "dragonWeakness";
 
 export interface SceneData {
   id: string;

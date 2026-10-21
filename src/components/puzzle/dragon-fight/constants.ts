@@ -52,3 +52,9 @@ export const TEXTURES = {
 export const SCENE_KEYS = {
   arena: "arena",
 } as const;
+
+export const BATTLE_BONUSES = {
+  maxExtraPlayerHp: 2,
+  maxExtraOwlbearHp: 2,
+  damageMultiplier: 1.1,
+} as const;
