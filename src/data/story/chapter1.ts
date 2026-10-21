@@ -315,6 +315,7 @@ export const firstChapter: ChapterData = {
           "Ты приседаешь рядом с пьедесталом и внимательно изучаешь след. Пыль, царапины и потёртости могут подсказать, что здесь происходило.",
         skill: "Анализ",
         difficulty: 12,
+        achievement: "owlbearClues",
         outcomes: [
           {
             min: 1,
