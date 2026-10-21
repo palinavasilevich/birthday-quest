@@ -102,7 +102,6 @@ export const finalChapter: ChapterData = {
       },
       audio: audio.music.forest,
       sfx: audio.sfx.dragonRoar,
-      // Медленный наезд — тень дракона раскрывается игроку постепенно.
       specialEffects: ["rumble", "vignette-pulse"],
 
       nextScene: "final-battlefield-4",

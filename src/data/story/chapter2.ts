@@ -310,7 +310,7 @@ export const secondChapter: ChapterData = {
             text: "> CORE MODULES: 03",
           },
           {
-            text: "> UNSIGNED ................. FAILED",
+            text: "> UNSIGNED ............... FAILED",
             type: "error",
           },
           {
@@ -318,7 +318,7 @@ export const secondChapter: ChapterData = {
             type: "error",
           },
           {
-            text: "> POLYMORPH ................. FAILED",
+            text: "> POLYMORPH .............. FAILED",
             type: "error",
           },
           {

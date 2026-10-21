@@ -90,13 +90,13 @@ export function DiceCheck({ content }: DiceCheckProps) {
     resolveRoll(result);
   };
 
-  const resetCheck = () => {
-    setMode(null);
-    setManualRoll("");
-    setRoll(null);
-    setOutcome(null);
-    setIsSettled(false);
-  };
+  // const resetCheck = () => {
+  //   setMode(null);
+  //   setManualRoll("");
+  //   setRoll(null);
+  //   setOutcome(null);
+  //   setIsSettled(false);
+  // };
 
   return (
     <div className="mx-auto mt-8 w-full max-w-xl space-y-6 text-center">
