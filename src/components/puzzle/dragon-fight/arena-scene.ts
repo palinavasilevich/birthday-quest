@@ -17,6 +17,7 @@ import type {
   GameHooks,
   GameStats,
 } from "./types";
+import { useGameStore } from "@/store/game-store";
 
 const { width: W, height: H, padding: PAD } = WORLD;
 
@@ -30,6 +31,9 @@ export class ArenaScene extends Phaser.Scene {
   private mi01StunUsed = false;
   private mi01HealUsed = false;
   private mi01AvailableAt = 0;
+
+  private mi01State: "idle" | "interrupt" | "heal" | "dropping-medkit" = "idle";
+  private medkitDropPending = false;
 
   private player!: Phaser.Physics.Arcade.Sprite;
   private dragon!: Phaser.Physics.Arcade.Sprite;
@@ -128,6 +132,11 @@ export class ArenaScene extends Phaser.Scene {
 
   private gameOver = false;
   private lastStats: GameStats | null = null;
+
+  private medkit!: Phaser.GameObjects.Container;
+  private medkitSpawned = false;
+  private medkitCollected = false;
+  private medkitLanded = false;
 
   constructor(hooks: GameHooks, bonuses: BattleBonuses) {
     super(SCENE_KEYS.arena);
@@ -253,6 +262,21 @@ export class ArenaScene extends Phaser.Scene {
       .setScale(0.075)
       .setDepth(12)
       .setVisible(false);
+
+    // Аптечка
+    const medkitBody = this.add
+      .rectangle(0, 0, 24, 28, 0xf2eadb)
+      .setStrokeStyle(2, 0x463b32);
+
+    const medkitCrossVertical = this.add.rectangle(0, 0, 5, 16, 0xc83b35);
+
+    const medkitCrossHorizontal = this.add.rectangle(0, 0, 16, 5, 0xc83b35);
+
+    this.medkit = this.add
+      .container(0, 0, [medkitBody, medkitCrossVertical, medkitCrossHorizontal])
+      .setDepth(13)
+      .setVisible(false);
+
     // -------------------------------------------------------------
     // Снаряды
     // -------------------------------------------------------------
@@ -372,6 +396,12 @@ export class ArenaScene extends Phaser.Scene {
 
     this.gameOver = false;
     this.lastStats = null;
+
+    this.mi01State = "idle";
+    this.medkitDropPending = false;
+    this.medkitSpawned = false;
+    this.medkitCollected = false;
+    this.medkitLanded = false;
   }
 
   // ===============================================================
@@ -447,6 +477,7 @@ export class ArenaScene extends Phaser.Scene {
   override update(time: number, delta: number): void {
     if (!this.gameOver) {
       this.updatePlayer(time, delta);
+      this.updateMedkitPickup();
 
       // Визуальное направление дракона отдельно
       // от математических углов атак.
@@ -736,6 +767,10 @@ export class ArenaScene extends Phaser.Scene {
 
     this.playerHp -= damage;
 
+    if (this.playerHp <= 2 && this.playerHp > 0) {
+      this.dropMedkit();
+    }
+
     this.invulnUntil = this.time.now + PLAYER.iframes;
 
     this.cameras.main.shake(140, 0.008);
@@ -763,6 +798,8 @@ export class ArenaScene extends Phaser.Scene {
 
   private animateMi01Interrupt(): void {
     if (!this.mi01?.active || !this.dragon?.active) return;
+
+    this.mi01State = "interrupt";
 
     // Если предыдущая анимация ещё не завершилась,
     // прекращаем её перед новым запуском.
@@ -849,7 +886,11 @@ export class ArenaScene extends Phaser.Scene {
               rotation: this.mi01.rotation + Math.PI,
               duration: 300,
               ease: "Cubic.In",
-              onComplete: () => this.mi01.setVisible(false),
+              onComplete: () => {
+                this.mi01.setVisible(false);
+                this.mi01State = "idle";
+                this.processPendingMedkit();
+              },
             });
           },
         });
@@ -868,6 +909,7 @@ export class ArenaScene extends Phaser.Scene {
 
     if (
       !this.bonuses.mi01InterruptAvailable ||
+      this.mi01State !== "idle" ||
       !this.owlbearSafe ||
       this.time.now < this.mi01AvailableAt ||
       this.mi01StunUsed ||
@@ -900,6 +942,155 @@ export class ArenaScene extends Phaser.Scene {
     return true;
   }
 
+  private dropMedkit(): void {
+    if (this.medkitSpawned || this.medkitDropPending || this.gameOver) {
+      return;
+    }
+
+    const hasMedkitAchievement = useGameStore
+      .getState()
+      .achievements.includes("medkit");
+
+    if (
+      !hasMedkitAchievement ||
+      this.medkitSpawned ||
+      this.medkitDropPending ||
+      this.gameOver
+    ) {
+      return;
+    }
+
+    this.medkitDropPending = true;
+    this.processPendingMedkit();
+  }
+
+  private processPendingMedkit(): void {
+    if (!this.medkitDropPending || this.mi01State !== "idle" || this.gameOver) {
+      return;
+    }
+
+    this.medkitDropPending = false;
+    this.startMedkitDrop();
+  }
+
+  private updateMedkitPickup(): void {
+    if (
+      !this.medkitSpawned ||
+      this.medkitCollected ||
+      !this.medkit.visible ||
+      this.gameOver
+    ) {
+      return;
+    }
+
+    const distance = Phaser.Math.Distance.Between(
+      this.player.x,
+      this.player.y,
+      this.medkit.x,
+      this.medkit.y,
+    );
+
+    if (distance > 30) return;
+
+    this.medkitCollected = true;
+
+    this.playerHp = Math.min(
+      this.playerHp + 3,
+      PLAYER.maxHp + this.bonuses.extraPlayerHp,
+    );
+
+    this.medkit.setVisible(false);
+
+    this.spawnBurst(this.player.x, this.player.y, 0xffd34d, 12);
+
+    this.cameras.main.flash(180, 100, 220, 130);
+
+    this.hooks.onAnnounce("Аптечка подобрана: +2 HP!");
+
+    this.pushStats();
+  }
+
+  private startMedkitDrop(): void {
+    if (this.gameOver || !this.mi01?.active || !this.medkit?.active) {
+      return;
+    }
+
+    this.mi01State = "dropping-medkit";
+    this.medkitSpawned = true;
+    this.medkitLanded = false;
+
+    const targetX = Phaser.Math.Clamp(
+      this.player.x + Phaser.Math.Between(-100, 100),
+      PAD + 35,
+      W - PAD - 35,
+    );
+
+    const targetY = Phaser.Math.Clamp(
+      this.player.y - 100,
+      PAD + 35,
+      H - PAD - 35,
+    );
+
+    this.mi01
+      .setPosition(this.player.x - 65, this.player.y - 115)
+      .setRotation(0)
+      .setAlpha(1)
+      .setVisible(true);
+
+    this.medkit
+      .setPosition(this.mi01.x, this.mi01.y)
+      .setScale(0.65)
+      .setAlpha(1)
+      .setVisible(true);
+
+    this.hooks.onAnnounce("MI-01 сбрасывает аптечку!");
+
+    this.tweens.add({
+      targets: this.mi01,
+      x: targetX,
+      y: targetY - 45,
+      duration: 650,
+      ease: "Sine.easeOut",
+
+      onUpdate: () => {
+        this.medkit.setPosition(this.mi01.x, this.mi01.y + 20);
+      },
+
+      onComplete: () => {
+        if (!this.mi01.active || !this.medkit.active) return;
+
+        this.tweens.add({
+          targets: this.medkit,
+          x: targetX,
+          y: targetY,
+          scale: 1,
+          duration: 350,
+          ease: "Bounce.Out",
+          onComplete: () => {
+            if (!this.gameOver && this.medkit.active) {
+              this.medkitLanded = true;
+            }
+          },
+        });
+
+        this.tweens.add({
+          targets: this.mi01,
+          x: targetX + 100,
+          y: targetY - 100,
+          alpha: 0,
+          duration: 450,
+          ease: "Cubic.In",
+
+          onComplete: () => {
+            this.mi01.setVisible(false);
+            this.mi01State = "idle";
+            this.processPendingMedkit();
+          },
+        });
+      },
+    });
+  }
+
   /**
    * Второе вмешательство MI-01: если после оглушения дракона
    * у Медвесыча остаётся меньше 2 HP, жук один раз лечит его.
@@ -911,6 +1102,7 @@ export class ArenaScene extends Phaser.Scene {
   private tryMi01Heal(): void {
     if (
       !this.bonuses.mi01HealOwlbearAvailable ||
+      this.mi01State !== "idle" ||
       !this.owlbearSafe ||
       this.mi01HealUsed ||
       this.owlbearHp >= 2 ||
@@ -949,6 +1141,8 @@ export class ArenaScene extends Phaser.Scene {
   private animateMi01Heal(): void {
     if (!this.mi01?.active || !this.owlbear?.active) return;
 
+    this.mi01State = "heal";
+
     this.tweens.killTweensOf(this.mi01);
 
     this.mi01
@@ -976,7 +1170,11 @@ export class ArenaScene extends Phaser.Scene {
           rotation: Math.PI,
           duration: 360,
           ease: "Cubic.In",
-          onComplete: () => this.mi01.setVisible(false),
+          onComplete: () => {
+            this.mi01.setVisible(false);
+            this.mi01State = "idle";
+            this.processPendingMedkit();
+          },
         });
       },
     });
@@ -2282,6 +2480,13 @@ export class ArenaScene extends Phaser.Scene {
 
   private finish(won: boolean, reason: "player" | "owlbear" = "player"): void {
     this.gameOver = true;
+
+    this.medkitDropPending = false;
+    this.mi01State = "idle";
+    this.tweens.killTweensOf(this.mi01);
+    this.tweens.killTweensOf(this.medkit);
+    this.mi01.setVisible(false);
+    this.medkit.setVisible(false);
 
     this.attackQueue = [];
     this.dragonGuardUntil = 0;

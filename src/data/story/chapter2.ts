@@ -422,7 +422,7 @@ export const secondChapter: ChapterData = {
           "Ты решаешь внимательнее осмотреть стол. Возможно, среди бумаг осталось что-то незамеченное.",
         skill: "Анализ",
         difficulty: 12,
-
+        achievement: "medkit",
         outcomes: [
           {
             min: 1,
@@ -546,7 +546,7 @@ export const secondChapter: ChapterData = {
       background: images.workshopTraces,
       content: {
         type: "text",
-        text: "Ты уже собираешься закрыть коробку, но замечаешь два крошечных отпечатка в пыли у самого края стола.\n\nОни расположены рядом, словно кто-то приподнялся на задних лапах и потянулся к столешнице.",
+        text: "Ты уже собираешься закрыть коробку, но замечаешь два крошечных отпечатка в пыли у самого края стола.",
       },
       audio: audio.music.table,
       nextScene: "chapter2-open-3",
@@ -577,14 +577,14 @@ export const secondChapter: ChapterData = {
             max: 1,
             title: "Критический провал",
             text: "Ты наклоняешься слишком низко, и твоё дыхание поднимает облачко пыли. Отпечатки становятся ещё менее различимыми. Куда они вёли, теперь не узнать.",
-            nextScene: "chapter2-open-4",
+            nextScene: "chapter2-open-3-fail",
           },
           {
             min: 2,
             max: 10,
             title: "Неудача",
             text: "Ты различаешь следы на столе и полу, но не можешь восстановить путь их обладателя. Похоже, кто-то забирался на стол и спускался обратно, однако понять, куда он ушёл потом, не получается.",
-            nextScene: "chapter2-open-4",
+            nextScene: "chapter2-open-3-fail",
           },
           {
             min: 11,
@@ -605,35 +605,24 @@ export const secondChapter: ChapterData = {
       audio: audio.music.table,
     },
     {
-      id: "chapter2-open-3-hint",
+      id: "chapter2-open-3-fail",
       background: images.workshopTraces,
       content: {
         type: "text",
         text: "Ты ещё раз смотришь на следы, а затем переводишь взгляд на коробку в своих руках.\n\nТеперь ты знаешь, что в мастерской недавно кто-то побывал. Но куда он направился дальше — пока остаётся загадкой.",
       },
       audio: audio.music.table,
-      nextScene: "chapter2-open-4",
+      nextScene: "chapter2-open-3-fail-2",
     },
     {
-      id: "chapter2-open-4",
+      id: "chapter2-open-3-fail-2",
       background: images.workshopTraces,
       content: {
         type: "text",
-        text: "Ты выпрямляешься. Коробка по-прежнему у тебя в руках.\n\nМожно уйти прямо сейчас — или остаться и посмотреть, что будет дальше.",
+        text: "Больше ничего выяснить не удаётся. Ты вздыхаешь, кладёшь коробку в сумку и выходишь из мастерской.",
       },
       audio: audio.music.table,
-      actions: [
-        {
-          id: "leave-now",
-          label: "Pick up box and leave",
-          nextScene: "chapter2-transition-back",
-        },
-        {
-          id: "wait-here",
-          label: "Wait",
-          nextScene: "chapter2-wait",
-        },
-      ],
+      nextScene: "chapter2-transition-back",
     },
     {
       id: "chapter2-open-3-hint",

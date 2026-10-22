@@ -102,7 +102,8 @@ export type GameAchievement =
   | "owlbearClues"
   | "mi01Master"
   | "dragonWeakness"
-  | "threadFinder";
+  | "threadFinder"
+  | "medkit";
 
 export interface SceneData {
   id: string;
