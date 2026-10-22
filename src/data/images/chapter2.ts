@@ -15,6 +15,7 @@ export const images = {
   box: "/images/chapter2/box.png",
   contentOfBox: "/images/chapter2/content-of-box-2.png",
   workshopTraces: "/images/chapter2/workshop-traces.png",
+  workshopTracesTable: "/images/chapter2/workshop-traces-table.png",
   wait: "/images/chapter2/workshop-screen-3.png",
   workshopOutside: "/images/chapter2/workshop-outside.png",
   forest: "/images/chapter2/forest.png",

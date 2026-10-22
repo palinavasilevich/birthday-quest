@@ -543,7 +543,7 @@ export const secondChapter: ChapterData = {
 
     {
       id: "chapter2-open-2",
-      background: images.workshopTraces,
+      background: images.workshopTracesTable,
       content: {
         type: "text",
         text: "Ты уже собираешься закрыть коробку, но замечаешь два крошечных отпечатка в пыли у самого края стола.",
@@ -556,7 +556,7 @@ export const secondChapter: ChapterData = {
       background: images.workshopTraces,
       content: {
         type: "text",
-        text: "Ты наклоняешься и заглядываешь под стол. На полу виднеются ещё несколько отпечатков. Они уходят в глубину мастерской.",
+        text: "Ты наклоняешься и заглядываешь под стол. На полу виднеются ещё несколько отпечатков. Они уходят в глубь мастерской.",
       },
       audio: audio.music.table,
       nextScene: "chapter2-trace-check",
