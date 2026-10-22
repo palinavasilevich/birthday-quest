@@ -1,3 +1,4 @@
+import type { BattleBonuses } from "@/components/puzzle/dragon-fight/types";
 import type { GameAchievement } from "@/types/game";
 import { create } from "zustand";
 // import { persist } from "zustand/middleware";
@@ -21,12 +22,7 @@ const SCENE_STORY_EVENTS: Partial<Record<string, StoryEvent>> = {
   "chapter2-workshop-3": "workshopEntered",
 };
 
-export interface BattleBonuses {
-  extraPlayerHp: number;
-  extraOwlbearHp: number;
-  damageMultiplier: number;
-  mi01InterruptAvailable: boolean;
-}
+export type RuneHintLevel = "none" | "sound" | "first-rune";
 
 interface GameState {
   currentSceneId: string;
@@ -42,6 +38,9 @@ interface GameState {
   isSoundEnabled: boolean;
   isSfxPlaying: boolean;
   itemNotification: string | null;
+
+  runeHintLevel: RuneHintLevel;
+  setRuneHintLevel: (level: RuneHintLevel) => void;
 
   setScene: (sceneId: string) => void;
   addItem: (itemId: string) => void;
@@ -75,19 +74,24 @@ export const useGameStore = create<GameState>()(
     storyTimestamps: {},
     // currentSceneId: "final-victory",
     // currentSceneId: "chapter2-code-puzzle",
-    currentSceneId: "chapter2-open",
+    currentSceneId: "chapter1-perception-check",
     // currentSceneId: "chapter1-forest",
     completedPuzzles: [],
     completedActions: [],
     inventory: [],
-    achievements: ["mi01Master"],
+    achievements: [],
     isSoundEnabled: true,
     isSfxPlaying: false,
     itemNotification: null,
 
+    runeHintLevel: "none",
+
+    setRuneHintLevel: (level) => set({ runeHintLevel: level }),
+
     startGame: () =>
       set({
         gameStartedAt: Date.now(),
+        runeHintLevel: "none",
       }),
 
     markStoryEvent: (event) =>
@@ -156,7 +160,7 @@ export const useGameStore = create<GameState>()(
       let extraPlayerHp = 0;
       let extraOwlbearHp = 0;
       let damageMultiplier = 1;
-      let mi01InterruptAvailable = true;
+      let mi01InterruptAvailable = false;
 
       if (achievements.includes("keenEye")) {
         extraPlayerHp += 1;
@@ -164,10 +168,6 @@ export const useGameStore = create<GameState>()(
 
       if (achievements.includes("owlbearClues")) {
         extraOwlbearHp += 1;
-      }
-
-      if (achievements.includes("runeKnowledge")) {
-        extraPlayerHp += 1;
       }
 
       if (achievements.includes("dragonWeakness")) {
@@ -183,6 +183,7 @@ export const useGameStore = create<GameState>()(
         extraOwlbearHp: Math.min(extraOwlbearHp, 2),
         damageMultiplier,
         mi01InterruptAvailable,
+        mi01HealOwlbearAvailable: achievements.includes("threadFinder"),
       };
     },
 

@@ -81,6 +81,7 @@ type PuzzlePhase = "discovery" | "round";
 export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
   const setScene = useGameStore((state) => state.setScene);
   const completePuzzle = useGameStore((state) => state.completePuzzle);
+  const runeHintLevel = useGameStore((state) => state.runeHintLevel);
 
   const [phase, setPhase] = useState<PuzzlePhase>("discovery");
 
@@ -122,6 +123,10 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
    */
 
   useEffect(() => {
+    if (runeHintLevel !== "sound") {
+      return;
+    }
+
     let cancelled = false;
 
     const startIntro = async () => {
@@ -238,7 +243,12 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
    */
 
   const handleDiscoveryRune = async (rune: Rune) => {
-    if (!introFinished || phase !== "discovery" || isPlaying || isSolved) {
+    if (
+      (!introFinished && runeHintLevel === "sound") ||
+      phase !== "discovery" ||
+      isPlaying ||
+      isSolved
+    ) {
       return;
     }
 
@@ -304,6 +314,20 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     setIsPlaying(true);
 
     try {
+      // if (round === 0 && fromIndex === 0 && runeHintLevel === "sound") {
+      //   const firstNote = currentMelody[0];
+
+      //   if (firstNote) {
+      //     setActiveRune(NOTE_TO_RUNE[firstNote.note] ?? null);
+      //     await playMelodyNote(firstNote.note, firstNote.duration);
+      //     setActiveRune(null);
+
+      //     await new Promise<void>((resolve) => {
+      //       window.setTimeout(resolve, 500);
+      //     });
+      //   }
+      // }
+
       for (let index = fromIndex; index < currentMelody.length; index += 1) {
         const item = currentMelody[index];
 
@@ -385,7 +409,11 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
       ? NOTE_TO_RUNE[expectedNote.note]
       : undefined;
 
-    const isCorrectRune = rune.id === expectedRune;
+    const isFirstRuneHint =
+      runeHintLevel === "first-rune" && round === 0 && sequence.length === 0;
+
+    const isCorrectRune =
+      rune.id === expectedRune || (isFirstRuneHint && rune.id === "quen");
 
     /*
      * ----------------------------------------------------------
@@ -532,9 +560,21 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     }
 
     if (phase === "discovery") {
-      if (!introFinished) {
+      if (runeHintLevel === "first-rune") {
+        return "Теперь ты знаешь, с какого знака нужно начинать. Коснись рун и послушай, что они скажут.";
+      }
+
+      if (!introFinished && runeHintLevel !== "none") {
         return "Руна откликается на прикосновение и начинает едва заметно светиться. Звук эхом разносится по лесу...";
       }
+
+      // if (runeHintLevel === "first-rune") {
+      //   return "Ты узнаёшь QUEN. Кажется, именно с этого знака начинается последовательность.";
+      // }
+
+      // if (runeHintLevel === "sound") {
+      //   return "Прислушайся к первому звуку. Постарайся запомнить его.";
+      // }
 
       if (discoveredRunes.length === 0) {
         return "Коснись рун и послушай, что они скажут.";
@@ -656,16 +696,16 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
       <div className="grid grid-cols-5 gap-2 sm:gap-4">
         {RUNES.map((rune) => {
           const isActive = activeRune === rune.id;
-
           const isDiscovered = discoveredRunes.includes(rune.id);
-
           const isMistakeRune = isMistake && mistakeRune === rune.id;
 
           return (
             <button
               key={rune.id}
               type="button"
-              disabled={isPlaying || isSolved}
+              disabled={
+                isPlaying || isSolved || (isDiscovered && phase === "discovery")
+              }
               onClick={() =>
                 phase === "discovery"
                   ? void handleDiscoveryRune(rune)
@@ -707,22 +747,24 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
                       `
                       : isDiscovered && phase === "discovery"
                         ? `
-                          border-[#ff9b00]/80
+                          border-[#ff9b00]
                           bg-[#ff9b00]/10
                         `
                         : `
-                          border-[#ff9b00]/40
+                          border-[#66420b]/40
                           text-[#ff9b00]
                         `
                 }
+
+                ${rune.id === "quen" && phase === "discovery" && runeHintLevel === "first-rune" ? "border-[#ff9b00] bg-[#ff9b00]/10" : ""}
 
                 hover:border-[#ff9b00]
                 hover:bg-[#ff9b00]/10
 
                 focus-visible:border-[#ff9b00]
                 focus-visible:shadow-[0_0_20px_rgba(255,155,0,0.35)]
-
-                disabled:cursor-default
+                 disabled:cursor-not-allowed
+                
               `}
             >
               <img
@@ -852,7 +894,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
             text-white/55
             transition-colors
             hover:text-[#ff9b00]
-            disabled:cursor-default
+            disabled:cursor-not-allowed
             disabled:opacity-30
           "
         >

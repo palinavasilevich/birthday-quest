@@ -160,6 +160,7 @@ export const firstChapter: ChapterData = {
             max: 1,
             title: "Критический провал",
             text: "Ты слишком увлекаешься поисками и случайно сдвигаешь камешек. Он падает тебе на ногу. От неожиданности ты отступаешь, так и не разобравшись, что там может быть.",
+            runeHintLevel: "none",
             nextScene: "chapter1-signs-fail",
           },
           {
@@ -167,6 +168,7 @@ export const firstChapter: ChapterData = {
             max: 11,
             title: "Неудача",
             text: "Ты осматриваешь стену, но ничего необычного обнаружить не удаётся.",
+            runeHintLevel: "none",
             nextScene: "chapter1-signs-fail",
           },
           {
@@ -174,13 +176,15 @@ export const firstChapter: ChapterData = {
             max: 19,
             title: "Успех",
             text: "У самого основания стены ты замечаешь свежие царапины. Под слоем мха проступает знак QUEN. Кто-то оставил его здесь совсем недавно.",
-            nextScene: "chapter1-signs-success",
+            runeHintLevel: "first-rune",
+            nextScene: "chapter1-signs-success-2",
           },
           {
             min: 20,
             max: 20,
             title: "Критический успех",
             text: "Ты замечаешь QUEN у самого основания стены. Царапины свежие и расположены необычно низко. Похоже, тот, кто оставил их, хотел подсказать, с какого знака начать.",
+            runeHintLevel: "sound",
             nextScene: "chapter1-signs-success",
           },
         ],
@@ -192,7 +196,20 @@ export const firstChapter: ChapterData = {
       background: images.wallWithSymbolsHint,
       content: {
         type: "text",
-        text: "Ты подходишь ближе и осторожно касаешься знака.",
+        text: "Ты подходишь ближе и осторожно касаешься знака QUEN.",
+      },
+      audio: audio.music.forest,
+      autoTransitionDelay: 1000,
+      autoTransitionToNextScene: true,
+      nextScene: "chapter1-rune-puzzle",
+    },
+
+    {
+      id: "chapter1-signs-success-2",
+      background: images.wallWithSymbolsHint,
+      content: {
+        type: "text",
+        text: "Ты подходишь ближе к стене.",
       },
       audio: audio.music.forest,
       autoTransitionDelay: 1000,
@@ -210,7 +227,8 @@ export const firstChapter: ChapterData = {
       autoTransitionDelay: 1000,
       autoTransitionToNextScene: true,
       nextScene: "chapter1-rune-puzzle",
-    }, // ============================================================
+    },
+    // ============================================================
     // THE SIGNS
     // ============================================================
     {
@@ -225,7 +243,8 @@ export const firstChapter: ChapterData = {
         type: "runes",
         nextScene: "chapter1-door",
       },
-    }, // ============================================================
+    },
+    // ============================================================
     // THE DOOR
     // ============================================================
     {
@@ -645,6 +664,7 @@ export const firstChapter: ChapterData = {
         description: "Ты поднимаешь нить и внимательно рассматриваешь её.",
         skill: "Анализ",
         difficulty: 12,
+        achievement: "threadFinder",
         outcomes: [
           {
             min: 1,
@@ -766,6 +786,7 @@ export const firstChapter: ChapterData = {
         description: "Ты поднимаешь нить и внимательно рассматриваешь её.",
         skill: "Анализ",
         difficulty: 12,
+        achievement: "threadFinder",
         outcomes: [
           {
             min: 1,

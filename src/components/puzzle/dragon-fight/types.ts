@@ -22,6 +22,7 @@ export interface BattleBonuses {
   extraOwlbearHp: number;
   damageMultiplier: number;
   mi01InterruptAvailable: boolean;
+  mi01HealOwlbearAvailable: boolean;
 }
 
 export interface GameStats {

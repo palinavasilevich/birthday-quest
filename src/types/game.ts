@@ -19,6 +19,7 @@ export interface DiceOutcome {
   title: string;
   text: string;
   nextScene: string;
+  runeHintLevel?: "none" | "sound" | "first-rune";
 }
 
 export interface DiceCheckContent {
@@ -98,10 +99,10 @@ export type SpecialEffect =
 
 export type GameAchievement =
   | "keenEye"
-  | "runeKnowledge"
   | "owlbearClues"
   | "mi01Master"
-  | "dragonWeakness";
+  | "dragonWeakness"
+  | "threadFinder";
 
 export interface SceneData {
   id: string;

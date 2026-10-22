@@ -19,6 +19,7 @@ export function DiceCheck({ content }: DiceCheckProps) {
   const setScene = useGameStore((state) => state.setScene);
   const inventory = useGameStore((state) => state.inventory);
   const unlockAchievement = useGameStore((state) => state.unlockAchievement);
+  const setRuneHintLevel = useGameStore((state) => state.setRuneHintLevel);
 
   const [mode, setMode] = useState<RollMode | null>(null);
   const [manualRoll, setManualRoll] = useState("");
@@ -66,6 +67,8 @@ export function DiceCheck({ content }: DiceCheckProps) {
       });
       return;
     }
+
+    setRuneHintLevel(resultOutcome.runeHintLevel ?? "none");
 
     const isNaturalCritical = result === 1 || result === 20;
     const isSuccess = total >= content.difficulty;

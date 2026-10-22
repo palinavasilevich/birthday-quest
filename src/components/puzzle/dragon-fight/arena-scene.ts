@@ -904,12 +904,14 @@ export class ArenaScene extends Phaser.Scene {
    * Второе вмешательство MI-01: если после оглушения дракона
    * у Медвесыча остаётся меньше 2 HP, жук один раз лечит его.
    */
+  /**
+   * MI-01 один раз за бой лечит Медвесыча,
+   * если игрок успешно проанализировал нитку во второй главе.
+   */
   private tryMi01Heal(): void {
     if (
-      !this.bonuses.mi01InterruptAvailable ||
+      !this.bonuses.mi01HealOwlbearAvailable ||
       !this.owlbearSafe ||
-      this.time.now < this.mi01AvailableAt ||
-      !this.mi01StunUsed ||
       this.mi01HealUsed ||
       this.owlbearHp >= 2 ||
       this.owlbearHp <= 0 ||
@@ -919,25 +921,30 @@ export class ArenaScene extends Phaser.Scene {
     }
 
     this.mi01HealUsed = true;
+
     this.owlbearHp = Math.min(this.owlbearMaxHp, this.owlbearHp + 3);
+
     this.owlbearNeedsHelp = false;
     this.owlbearAidProgress = 0;
     this.owlbearAidAnnounced = false;
+
     this.owlbearInvulnerableUntil = this.time.now + 2_000;
 
     this.owlbear.clearTint();
     this.owlbear.setTint(0xffd59a);
 
     this.animateMi01Heal();
+
     this.spawnBurst(this.owlbear.x, this.owlbear.y, 0xe8c27a, 18);
+
     this.cameras.main.flash(180, 232, 194, 122);
 
     this.hooks.onAnnounce(
       `MI-01 лечит Медвесыча! ${this.owlbearHp}/${this.owlbearMaxHp} HP`,
     );
+
     this.pushStats(true);
   }
-
   /** Жук подлетает к Медвесычу и оставляет золотистый лечебный импульс. */
   private animateMi01Heal(): void {
     if (!this.mi01?.active || !this.owlbear?.active) return;
