@@ -385,7 +385,7 @@ export const secondChapter: ChapterData = {
       background: images.drawing,
       content: {
         type: "text",
-        text: "Стол завален чертежами.\n\nСреди них снова и снова встречается один и тот же силуэт.",
+        text: "Стол завален чертежами и заметками.\n\nСреди них снова и снова встречается один и тот же силуэт.",
       },
       audio: audio.music.workshop,
       nextScene: "chapter2-table-2",
@@ -397,6 +397,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Небольшое механическое существо.\n\nДве широкие пластины на спине, прозрачные крылья и шесть тонких лап.",
       },
+
       audio: audio.music.workshop,
       nextScene: "chapter2-table-3",
     },
@@ -405,91 +406,118 @@ export const secondChapter: ChapterData = {
       background: images.drawing,
       content: {
         type: "text",
-        text: "Внутри корпуса — шестерни, шарниры и десятки мелких деталей.\n\nКаждый механизм прорисован до последнего винта.",
+        text: "Ты рассматриваешь устройство его корпуса.\n\nШестерни, шарниры и десятки крошечных деталей соединены в сложный механизм.",
       },
       audio: audio.music.workshop,
-      nextScene: "chapter2-table-4",
-    },
-    {
-      id: "chapter2-table-4",
-      background: images.knittingPattern,
-      content: {
-        type: "text",
-        text: "Ты переворачиваешь последний лист.\n\nПод ним обнаруживается ещё одна схема.",
-      },
-      audio: audio.music.table,
-      nextScene: "chapter2-table-5",
-    },
-    {
-      id: "chapter2-table-5",
-      background: images.knittingPattern,
-      content: {
-        type: "text",
-        text: "Но эта схема совсем другая.\n\nЗдесь нет шестерён и механизмов — только простые линии.\n\nМаленькая фигура с круглыми ушами и четырьмя лапами.",
-      },
-      audio: audio.music.table,
       nextScene: "chapter2-pattern-check",
     },
 
     {
       id: "chapter2-pattern-check",
-      background: images.knittingPattern,
+      background: images.drawing,
       content: {
         type: "diceCheck",
         title: "Анализ",
         description:
-          "Ты внимательно изучаешь рисунок. Простые линии складываются в маленькую фигуру, но почему-то она кажется тебе знакомой.",
+          "Ты решаешь внимательнее осмотреть стол. Возможно, среди бумаг осталось что-то незамеченное.",
         skill: "Анализ",
         difficulty: 12,
+
         outcomes: [
           {
             min: 1,
             max: 1,
             title: "Критический провал",
-            text: "Ты долго всматриваешься в рисунок, пытаясь найти скрытый смысл. Но чем дольше смотришь, тем меньше понимаешь. В конце концов ты решаешь, что это всего лишь схема для вязания.",
-            nextScene: "chapter2-table-6",
+            text: "Ты перебираешь чертежи, переворачиваешь листы и заглядываешь под них. Но чем дольше ищешь, тем сильнее путаешься в деталях.",
+            nextScene: "chapter2-table-7",
           },
           {
             min: 2,
             max: 11,
             title: "Неудача",
-            text: "Ты замечаешь, что линии образуют силуэт небольшого существа. Однако понять, почему кто-то оставил этот рисунок среди чертежей механизмов, не удаётся.",
-            nextScene: "chapter2-table-6",
+            text: "Ты внимательно изучаешь чертежи, но не находишь ничего необычного. Среди множества схем и заметок трудно понять, что здесь действительно важно.",
+            nextScene: "chapter2-table-7",
           },
           {
             min: 12,
             max: 19,
             title: "Успех",
-            text: "Ты замечаешь детали, которые раньше ускользали от внимания: круглые уши, короткие лапы и компактное туловище. Фигура напоминает маленькое существо, чьи следы ты видел в лесу.",
-            nextScene: "chapter2-table-6",
+            text: "Под стопкой чертежей ты обнаруживаешь ещё одну схему.",
+            nextScene: "chapter2-table-yarn-found",
           },
           {
             min: 20,
             max: 20,
             title: "Критический успех",
-            text: "Теперь ты видишь сходство совершенно ясно. Пропорции фигуры, округлые уши и короткие лапы напоминают того, кто оставил маленькие следы в лесу и у пьедестала.",
-            nextScene: "chapter2-table-6",
+            text: "Под стопкой чертежей ты обнаруживаешь ещё одну схему.",
+            nextScene: "chapter2-table-traces-found",
           },
         ],
       },
-      audio: audio.music.table,
+      audio: audio.music.workshop,
     },
+
     {
-      id: "chapter2-table-6",
-      background: images.knittingPatternYarn,
+      id: "chapter2-table-yarn-found",
+      background: images.knittingPattern,
       content: {
         type: "text",
-        text: "А рядом со схемой лежит клубок.\n\nТого же тёплого коричневого цвета, что и нитка у тебя в кармане.",
+        text: "Но эта схема совсем другая.\n\nЗдесь нет сложных механизнов — только простые линии.\n\nНа ней изображено маленькое существо с круглыми ушами и короткими лапами.",
+      },
+      audio: audio.music.table,
+      nextScene: "chapter2-table-found-2",
+    },
+
+    {
+      id: "chapter2-table-found-2",
+      background: images.knittingPattern,
+      content: {
+        type: "text",
+        text: "Ты внимательно изучаешь рисунок. Простые линии складываются в маленькую фигуру, которая почему-то она кажется тебе знакомой.",
       },
       audio: audio.music.table,
       nextScene: "chapter2-table-7",
     },
+
+    {
+      id: "chapter2-table-traces-found",
+      background: images.knittingPattern,
+      content: {
+        type: "text",
+        text: "Но эта схема совсем другая.\n\nЗдесь нет сложных механизнов — только простые линии.\n\nНа ней изображено маленькое существо с круглыми ушами и короткими лапами.",
+      },
+      audio: audio.music.table,
+      nextScene: "chapter2-table-traces-found-2",
+    },
+
+    {
+      id: "chapter2-table-traces-found-2",
+      background: images.knittingPattern,
+      content: {
+        type: "text",
+        text: "Ты внимательно изучаешь рисунок. Простые линии складываются в маленькую фигуру, которая почему-то она кажется тебе знакомой.",
+      },
+      audio: audio.music.table,
+      nextScene: "chapter2-table-traces-found-3",
+    },
+
+    {
+      id: "chapter2-table-traces-found-3",
+      background: images.knittingPatternYarn,
+      content: {
+        type: "text",
+        text: "Рядом со схемой ты видишь клубок ниток.\n\nТого же тёплого коричневого цвета, что и нитка у тебя в кармане.",
+      },
+      audio: audio.music.table,
+      nextScene: "chapter2-table-7",
+    },
+
     {
       id: "chapter2-table-7",
       background: images.box,
       content: {
         type: "text",
-        text: "В самом углу стола, отдельно от всего, стоит небольшая коробка.\n\nНа ней надпись:\n\nMI-01.",
+        text: "Ты продолжаешь остатривать стол и в самом углу стола видишь небольшую коробку.\n\nНа ней надпись:\n\nMI-OI.",
       },
       audio: audio.music.table,
       actions: [
@@ -518,12 +546,21 @@ export const secondChapter: ChapterData = {
       background: images.workshopTraces,
       content: {
         type: "text",
-        text: "Ты уже собираешься закрыть коробку, но замечаешь маленький след в пыли на столе.",
+        text: "Ты уже собираешься закрыть коробку, но замечаешь два крошечных отпечатка в пыли у самого края стола.\n\nОни расположены рядом, словно кто-то приподнялся на задних лапах и потянулся к столешнице.",
+      },
+      audio: audio.music.table,
+      nextScene: "chapter2-open-3",
+    },
+    {
+      id: "chapter2-open-3",
+      background: images.workshopTraces,
+      content: {
+        type: "text",
+        text: "Ты наклоняешься и заглядываешь под стол. На полу виднеются ещё несколько отпечатков. Они уходят в глубину мастерской.",
       },
       audio: audio.music.table,
       nextScene: "chapter2-trace-check",
     },
-
     {
       id: "chapter2-trace-check",
       background: images.workshopTraces,
@@ -531,7 +568,7 @@ export const secondChapter: ChapterData = {
         type: "diceCheck",
         title: "Восприятие",
         description:
-          "Ты склоняешься над столом и всматриваешься в маленький след. Слой пыли здесь лежит неровно — возможно, он подскажет, куда направлялся тот, кто здесь был.",
+          "Ты внимательно изучаешь следы на столе и полу. Возможно, они подскажет, куда направлялся тот, кто здесь был.",
         skill: "Восприятие",
         difficulty: 11,
         outcomes: [
@@ -539,85 +576,50 @@ export const secondChapter: ChapterData = {
             min: 1,
             max: 1,
             title: "Критический провал",
-            text: "Ты наклоняешься слишком низко, и твоё дыхание сдувает пыль со стола. Вместе с ней исчезает и след. Куда он вёл, теперь не узнать.",
-            nextScene: "chapter2-open-3",
+            text: "Ты наклоняешься слишком низко, и твоё дыхание поднимает облачко пыли. Отпечатки становятся ещё менее различимыми. Куда они вёли, теперь не узнать.",
+            nextScene: "chapter2-open-4",
           },
           {
             min: 2,
             max: 10,
             title: "Неудача",
-            text: "Пыль лежит неровно, и разобрать направление следа не удаётся. След как след — маленький, одинокий и ведущий в никуда.",
-            nextScene: "chapter2-open-3",
+            text: "Ты различаешь следы на столе и полу, но не можешь восстановить путь их обладателя. Похоже, кто-то забирался на стол и спускался обратно, однако понять, куда он ушёл потом, не получается.",
+            nextScene: "chapter2-open-4",
           },
           {
             min: 11,
             max: 19,
             title: "Успех",
-            text: "След ведёт не к двери, а к монитору. Как будто кто-то подходил к экрану совсем недавно.",
+            text: "Ты различаешь следы на столе и полу. Два следа у края столешницы словно оставлены передними лапами, а на полу видна цепочка отпечатков четырёх лап. Следы ведут в сторону монитора. Похоже, кто-то подходил к нему совсем недавно.",
             nextScene: "chapter2-open-3-hint",
           },
           {
             min: 20,
             max: 20,
             title: "Критический успех",
-            text: "След ведёт не к двери, а к монитору. А на клавиатуре — ни пылинки, в отличие от всего остального стола. Кто-то подходил к экрану совсем недавно и, судя по всему, не в первый раз.",
+            text: "Ты внимательно изучаешь каждый оставленный след. Два следа у края стола показывают, что существо приподнялось на задних лапах и потянулось к столешнице. На полу отпечатки четырёх лап ведут прямо к монитору.",
             nextScene: "chapter2-open-3-hint",
           },
         ],
       },
       audio: audio.music.table,
     },
-
-    // {
-    //   id: "chapter2-open-2",
-    //   background: images.workshopTraces,
-    //   content: {
-    //     type: "diceCheck",
-    //     title: "Восприятие",
-    //     description:
-    //       "Ты уже собираешься закрыть коробку, но замечаешь маленький след в пыли на столе. Попробуй понять, куда он ведёт.",
-    //     skill: "Восприятие",
-    //     difficulty: 11,
-    //     outcomes: [
-    //       {
-    //         min: 1,
-    //         max: 1,
-    //         title: "Критический провал",
-    //         text: "Ты пытаешься рассмотреть след, но случайно задеваешь пыль рукавом. Отпечаток расплывается, и направление больше не разобрать.",
-    //         nextScene: "chapter2-open-2-choice",
-    //       },
-    //       {
-    //         min: 2,
-    //         max: 10,
-    //         title: "Неудача",
-    //         text: "След слишком слабый, чтобы уверенно определить его направление. Ты замечаешь только, что он совсем свежий.",
-    //         nextScene: "chapter2-open-2-choice",
-    //       },
-    //       {
-    //         min: 11,
-    //         max: 19,
-    //         title: "Успех",
-    //         text: "След ведёт не к двери, а к монитору, как будто кто-то подходил к экрану совсем недавно.",
-    //         nextScene: "chapter2-open-2-choice",
-    //       },
-    //       {
-    //         min: 20,
-    //         max: 20,
-    //         title: "Критический успех",
-    //         text: "След ведёт не к двери, а к монитору, как будто кто-то подходил к экрану совсем недавно. Рядом виден ещё один, почти стёртый отпечаток: к экрану возвращались не один раз.",
-    //         nextScene: "chapter2-open-2-choice",
-    //       },
-    //     ],
-    //   },
-    //   itemsToCollect: ["mechanical-beetle"],
-    //   audio: audio.music.table,
-    // },
     {
-      id: "chapter2-open-3",
+      id: "chapter2-open-3-hint",
       background: images.workshopTraces,
       content: {
         type: "text",
-        text: "Ты выпрямляешься.\n\nКоробка по-прежнему у тебя в руках. Можно уйти прямо сейчас — или остаться и посмотреть, что будет дальше.",
+        text: "Ты ещё раз смотришь на следы, а затем переводишь взгляд на коробку в своих руках.\n\nТеперь ты знаешь, что в мастерской недавно кто-то побывал. Но куда он направился дальше — пока остаётся загадкой.",
+      },
+      audio: audio.music.table,
+      nextScene: "chapter2-open-4",
+    },
+    {
+      id: "chapter2-open-4",
+      background: images.workshopTraces,
+      content: {
+        type: "text",
+        text: "Ты выпрямляешься. Коробка по-прежнему у тебя в руках.\n\nМожно уйти прямо сейчас — или остаться и посмотреть, что будет дальше.",
       },
       audio: audio.music.table,
       actions: [
@@ -633,7 +635,6 @@ export const secondChapter: ChapterData = {
         },
       ],
     },
-
     {
       id: "chapter2-open-3-hint",
       background: images.workshopTraces,
@@ -701,7 +702,8 @@ export const secondChapter: ChapterData = {
       },
       audio: audio.music.wait,
       nextScene: "chapter2-transition-back",
-    }, // ─────────────────────────────
+    },
+    // ─────────────────────────────
     // SCENE 07 — RETURN
     // ─────────────────────────────
     {

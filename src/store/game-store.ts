@@ -60,13 +60,6 @@ interface GameState {
   dismissItemNotification: () => void;
 }
 
-// const INITIAL_BATTLE_BONUSES: BattleBonuses = {
-//   extraPlayerHp: 0,
-//   extraOwlbearHp: 0,
-//   damageMultiplier: 1,
-//   mi01InterruptAvailable: false,
-// };
-
 export const useGameStore = create<GameState>()(
   // persist(
   (set, get) => ({
@@ -74,7 +67,7 @@ export const useGameStore = create<GameState>()(
     storyTimestamps: {},
     // currentSceneId: "final-victory",
     // currentSceneId: "chapter2-code-puzzle",
-    currentSceneId: "chapter1-perception-check",
+    currentSceneId: "chapter2-pattern-check",
     // currentSceneId: "chapter1-forest",
     completedPuzzles: [],
     completedActions: [],

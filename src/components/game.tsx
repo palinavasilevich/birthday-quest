@@ -14,7 +14,7 @@ import { useGameStore } from "@/store/game-store";
 import { GameLayout } from "./layout/game-layout";
 import { StartScreen } from "./scene/start-scene";
 
-import startScreen from "../../public/images/start_2.jpg";
+import startScreen from "../../public/images/start_6.jpg";
 
 export function Game() {
   const [isStarted, setIsStarted] = useState(false);
