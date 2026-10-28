@@ -1,21 +1,22 @@
 import type { ChapterData } from "@/types/game";
 import { images } from "@/data/images/chapter2";
 import { audio } from "@/data/audio/chapter2";
+
 export const secondChapter: ChapterData = {
   id: "chapter2",
   title: "NIGHT CITY",
+
   scenes: [
     // ─────────────────────────────
     // SCENE 01 — NIGHT CITY
     // ─────────────────────────────
     {
-      id: "chapter2-eyes-opening", // background: images.city,
+      id: "chapter2-eyes-opening",
+      // background: images.city,
       content: {
         type: "text",
         text: "",
       },
-      specialEffects: ["signal"],
-      effectDelay: 0,
       showBackgroundOnly: true,
       autoTransitionToNextScene: true,
       autoTransitionDelay: 1500,
@@ -114,7 +115,7 @@ export const secondChapter: ChapterData = {
             min: 2,
             max: 11,
             title: "Неудача",
-            text: "Ты успеваешь заметить лишь силуэт, мелькнувший между людьми. Кто это был и куда направился незнакомец, остаётся загадкой.",
+            text: "Ты успеваешь заметить лишь силуэт, мелькнувший между людьми. Кто это был, остаётся загадкой, но тень свернула в узкий переулок, и других зацепок у тебя нет.",
             nextScene: "chapter2-night-city-8",
           },
           {
@@ -187,10 +188,13 @@ export const secondChapter: ChapterData = {
       audio: audio.music.cyberpunk,
       specialEffects: ["static"],
       effectDelay: 1500,
+
       autoTransitionToNextScene: true,
-      autoTransitionDelay: 1000,
+      autoTransitionDelay: 1200,
       nextScene: "chapter2-terminal",
-    }, // ─────────────────────────────
+    },
+
+    // ─────────────────────────────
     // SCENE 03 — TERMINAL
     // ─────────────────────────────
     {
@@ -302,7 +306,9 @@ export const secondChapter: ChapterData = {
         type: "cyberpunk",
         nextScene: "chapter2-workshop",
       },
-    }, // ─────────────────────────────
+    },
+
+    // ─────────────────────────────
     // SCENE 05 — WORKSHOP
     // ─────────────────────────────
     {
@@ -356,10 +362,13 @@ export const secondChapter: ChapterData = {
           nextScene: "chapter2-log",
         },
       ],
-    }, // ── Ветка: экран ──
+    },
+
+    // ── Ветка: экран ──
     // Тот, кто пойдёт к столу сразу, лога не увидит.
     {
-      id: "chapter2-log", // background: images.workshopScreen,
+      id: "chapter2-log",
+      // background: images.workshopScreen,
       content: {
         type: "text",
         text: "На экране открыт лог.\n\nОн всё ещё пишется.",
@@ -379,7 +388,9 @@ export const secondChapter: ChapterData = {
       },
       audio: audio.music.workshop,
       nextScene: "chapter2-table",
-    }, // ── Стол ──
+    },
+
+    // ── Стол ──
     {
       id: "chapter2-table",
       background: images.drawing,
@@ -397,7 +408,6 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Небольшое механическое существо.\n\nДве широкие пластины на спине, прозрачные крылья и шесть тонких лап.",
       },
-
       audio: audio.music.workshop,
       nextScene: "chapter2-table-3",
     },
@@ -409,17 +419,85 @@ export const secondChapter: ChapterData = {
         text: "Ты рассматриваешь устройство его корпуса.\n\nШестерни, шарниры и десятки крошечных деталей соединены в сложный механизм.",
       },
       audio: audio.music.workshop,
+      nextScene: "chapter2-table-4",
+    },
+
+    // Схема вязания и клубок видят ВСЕ игроки: на них ссылается финал
+    // («та самая, что лежала на столе», «странная схема»). Бросок ниже
+    // даёт только понимание, а не доступ к самой улике.
+    {
+      id: "chapter2-table-4",
+      background: images.knittingPattern,
+      content: {
+        type: "text",
+        text: "Под стопкой чертежей ты находишь ещё одну схему.\n\nЭто не чертёж механизма. Здесь нет шестерён, только простые линии: маленькая фигура с круглыми ушами и короткими лапами.",
+      },
+      audio: audio.music.table,
+      nextScene: "chapter2-table-5",
+    },
+    {
+      id: "chapter2-table-5",
+      background: images.knittingPatternYarn,
+      content: {
+        type: "text",
+        text: "Рядом со схемой лежит клубок ниток.\n\nТёплого коричневого цвета.",
+      },
+      audio: audio.music.table,
       nextScene: "chapter2-pattern-check",
     },
+    // {
+    //   id: "chapter2-pattern-check",
+    //   background: images.knittingPatternYarn,
+    //   content: {
+    //     type: "diceCheck",
+    //     title: "Анализ",
+    //     description:
+    //       "Ты всматриваешься в схему и в клубок рядом с ней. Что-то в них кажется тебе знакомым.",
+    //     skill: "Анализ",
+    //     difficulty: 12,
+    //     achievement: "medkit",
+    //     outcomes: [
+    //       {
+    //         min: 1,
+    //         max: 1,
+    //         title: "Критический провал",
+    //         text: "Ты долго всматриваешься в рисунок, пытаясь найти скрытый смысл. Но чем дольше смотришь, тем меньше понимаешь. В конце концов ты решаешь, что это всего лишь схема для вязания и клубок.",
+    //         nextScene: "chapter2-table-7",
+    //       },
+    //       {
+    //         min: 2,
+    //         max: 11,
+    //         title: "Неудача",
+    //         text: "Ты замечаешь, что линии образуют силуэт небольшого существа. Однако понять, почему кто-то оставил эту схему среди чертежей механизмов, не удаётся.",
+    //         nextScene: "chapter2-table-7",
+    //       },
+    //       {
+    //         min: 12,
+    //         max: 19,
+    //         title: "Успех",
+    //         text: "Круглые уши и короткие лапы. Фигура напоминает маленькое существо, чьи следы ты видел в лесу.",
+    //         nextScene: "chapter2-table-7",
+    //       },
+    //       {
+    //         min: 20,
+    //         max: 20,
+    //         title: "Критический успех",
+    //         text: "Теперь ты видишь сходство совершенно ясно: это тот, кто оставил следы в лесу и у пьедестала. А цвет клубка в точности совпадает с ниткой у тебя в кармане. Кто бы ни нарисовал эту схему, он хорошо знал, кого рисует.",
+    //         nextScene: "chapter2-table-7",
+    //       },
+    //     ],
+    //   },
+    //   audio: audio.music.table,
+    // },
 
     {
       id: "chapter2-pattern-check",
-      background: images.drawing,
+      background: images.knittingPatternYarn,
       content: {
         type: "diceCheck",
         title: "Анализ",
         description:
-          "Ты решаешь внимательнее осмотреть стол. Возможно, среди бумаг осталось что-то незамеченное.",
+          "Ты всматриваешься в схему и в клубок рядом с ней. Что-то в них кажется тебе знакомым.",
         skill: "Анализ",
         difficulty: 12,
         achievement: "medkit",
@@ -428,96 +506,40 @@ export const secondChapter: ChapterData = {
             min: 1,
             max: 1,
             title: "Критический провал",
-            text: "Ты перебираешь чертежи, переворачиваешь листы и заглядываешь под них. Но чем дольше ищешь, тем сильнее путаешься в деталях.",
+            text: "Ты пытаешься найти закономерность в линиях, сравниваешь отдельные элементы и снова возвращаешься к началу. Но рисунок не складывается в цельный образ. В конце концов ты решаешь, что перед тобой обычная схема для вязания, и откладываешь её.",
             nextScene: "chapter2-table-7",
           },
           {
             min: 2,
             max: 11,
             title: "Неудача",
-            text: "Ты внимательно изучаешь чертежи, но не находишь ничего необычного. Среди множества схем и заметок трудно понять, что здесь действительно важно.",
+            text: "Постепенно ты различаешь в узоре очертания небольшого существа: круглые уши, короткие лапы, компактное туловище. Но понять, почему схема для вязания оказалась среди чертежей механизмов, тебе не удаётся.",
             nextScene: "chapter2-table-7",
           },
           {
             min: 12,
             max: 19,
             title: "Успех",
-            text: "Под стопкой чертежей ты обнаруживаешь ещё одну схему.",
-            nextScene: "chapter2-table-yarn-found",
+            text: "Теперь очертания становятся яснее. Круглые уши, короткие лапы, небольшое туловище... Ты уже видел нечто похожее. В памяти всплывают маленькие следы, которые ты обнаружил в лесу.",
+            nextScene: "chapter2-table-7",
           },
           {
             min: 20,
             max: 20,
             title: "Критический успех",
-            text: "Под стопкой чертежей ты обнаруживаешь ещё одну схему.",
-            nextScene: "chapter2-table-traces-found",
+            text: "Теперь сомнений почти не остаётся. На схеме изображено то самое существо, чьи следы ты видел в лесу и у пьедестала. Ты переводишь взгляд на клубок рядом — его цвет в точности совпадает с ниткой, которую ты подобрал раньше. Похоже, эти находки связаны между собой. Но кто оставил схему в мастерской и зачем?",
+            nextScene: "chapter2-table-7",
           },
         ],
       },
-      audio: audio.music.workshop,
-    },
-
-    {
-      id: "chapter2-table-yarn-found",
-      background: images.knittingPattern,
-      content: {
-        type: "text",
-        text: "Но эта схема совсем другая.\n\nЗдесь нет сложных механизнов — только простые линии.\n\nНа ней изображено маленькое существо с круглыми ушами и короткими лапами.",
-      },
       audio: audio.music.table,
-      nextScene: "chapter2-table-found-2",
     },
-
-    {
-      id: "chapter2-table-found-2",
-      background: images.knittingPattern,
-      content: {
-        type: "text",
-        text: "Ты внимательно изучаешь рисунок. Простые линии складываются в маленькую фигуру, которая почему-то она кажется тебе знакомой.",
-      },
-      audio: audio.music.table,
-      nextScene: "chapter2-table-7",
-    },
-
-    {
-      id: "chapter2-table-traces-found",
-      background: images.knittingPattern,
-      content: {
-        type: "text",
-        text: "Но эта схема совсем другая.\n\nЗдесь нет сложных механизнов — только простые линии.\n\nНа ней изображено маленькое существо с круглыми ушами и короткими лапами.",
-      },
-      audio: audio.music.table,
-      nextScene: "chapter2-table-traces-found-2",
-    },
-
-    {
-      id: "chapter2-table-traces-found-2",
-      background: images.knittingPattern,
-      content: {
-        type: "text",
-        text: "Ты внимательно изучаешь рисунок. Простые линии складываются в маленькую фигуру, которая почему-то она кажется тебе знакомой.",
-      },
-      audio: audio.music.table,
-      nextScene: "chapter2-table-traces-found-3",
-    },
-
-    {
-      id: "chapter2-table-traces-found-3",
-      background: images.knittingPatternYarn,
-      content: {
-        type: "text",
-        text: "Рядом со схемой ты видишь клубок ниток.\n\nТого же тёплого коричневого цвета, что и нитка у тебя в кармане.",
-      },
-      audio: audio.music.table,
-      nextScene: "chapter2-table-7",
-    },
-
     {
       id: "chapter2-table-7",
       background: images.box,
       content: {
         type: "text",
-        text: "Ты продолжаешь остатривать стол и в самом углу стола видишь небольшую коробку.\n\nНа ней надпись:\n\nMI-OI.",
+        text: "Ты продолжаешь осматривать стол и в самом углу замечаешь небольшую коробку.\n\nНа ней надпись:\n\nMI-01.",
       },
       audio: audio.music.table,
       actions: [
@@ -527,7 +549,9 @@ export const secondChapter: ChapterData = {
           nextScene: "chapter2-open",
         },
       ],
-    }, // ─────────────────────────────
+    },
+
+    // ─────────────────────────────
     // SCENE 06 — THE GIFT
     // ─────────────────────────────
     {
@@ -540,7 +564,6 @@ export const secondChapter: ChapterData = {
       audio: audio.music.table,
       nextScene: "chapter2-open-2",
     },
-
     {
       id: "chapter2-open-2",
       background: images.workshopTracesTable,
@@ -548,6 +571,8 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Ты уже собираешься закрыть коробку, но замечаешь два крошечных отпечатка в пыли у самого края стола.",
       },
+      // Был потерян при правках: оба пути дальше уносят коробку с собой.
+      itemsToCollect: ["mechanical-beetle"],
       audio: audio.music.table,
       nextScene: "chapter2-open-3",
     },
@@ -556,7 +581,7 @@ export const secondChapter: ChapterData = {
       background: images.workshopTraces,
       content: {
         type: "text",
-        text: "Ты наклоняешься и заглядываешь под стол. На полу виднеются ещё несколько отпечатков. Они уходят в глубь мастерской.",
+        text: "Ты наклоняешься и заглядываешь под стол. На полу виднеются ещё несколько отпечатков. Они уходят вглубь мастерской.",
       },
       audio: audio.music.table,
       nextScene: "chapter2-trace-check",
@@ -568,7 +593,7 @@ export const secondChapter: ChapterData = {
         type: "diceCheck",
         title: "Восприятие",
         description:
-          "Ты внимательно изучаешь следы на столе и полу. Возможно, они подскажет, куда направлялся тот, кто здесь был.",
+          "Ты внимательно изучаешь следы на столе и полу. Возможно, они подскажут, куда направлялся тот, кто здесь был.",
         skill: "Восприятие",
         difficulty: 11,
         outcomes: [
@@ -576,7 +601,7 @@ export const secondChapter: ChapterData = {
             min: 1,
             max: 1,
             title: "Критический провал",
-            text: "Ты наклоняешься слишком низко, и твоё дыхание поднимает облачко пыли. Отпечатки становятся ещё менее различимыми. Куда они вёли, теперь не узнать.",
+            text: "Ты наклоняешься слишком низко, и твоё дыхание поднимает облачко пыли. Отпечатки становятся ещё менее различимыми. Куда они вели, теперь не узнать.",
             nextScene: "chapter2-open-3-fail",
           },
           {
@@ -604,25 +629,27 @@ export const secondChapter: ChapterData = {
       },
       audio: audio.music.table,
     },
+
     {
       id: "chapter2-open-3-fail",
       background: images.workshopTraces,
       content: {
         type: "text",
-        text: "Ты ещё раз смотришь на следы, а затем переводишь взгляд на коробку в своих руках.\n\nТеперь ты знаешь, что в мастерской недавно кто-то побывал. Но куда он направился дальше — пока остаётся загадкой.",
+        text: "Ты ещё раз смотришь на следы, а затем переводишь взгляд на коробку в своих руках.\n\nТеперь ты знаешь, что в мастерской недавно кто-то побывал. Но куда он направился дальше, пока остаётся загадкой.",
       },
       audio: audio.music.table,
-      nextScene: "chapter2-open-3-fail-2",
-    },
-    {
-      id: "chapter2-open-3-fail-2",
-      background: images.workshopTraces,
-      content: {
-        type: "text",
-        text: "Больше ничего выяснить не удаётся. Ты вздыхаешь, кладёшь коробку в сумку и выходишь из мастерской.",
-      },
-      audio: audio.music.table,
-      nextScene: "chapter2-transition-back",
+      actions: [
+        {
+          id: "leave-now",
+          label: "Pick up box and leave",
+          nextScene: "chapter2-transition-back",
+        },
+        {
+          id: "wait-here",
+          label: "Wait",
+          nextScene: "chapter2-wait",
+        },
+      ],
     },
     {
       id: "chapter2-open-3-hint",
@@ -648,6 +675,16 @@ export const secondChapter: ChapterData = {
 
     // ── Ветка: подождать ──
     {
+      id: "chapter2-wait",
+      background: images.wait,
+      content: {
+        type: "text",
+        text: "Ты садишься на пол и ждёшь.\n\nМинуту. Две.",
+      },
+      audio: audio.music.wait,
+      nextScene: "chapter2-wait-2",
+    },
+    {
       id: "chapter2-wait-hint",
       background: images.wait,
       content: {
@@ -657,7 +694,6 @@ export const secondChapter: ChapterData = {
       audio: audio.music.wait,
       nextScene: "chapter2-wait-2",
     },
-
     {
       id: "chapter2-wait-2",
       background: images.wait,
@@ -692,6 +728,7 @@ export const secondChapter: ChapterData = {
       audio: audio.music.wait,
       nextScene: "chapter2-transition-back",
     },
+
     // ─────────────────────────────
     // SCENE 07 — RETURN
     // ─────────────────────────────
@@ -712,7 +749,7 @@ export const secondChapter: ChapterData = {
         type: "text",
         text: "Шум города становится всё тише.\n\nНеон исчезает.",
       },
-      autoTransitionDelay: 3500,
+      autoTransitionDelay: 1300,
       autoTransitionToNextScene: true,
       audio: audio.music.wait,
       nextScene: "chapter2-transition-back-3",

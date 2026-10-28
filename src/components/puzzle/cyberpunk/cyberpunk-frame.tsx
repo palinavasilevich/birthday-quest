@@ -130,7 +130,7 @@ export function CyberpunkAction({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="w-full border border-[#d99b22]/40 bg-[#d99b22]/5 px-5 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-[#d99b22] transition-all duration-200 hover:border-[#d99b22] hover:bg-[#d99b22]/10 hover:shadow-[0_0_20px_rgba(217,155,34,0.12)] disabled:cursor-not-allowed disabled:opacity-30"
+      className="w-full border border-[#d99b22]/40 bg-[#d99b22]/5 px-5 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-[#d99b22] transition-all duration-200 cursor-pointer hover:border-[#d99b22] hover:bg-[#d99b22]/10 hover:shadow-[0_0_20px_rgba(217,155,34,0.12)] disabled:cursor-not-allowed disabled:opacity-30"
     >
       &gt; {label}
     </button>
