@@ -1,9 +1,11 @@
 import type { ChapterData } from "@/types/game";
 import { images } from "@/data/images/final";
 import { audio } from "@/data/audio/final";
+
 export const finalChapter: ChapterData = {
   id: "final",
   title: "THE LAST STAND",
+
   scenes: [
     // ─────────────────────────────
     // SCENE 01 — RETURN
@@ -40,7 +42,7 @@ export const finalChapter: ChapterData = {
       audio: audio.music.forest,
       sfx: audio.sfx.dragonRoar,
       autoTransitionToNextScene: true,
-      autoTransitionDelay: 1000,
+      autoTransitionDelay: 1200,
       nextScene: "final-start-4",
     },
     {
@@ -58,7 +60,9 @@ export const finalChapter: ChapterData = {
           nextScene: "final-battlefield",
         },
       ],
-    }, // ─────────────────────────────
+    },
+
+    // ─────────────────────────────
     // SCENE 02 — BATTLEFIELD
     // ─────────────────────────────
     {
@@ -118,13 +122,15 @@ export const finalChapter: ChapterData = {
       background: images.owlbear,
       content: {
         type: "text",
-        text: "Медвесыч?.. \n\nТак вот кто вёл тебя всё это время.",
+        text: "Медвесыч?..\n\nТак вот кто вёл тебя всё это время.",
       },
       audio: audio.music.dragon,
       autoTransitionToNextScene: true,
       autoTransitionDelay: 1600,
       nextScene: "final-battle",
-    }, // ─────────────────────────────
+    },
+
+    // ─────────────────────────────
     // SCENE 03 — MI-01
     // ─────────────────────────────
     {
@@ -214,6 +220,16 @@ export const finalChapter: ChapterData = {
       nextScene: "final-battle-9",
     },
     {
+      id: "final-battle-9",
+      background: images.deviceAssembly,
+      content: {
+        type: "text",
+        text: "Ты сверяешь детали с инструкцией. В дыму снова раздаётся рёв дракона — времени почти не осталось.",
+      },
+      audio: audio.music.book,
+      nextScene: "final-battle-9-check",
+    },
+    {
       id: "final-battle-9-check",
       background: images.deviceAssembly,
       content: {
@@ -258,22 +274,13 @@ export const finalChapter: ChapterData = {
       audio: audio.music.book,
     },
     {
-      id: "final-battle-9",
-      background: images.deviceAssembly,
-      content: {
-        type: "text",
-        text: "Ты сверяешь детали с инструкцией. В дыму снова раздаётся рёв дракона — времени почти не осталось.",
-      },
-      audio: audio.music.book,
-      nextScene: "final-battle-9-check",
-    },
-    {
       id: "final-battle-10",
       background: images.device,
       content: {
         type: "text",
         text: "MI-01 лежит у тебя на ладони.\n\nНа мгновение — тишина.\n\nЗатем надкрылья раскрываются.\n\nОн оживает.",
-      }, // Механизм оживает так же, как ожили руны у стены.
+      },
+      // Механизм оживает так же, как ожили руны у стены.
       audio: audio.music.book,
       specialEffects: ["glow"],
       nextScene: "final-battle-11",
@@ -297,8 +304,53 @@ export const finalChapter: ChapterData = {
       },
       audio: audio.music.book,
       sfx: audio.sfx.crash,
-      nextScene: "final-battle-13",
+      nextScene: "final-battle-12-check",
     },
+
+    // {
+    //   id: "final-battle-12-check",
+    //   background: images.owlbearFire,
+    //   content: {
+    //     type: "diceCheck",
+    //     title: "Восприятие",
+    //     description:
+    //       "Огонь жжёт лицо, дракон ревёт совсем рядом. Ты заставляешь себя не отводить взгляд от дыма, где исчез MI-01. Ему нужно время — и ты не можешь бросить его сейчас.",
+    //     skill: "Восприятие",
+    //     difficulty: 12,
+    //     achievement: "medkit",
+    //     outcomes: [
+    //       {
+    //         min: 1,
+    //         max: 1,
+    //         title: "Критический провал",
+    //         text: "Жар заставляет тебя отшатнуться и закрыть лицо руками. Когда ты снова смотришь в дым, там уже ничего не разобрать. Ты не знаешь, удалось ли MI-01 выполнить свою задачу.",
+    //         nextScene: "final-battle-13",
+    //       },
+    //       {
+    //         min: 2,
+    //         max: 11,
+    //         title: "Неудача",
+    //         text: "Ты напряжённо всматриваешься в дым, но вспышки пламени ослепляют, а рёв дракона заглушает остальные звуки. На мгновение тебе кажется, что ты замечаешь движение, но понять, что это было, не удаётся.",
+    //         nextScene: "final-battle-13",
+    //       },
+    //       {
+    //         min: 12,
+    //         max: 19,
+    //         title: "Успех",
+    //         text: "Ты стоишь неподвижно и вслушиваешься. Сквозь рёв и треск пробивается тихое жужжание крыльев. MI-01 где-то рядом.",
+    //         nextScene: "final-battle-13",
+    //       },
+    //       {
+    //         min: 20,
+    //         max: 20,
+    //         title: "Критический успех",
+    //         text: "Ты не двигаешься с места и слышишь жужжание крыльев раньше, чем что-либо ещё. Ты первым замечаешь крошечный огонёк, мерцающий в дыму.",
+    //         nextScene: "final-battle-13",
+    //       },
+    //     ],
+    //   },
+    //   audio: audio.music.book,
+    // },
     {
       id: "final-battle-13",
       background: images.owlbearFire,
@@ -329,6 +381,7 @@ export const finalChapter: ChapterData = {
       audio: audio.music.battleWithDragon,
       nextScene: "final-puzzle",
     },
+
     // ─────────────────────────────
     // SCENE 04 — THE LAST STAND
     // ─────────────────────────────
@@ -345,7 +398,9 @@ export const finalChapter: ChapterData = {
         type: "final",
         nextScene: "final-victory",
       },
-    }, // ─────────────────────────────
+    },
+
+    // ─────────────────────────────
     // SCENE 05 — VICTORY
     // ─────────────────────────────
     {
@@ -354,9 +409,11 @@ export const finalChapter: ChapterData = {
       content: {
         type: "text",
         text: "Дракон падает.\n\nНаступает тишина.\n\nПепел медленно оседает на землю.",
-      }, // Один резкий толчок + тёплая вспышка — удар падения дракона,
+      },
+      // Один резкий толчок + тёплая вспышка — удар падения дракона,
       // который быстро гаснет в тишину.
-      audio: audio.music.victory, // sfx: audio.sfx.dragonDeath,
+      audio: audio.music.victory,
+      // sfx: audio.sfx.dragonDeath,
       specialEffects: ["impact"],
       nextScene: "final-victory-2",
     },
@@ -410,7 +467,9 @@ export const finalChapter: ChapterData = {
       audio: audio.music.victory,
       sfx: audio.sfx.song,
       nextScene: "final-reveal",
-    }, // ─────────────────────────────
+    },
+
+    // ─────────────────────────────
     // SCENE 07 — FINAL REVEAL
     // ─────────────────────────────
     {
@@ -441,7 +500,8 @@ export const finalChapter: ChapterData = {
       content: {
         type: "text",
         text: "Книга на древнем пьедестале.\n\nПервая загадка — и первый шаг в неизвестность.",
-      }, // Лёгкий отблеск — вспышка памяти, а не полноценный переход.
+      },
+      // Лёгкий отблеск — вспышка памяти, а не полноценный переход.
       audio: audio.music.victory,
       specialEffects: ["warp-in"],
       effectDelay: 0,
@@ -480,7 +540,9 @@ export const finalChapter: ChapterData = {
       },
       audio: audio.music.victory,
       nextScene: "final-thread",
-    }, // ─────────────────────────────
+    },
+
+    // ─────────────────────────────
     // SCENE 08 — THE THREAD
     // ─────────────────────────────
     {
@@ -490,8 +552,7 @@ export const finalChapter: ChapterData = {
         type: "text",
         text: "Ты открываешь глаза.\n\nМедвесыч возится с чем-то рядом.",
       },
-      audio: audio.music.final, // specialEffects: ["glow"],
-      // effectDelay: 1000,
+      audio: audio.music.final,
       specialEffects: ["warp-in"],
       effectDelay: 1000,
       nextScene: "final-thread-2",
@@ -576,7 +637,7 @@ export const finalChapter: ChapterData = {
           label: "Follow the thread",
           nextScene: "final-thread-9",
         },
-      ], // specialEffects: ["shimmer"],
+      ],
     },
     {
       id: "final-thread-9",
