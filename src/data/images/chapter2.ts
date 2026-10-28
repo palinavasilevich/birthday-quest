@@ -11,7 +11,7 @@ export const images = {
   workshopScreen: "/images/chapter2/workshop-screen-3.png",
   drawing: "/images/chapter2/drawing.png",
   knittingPattern: "/images/chapter2/knitting-pattern.png",
-  knittingPatternYarn: "/images/chapter2/knitting-pattern-yarn.png",
+  knittingPatternYarn: "/images/chapter2/knitting-pattern-yarn-2.png",
   box: "/images/chapter2/box.png",
   contentOfBox: "/images/chapter2/content-of-box-2.png",
   workshopTraces: "/images/chapter2/workshop-traces.png",
