@@ -77,7 +77,7 @@ export const secondChapter: ChapterData = {
       actions: [
         {
           id: "look-around",
-          label: "Look around",
+          label: "Оглядеться",
           nextScene: "chapter2-night-city-6",
         },
       ],
@@ -103,6 +103,7 @@ export const secondChapter: ChapterData = {
           "Вдруг ты замечаешь движение в толпе. Чья-то тень быстро исчезает в узком переулке.",
         skill: "Восприятие",
         difficulty: 12,
+        tag: "navigation",
         outcomes: [
           {
             min: 1,
@@ -147,7 +148,7 @@ export const secondChapter: ChapterData = {
       actions: [
         {
           id: "approach-light",
-          label: "Approach the light",
+          label: "Подойти к свету",
           nextScene: "chapter2-night-city-9",
         },
       ],
@@ -173,7 +174,7 @@ export const secondChapter: ChapterData = {
       actions: [
         {
           id: "touch-screen",
-          label: "Inspect the panel",
+          label: "Осмотреть панель",
           nextScene: "chapter2-night-city-11",
         },
       ],
@@ -353,12 +354,12 @@ export const secondChapter: ChapterData = {
       actions: [
         {
           id: "check-table",
-          label: "Inspect table",
+          label: "Осмотреть стол",
           nextScene: "chapter2-table",
         },
         {
           id: "check-log",
-          label: "View what's on the screen",
+          label: "Посмотреть на экран",
           nextScene: "chapter2-log",
         },
       ],
@@ -517,14 +518,14 @@ export const secondChapter: ChapterData = {
             min: 12,
             max: 19,
             title: "Успех",
-            text: "Теперь очертания становятся яснее. Круглые уши, короткие лапы, небольшое туловище... Ты уже видел нечто похожее. В памяти всплывает образ существа, которое ты видел в тёмном коридоре.",
+            text: "Теперь очертания становятся яснее. Круглые уши, короткие лапы, небольшое туловище... Ты уже видел нечто похожее. В памяти всплывает образ существа, которое ты видел в коридоре.",
             nextScene: "chapter2-table-7",
           },
           {
             min: 20,
             max: 20,
             title: "Критический успех",
-            text: "Теперь сомнений почти не остаётся. На схеме изображено то самое существо, чьи следы ты видел в лесу и у пьедестала. Именно его ты мельком заметил в тёмном коридоре. Ты переводишь взгляд на клубок рядом — его цвет в точности совпадает с ниткой, которую ты подобрал раньше. Слишком много совпадений, чтобы считать их случайностью. Кто оставил эту схему в мастерской? И откуда ему известно об этом существе?",
+            text: "Теперь сомнений почти не остаётся. На схеме изображено то самое существо, чьи следы ты видел в лесу и у пьедестала. Именно его ты мельком заметил в коридоре. Ты переводишь взгляд на клубок рядом — его цвет в точности совпадает с ниткой, которую ты подобрал раньше. Слишком много совпадений, чтобы считать их случайностью. Кто оставил эту схему в мастерской? И откуда ему известно об этом существе?",
             nextScene: "chapter2-table-7",
           },
         ],
@@ -542,7 +543,7 @@ export const secondChapter: ChapterData = {
       actions: [
         {
           id: "open-box",
-          label: "Open the box",
+          label: "Открыть коробку",
           nextScene: "chapter2-open",
         },
       ],
@@ -638,12 +639,12 @@ export const secondChapter: ChapterData = {
       actions: [
         {
           id: "leave-now",
-          label: "Pick up box and leave",
+          label: "Забрать коробку и уйти",
           nextScene: "chapter2-transition-back",
         },
         {
           id: "wait-here",
-          label: "Wait",
+          label: "Подождать",
           nextScene: "chapter2-wait",
         },
       ],
@@ -659,12 +660,12 @@ export const secondChapter: ChapterData = {
       actions: [
         {
           id: "leave-now",
-          label: "Pick up box and leave",
+          label: "Забрать коробку и уйти",
           nextScene: "chapter2-transition-back",
         },
         {
           id: "wait-here",
-          label: "Wait",
+          label: "Подождать",
           nextScene: "chapter2-wait-hint",
         },
       ],
@@ -702,7 +703,7 @@ export const secondChapter: ChapterData = {
       actions: [
         {
           id: "check-log",
-          label: "View what's on the screen",
+          label: "Посмотреть на экран",
           nextScene: "chapter2-wait-3",
         },
       ],

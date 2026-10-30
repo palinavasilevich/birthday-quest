@@ -65,10 +65,7 @@ export const useGameStore = create<GameState>()(
   (set, get) => ({
     gameStartedAt: null,
     storyTimestamps: {},
-    // currentSceneId: "final-victory",
-    // currentSceneId: "chapter2-code-puzzle",
-    currentSceneId: "chapter2-table-3",
-    // currentSceneId: "chapter1-forest",
+    currentSceneId: "chapter1-forest",
     completedPuzzles: [],
     completedActions: [],
     inventory: [],

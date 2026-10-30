@@ -17,7 +17,7 @@ export const images = {
   dragonWin: "/images/final/dragon-win.png",
   book: "/images/final/book.png",
   cyberpunk: "/images/final/cyberpunk.png",
-  workshopTraces: "/images/final/workshop-traces.png",
+  workshopTraces: "/images/final/workshop.png",
   yarn: "/images/final/yarn.png",
   yarnInHands: "/images/final/yarn-in-hands.png",
   yarnInBattleField: "/images/final/yarn-in-battle-field.png",

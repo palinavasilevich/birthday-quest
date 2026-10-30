@@ -29,7 +29,7 @@ export function GameOverlay({
             ? "Дракон повержен"
             : endReason === "owlbear"
               ? "Медвесыч погиб"
-              : "Вы пали"}
+              : "Ты пал"}
         </p>
 
         <p className="overlay-note">
@@ -37,7 +37,7 @@ export function GameOverlay({
             ? "Вы прошли последний бой вместе."
             : endReason === "owlbear"
               ? "Его нужно было защищать до самого конца."
-              : "Попробуйте ещё раз."}
+              : "Попробуй ещё раз."}
         </p>
 
         {!won && (

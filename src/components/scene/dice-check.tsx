@@ -70,10 +70,10 @@ export function DiceCheck({ content }: DiceCheckProps) {
 
     setRuneHintLevel(resultOutcome.runeHintLevel ?? "none");
 
-    const isNaturalCritical = result === 1 || result === 20;
-    const isSuccess = total >= content.difficulty;
+    const isSuccess =
+      result === 20 || (result !== 1 && total >= content.difficulty);
 
-    if (content.achievement && !isNaturalCritical && isSuccess) {
+    if (content.achievement && isSuccess) {
       unlockAchievement(content.achievement);
     }
 
@@ -199,7 +199,7 @@ export function DiceCheck({ content }: DiceCheckProps) {
               </p>
 
               <ActionButton
-                text="Continue"
+                text="Продолжить"
                 onClick={() => {
                   if (outcome) {
                     setScene(outcome.nextScene);

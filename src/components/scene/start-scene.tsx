@@ -39,7 +39,7 @@ export function StartScreen({ onStart }: StartScreenProps) {
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ repeat: Infinity, duration: 2.4 }}
           >
-            <ActionButton text="Start" onClick={onStart} />
+            <ActionButton text="Начать" onClick={onStart} />
           </motion.div>
         </motion.div>
       </motion.div>

@@ -31,7 +31,7 @@ export const firstChapter: ChapterData = {
       actions: [
         {
           id: "follow-trail",
-          label: "Follow the trail",
+          label: "Пойти по тропе",
           nextScene: "chapter1-footprints",
         },
       ],
@@ -51,7 +51,7 @@ export const firstChapter: ChapterData = {
       actions: [
         {
           id: "look-closer",
-          label: "Take a closer look",
+          label: "Присмотреться",
           nextScene: "chapter1-footprints-2",
         },
       ],
@@ -133,7 +133,7 @@ export const firstChapter: ChapterData = {
       actions: [
         {
           id: "follow-footprints",
-          label: "Follow the footprints",
+          label: "Идти по следам",
           nextScene: "chapter1-stone",
         },
       ],
@@ -153,7 +153,7 @@ export const firstChapter: ChapterData = {
       actions: [
         {
           id: "examine-wall",
-          label: "Examine the wall",
+          label: "Осмотреть стену",
           nextScene: "chapter1-stone-2",
         },
       ],
@@ -190,7 +190,7 @@ export const firstChapter: ChapterData = {
       actions: [
         {
           id: "clear-moss",
-          label: "Examine the base of the wall",
+          label: "Осмотреть основание стены",
           nextScene: "chapter1-perception-check",
         },
       ],
@@ -334,7 +334,7 @@ export const firstChapter: ChapterData = {
       actions: [
         {
           id: "enter-chamber",
-          label: "Enter",
+          label: "Войти",
           nextScene: "chapter1-chamber",
         },
       ],
@@ -374,7 +374,7 @@ export const firstChapter: ChapterData = {
       actions: [
         {
           id: "examine-pedestal-traces",
-          label: "Examine the traces",
+          label: "Изучить следы",
           nextScene: "chapter1-chamber-3-check",
         },
       ],
@@ -446,12 +446,12 @@ export const firstChapter: ChapterData = {
       actions: [
         {
           id: "take-book",
-          label: "Take the book",
+          label: "Взять книгу",
           nextScene: "chapter1-relic",
         },
         {
           id: "leave-book",
-          label: "Leave it alone",
+          label: "Не трогать",
           nextScene: "chapter1-leave",
         },
       ],
@@ -511,7 +511,7 @@ export const firstChapter: ChapterData = {
       actions: [
         {
           id: "pick-book",
-          label: "Pick up the book",
+          label: "Поднять книгу",
           nextScene: "chapter1-relic",
         },
       ],
@@ -648,12 +648,12 @@ export const firstChapter: ChapterData = {
       actions: [
         {
           id: "chase",
-          label: "Follow the shadow",
+          label: "Погнаться за тенью",
           nextScene: "chapter1-chase",
         },
         {
           id: "wait",
-          label: "Stay still and wait",
+          label: "Замереть и ждать",
           nextScene: "chapter1-wait",
         },
       ],
@@ -680,7 +680,7 @@ export const firstChapter: ChapterData = {
         type: "diceCheck",
         title: "Атлетика",
         description:
-          "Ты бросаешься вперёд по узкому коридору. Под ногами неровные плиты, а вокруг почти ничего не видно.",
+          "Ты бросаешься вперёд по узкому коридору. Под ногами неровные плиты, а факелы на стенах дают лишь дрожащий свет.",
         skill: "Атлетика",
         difficulty: 11,
         outcomes: [
@@ -695,7 +695,7 @@ export const firstChapter: ChapterData = {
             min: 2,
             max: 10,
             title: "Неудача",
-            text: "Ты стараешься не отставать, но в темноте трудно разглядеть дорогу. Плечом задеваешь стену, и острый камень царапает кожу. Впереди мелькает тень, но расстояние между вами только увеличивается.",
+            text: "Ты стараешься не отставать, но в дрожащем свете факелов трудно разглядеть дорогу. Плечом задеваешь стену, и острый камень царапает кожу. Впереди мелькает тень, но расстояние между вами только увеличивается.",
             nextScene: "chapter1-chase-4",
           },
           {
@@ -709,7 +709,7 @@ export const firstChapter: ChapterData = {
             min: 20,
             max: 20,
             title: "Критический успех",
-            text: "Ты стремительно преодолеваешь коридор и почти настигаешь загадочное существо. В свете факела ты успеваешь разглядеть маленькую фигурку и круглые уши, которая ловко скрывается в узком проходе впереди. Ты замечаешь, куда она свернула, и не теряешь её из виду.",
+            text: "Ты стремительно преодолеваешь коридор и почти настигаешь загадочное существо. В свете факела ты успеваешь разглядеть маленькую фигурку с круглыми ушами, которая ловко скрывается в узком проходе впереди. Ты замечаешь, куда она свернула, но за поворотом уже никого нет.",
             nextScene: "chapter1-chase-4",
           },
         ],
@@ -747,7 +747,7 @@ export const firstChapter: ChapterData = {
       actions: [
         {
           id: "take-thread-torn",
-          label: "Inspect the thread",
+          label: "Рассмотреть нитку",
           nextScene: "chapter1-yarn-chase-analysis",
         },
       ],
@@ -871,7 +871,7 @@ export const firstChapter: ChapterData = {
       actions: [
         {
           id: "take-thread-torn",
-          label: "Inspect the thread",
+          label: "Рассмотреть нитку",
           nextScene: "chapter1-yarn-wait-analysis",
         },
       ],

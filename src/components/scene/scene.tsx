@@ -66,7 +66,7 @@ export function Scene({ scene }: SceneProps) {
     if (scene.nextScene && !scene.autoTransitionToNextScene && !isTerminal) {
       return (
         <div className="mt-10 flex justify-center">
-          <ActionButton text="Continue" onClick={handleContinue} />
+          <ActionButton text="Продолжить" onClick={handleContinue} />
         </div>
       );
     }

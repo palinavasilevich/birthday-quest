@@ -932,7 +932,7 @@ export class ArenaScene extends Phaser.Scene {
 
     this.hooks.onMi01Interrupt();
     this.hooks.onAnnounce(
-      "MI-01 отвлекает дракона! Действуйте, пока он оглушён!",
+      "MI-01 отвлекает дракона! Действуй, пока он оглушён!",
     );
 
     this.spawnBurst(this.dragon.x, this.dragon.y, 0x77b88a, 18);
@@ -976,6 +976,7 @@ export class ArenaScene extends Phaser.Scene {
   private updateMedkitPickup(): void {
     if (
       !this.medkitSpawned ||
+      !this.medkitLanded ||
       this.medkitCollected ||
       !this.medkit.visible ||
       this.gameOver
@@ -1005,7 +1006,7 @@ export class ArenaScene extends Phaser.Scene {
 
     this.cameras.main.flash(180, 100, 220, 130);
 
-    this.hooks.onAnnounce("Аптечка подобрана: +2 HP!");
+    this.hooks.onAnnounce("Аптечка подобрана: +3 HP!");
 
     this.pushStats();
   }
@@ -1320,7 +1321,7 @@ export class ArenaScene extends Phaser.Scene {
       } else {
         this.dragonHp = 1;
 
-        this.hooks.onAnnounce("Сначала спасите Медвесыча!");
+        this.hooks.onAnnounce("Сначала спаси Медвесыча!");
 
         this.pushStats(true);
       }
@@ -2194,7 +2195,7 @@ export class ArenaScene extends Phaser.Scene {
 
       if (!this.owlbearAidAnnounced) {
         this.owlbearAidAnnounced = true;
-        this.hooks.onAnnounce("Медвесыч тяжело ранен! Подойдите к нему!");
+        this.hooks.onAnnounce("Медвесыч тяжело ранен! Подойди к нему!");
       }
     }
 

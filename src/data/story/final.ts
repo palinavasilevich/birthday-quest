@@ -56,7 +56,7 @@ export const finalChapter: ChapterData = {
       actions: [
         {
           id: "go-after",
-          label: "Follow the sound",
+          label: "Идти на звук",
           nextScene: "final-battlefield",
         },
       ],
@@ -95,7 +95,51 @@ export const finalChapter: ChapterData = {
       audio: audio.music.forest,
       sfx: audio.sfx.dragonRoar,
       specialEffects: ["rumble", "vignette-pulse"],
-      nextScene: "final-battlefield-4",
+      nextScene: "final-battlefield-3-check",
+    },
+    {
+      id: "final-battlefield-3-check",
+      background: images.dragon,
+      content: {
+        type: "diceCheck",
+        title: "Восприятие",
+        description:
+          "Дракон разворачивается над поляной, и на мгновение пламя освещает его целиком. Ты заставляешь себя не отводить взгляд: у такого зверя должно быть уязвимое место.",
+        skill: "Восприятие",
+        difficulty: 12,
+        achievement: "dragonWeakness",
+        outcomes: [
+          {
+            min: 1,
+            max: 1,
+            title: "Критический провал",
+            text: "Порыв горячего ветра бросает пепел тебе в лицо. Ты зажмуриваешься, а когда снова открываешь глаза, дракон уже скрылся в дыму.",
+            nextScene: "final-battlefield-4",
+          },
+          {
+            min: 2,
+            max: 11,
+            title: "Неудача",
+            text: "Чешуя сплошь покрывает его тело и отражает отблески огня. Слабых мест ты не видишь.",
+            nextScene: "final-battlefield-4",
+          },
+          {
+            min: 12,
+            max: 19,
+            title: "Успех",
+            text: "Когда дракон поднимает крыло, ты замечаешь у его основания участок, где чешуя заметно тоньше. Туда и нужно бить.",
+            nextScene: "final-battlefield-4",
+          },
+          {
+            min: 20,
+            max: 20,
+            title: "Критический успех",
+            text: "Ты следишь за каждым взмахом и всё понимаешь. Чешуя у основания крыла тоньше, а перед ударом дракон открывает это место сам. Теперь ты знаешь, куда бить.",
+            nextScene: "final-battlefield-4",
+          },
+        ],
+      },
+      audio: audio.music.forest,
     },
     {
       id: "final-battlefield-4",
@@ -214,7 +258,7 @@ export const finalChapter: ChapterData = {
       background: images.deviceAssembly,
       content: {
         type: "text",
-        text: "Ты открываешь коробку.\n\nЛатунные пластины. Шестерни. Винты.\n\nРядом лежит инструкция. Ты раскладываешь детали перед собой и пытаешься понять, как соединить их в единый механизм.",
+        text: "Ты открываешь коробку.\n\nЛатунные пластины. Шестерни. Винты.\n\nНа внутренней стороне крышки — инструкция. Ты раскладываешь детали перед собой и пытаешься понять, как соединить их в единый механизм.",
       },
       audio: audio.music.book,
       nextScene: "final-battle-9",
@@ -239,6 +283,7 @@ export const finalChapter: ChapterData = {
           "Дракон ревёт совсем рядом. У тебя есть только несколько мгновений, чтобы собрать механизм. Детали должны встать на свои места.",
         skill: "Мастерство",
         difficulty: 12,
+        tag: "assembly",
         achievement: "mi01Master",
         outcomes: [
           {
@@ -304,7 +349,7 @@ export const finalChapter: ChapterData = {
       },
       audio: audio.music.book,
       sfx: audio.sfx.crash,
-      nextScene: "final-battle-12-check",
+      nextScene: "final-battle-13",
     },
 
     // {
@@ -512,7 +557,7 @@ export const finalChapter: ChapterData = {
       background: images.cyberpunk,
       content: {
         type: "text",
-        text: "Потом неоновые улицы.\n\nТайная мастерская и устройство, которое ты собрал.",
+        text: "Потом неоновые улицы.\n\nТайная мастерская и коробка с деталями, из которых ты собрал MI-01.",
       },
       audio: audio.music.victory,
       specialEffects: ["warp-in"],
@@ -618,7 +663,7 @@ export const finalChapter: ChapterData = {
       actions: [
         {
           id: "go-after",
-          label: "Follow the thread",
+          label: "Идти за нитью",
           nextScene: "final-thread-8",
         },
       ],
@@ -628,13 +673,13 @@ export const finalChapter: ChapterData = {
       background: images.yarnDisappeared,
       content: {
         type: "text",
-        text: "Нитка уходит всё дальше — сквозь лес, сквозь границу волшебного мира.\n\nТуда, где заканчивается эта история и начинается другая.",
+        text: "Нитка уходит всё дальше — сквозь лес, прочь от поля боя.\n\nТуда, где заканчивается эта история и начинается другая.",
       },
       audio: audio.music.final,
       actions: [
         {
           id: "go-after",
-          label: "Follow the thread",
+          label: "Идти за нитью",
           nextScene: "final-thread-9",
         },
       ],
