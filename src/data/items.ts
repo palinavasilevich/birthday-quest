@@ -25,9 +25,9 @@ export const ITEMS: Record<string, ItemDefinition> = {
 
   "mechanical-beetle": {
     id: "mechanical-beetle",
-    name: "Механический жук MI-01",
+    name: "Механический жук",
     description:
-      "Набор деталей для сборки механического жука. На внутренней стороне крышки — инструкция.",
+      "Набор деталей для сборки механического жука. На внутренней стороне крышки инструкция.",
     type: "story",
     image: "/images/items/mechanical-beetle.png",
     situationalBonuses: {

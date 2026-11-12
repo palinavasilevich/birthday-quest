@@ -537,7 +537,7 @@ export const secondChapter: ChapterData = {
       background: images.box,
       content: {
         type: "text",
-        text: "Ты продолжаешь осматривать стол и в самом углу замечаешь небольшую коробку.\n\nНа ней надпись:\n\nMI-01.",
+        text: "Ты продолжаешь осматривать стол и в самом углу замечаешь небольшую коробку.\n\nНа ней надпись:\n\nMI-OI.",
       },
       audio: audio.music.table,
       actions: [

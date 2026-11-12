@@ -323,7 +323,7 @@ export const finalChapter: ChapterData = {
       background: images.device,
       content: {
         type: "text",
-        text: "MI-01 лежит у тебя на ладони.\n\nНа мгновение — тишина.\n\nЗатем надкрылья раскрываются.\n\nОн оживает.",
+        text: "Механический жук лежит у тебя на ладони.\n\nНа мгновение — тишина.\n\nЗатем надкрылья раскрываются.\n\nОн оживает.",
       },
       // Механизм оживает так же, как ожили руны у стены.
       audio: audio.music.book,
@@ -401,7 +401,7 @@ export const finalChapter: ChapterData = {
       background: images.owlbearFire,
       content: {
         type: "text",
-        text: "И вдруг — в глубине поля боя появляется маленький огонёк.\n\nMI-01 пробивается сквозь дым. Он что-то нашёл.",
+        text: "И вдруг — в глубине поля боя появляется маленький огонёк.\n\nМеханический жук пробивается сквозь дым. Он что-то нашёл.",
       },
       audio: audio.music.book,
       nextScene: "final-battle-14",
@@ -487,7 +487,7 @@ export const finalChapter: ChapterData = {
       background: images.owlbearAndBeetle,
       content: {
         type: "text",
-        text: "MI-01 возвращается сам.\n\nСадится рядом с Медвесычем и складывает надкрылья.",
+        text: "Механический жук возвращается сам.\n\nСадится рядом с Медвесычем и складывает надкрылья.",
       },
       audio: audio.music.victory,
       nextScene: "final-companion",

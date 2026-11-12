@@ -932,7 +932,7 @@ export class ArenaScene extends Phaser.Scene {
 
     this.hooks.onMi01Interrupt();
     this.hooks.onAnnounce(
-      "MI-01 отвлекает дракона! Действуй, пока он оглушён!",
+      "Механический жук отвлекает дракона! Действуй, пока он оглушён!",
     );
 
     this.spawnBurst(this.dragon.x, this.dragon.y, 0x77b88a, 18);
@@ -1044,7 +1044,7 @@ export class ArenaScene extends Phaser.Scene {
       .setAlpha(1)
       .setVisible(true);
 
-    this.hooks.onAnnounce("MI-01 сбрасывает аптечку!");
+    this.hooks.onAnnounce("Механический жук сбрасывает аптечку!");
 
     this.tweens.add({
       targets: this.mi01,
@@ -1133,7 +1133,7 @@ export class ArenaScene extends Phaser.Scene {
     this.cameras.main.flash(180, 232, 194, 122);
 
     this.hooks.onAnnounce(
-      `MI-01 лечит Медвесыча! ${this.owlbearHp}/${this.owlbearMaxHp} HP`,
+      `Механический жук лечит Медвесыча! ${this.owlbearHp}/${this.owlbearMaxHp} HP`,
     );
 
     this.pushStats(true);
