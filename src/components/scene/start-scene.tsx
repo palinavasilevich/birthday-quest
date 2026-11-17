@@ -26,7 +26,7 @@ export function StartScreen({ onStart, isLeaving = false }: StartScreenProps) {
         }
       >
         <motion.h1
-          className="mb-3 text-lg leading-snug font-bold tracking-wide text-balance text-amber-100 drop-shadow-[0_0_18px_rgba(251,191,36,0.55)] [text-shadow:0_0_6px_rgba(255,214,140,0.6),0_2px_10px_rgba(0,0,0,0.8)] sm:text-3xl"
+          className="mb-3 text-2xl leading-snug font-bold tracking-wide text-balance text-amber-100 drop-shadow-[0_0_18px_rgba(251,191,36,0.55)] [text-shadow:0_0_6px_rgba(255,214,140,0.6),0_2px_10px_rgba(0,0,0,0.8)] sm:text-[1.8rem]"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.8 }}

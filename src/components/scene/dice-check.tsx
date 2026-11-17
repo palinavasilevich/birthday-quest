@@ -106,7 +106,7 @@ export function DiceCheck({ content }: DiceCheckProps) {
   };
 
   return (
-    <div className="mx-auto mt-8 w-full max-w-xl space-y-6 text-center">
+    <div className="mx-auto mt-8 w-full max-w-3xl space-y-6 text-center">
       <div className="space-y-2">
         <p className="text-sm uppercase tracking-[0.3em] text-amber-400/80">
           Проверка характеристики
@@ -117,7 +117,7 @@ export function DiceCheck({ content }: DiceCheckProps) {
         </h2>
 
         {!isSettled && (
-          <p className="text-lg leading-relaxed text-stone-300 sm:text-xl">
+          <p className="text-xl leading-relaxed text-stone-300 sm:text-2xl">
             {content.description}
           </p>
         )}
@@ -125,19 +125,23 @@ export function DiceCheck({ content }: DiceCheckProps) {
 
       {roll === null && mode === null && (
         <div className="space-y-3">
-          <p className="text-stone-400">Как ты хочешь бросить кубик?</p>
+          <p className="text-amber-100 text-xl font-bold">
+            Как ты хочешь бросить кубик?
+          </p>
 
-          <div className="flex justify-center gap-2">
+          <div className="mx-auto grid w-fit auto-cols-fr gap-4 sm:grid-flow-col">
             <ActionButton
-              text="Бросить D20 в игре"
+              text="В игре"
+              size="medium"
               onClick={handleGameRoll}
-              className="cursor-pointer"
+              className="w-full"
             />
 
             <ActionButton
-              text="Бросить настоящий D20"
+              text="Настоящий кубик"
+              size="medium"
               onClick={() => setMode("physical")}
-              className="cursor-pointer"
+              className="w-full"
             />
           </div>
         </div>
@@ -151,7 +155,10 @@ export function DiceCheck({ content }: DiceCheckProps) {
             handlePhysicalRoll();
           }}
         >
-          <label htmlFor="physical-roll" className="block text-stone-300">
+          <label
+            htmlFor="physical-roll"
+            className="block text-stone-300 text-xl font-semibold"
+          >
             Какое число выпало на кубике?
           </label>
 

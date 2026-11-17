@@ -34,7 +34,7 @@ export function TextTyper({ text, speed = 35, onComplete }: TextTyperProps) {
   }, [text, speed]);
 
   return (
-    <p className="mt-6 text-center text-2xl leading-[1.45] text-white/85 sm:text-[1.625rem]">
+    <p className="mt-6 text-center text-2xl leading-[1.45] text-white/85 sm:text-[1.8rem]">
       {displayed}
     </p>
   );

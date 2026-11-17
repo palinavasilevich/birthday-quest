@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes } from "react";
 
-type ActionButtonSize = "default" | "small";
+type ActionButtonSize = "default" | "medium" | "small";
 type ActionButtonVariant = "default" | "warm";
 
 interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -10,6 +10,25 @@ interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ActionButtonVariant;
 }
 
+/** Frame thickness in px — must match the button's `p-0.5`. */
+const BORDER = 2;
+
+/** Corner cut size (px) per button size. */
+const BEVEL: Record<ActionButtonSize, number> = {
+  default: 16,
+  medium: 12,
+  small: 8,
+};
+
+/**
+ * 45° bevels on the top-right and bottom-left corners.
+ * For the inner layer the cut is shrunk by BORDER·(2−√2) so the diagonal
+ * frame stays exactly as thick as the straight sides.
+ */
+function bevelPath(bevel: number) {
+  return `polygon(calc(100% - ${bevel}px) 0, 100% ${bevel}px, 100% 100%, ${bevel}px 100%, 0 calc(100% - ${bevel}px), 0 0)`;
+}
+
 const variantClasses: Record<
   ActionButtonVariant,
   { frame: string; inner: string; text: string }
@@ -17,26 +36,29 @@ const variantClasses: Record<
   default: {
     frame: `
       bg-[#ff9b00]
-      text-[#ff9b00]
-      hover:bg-[#8b0000]
-      hover:shadow-[inset_0_0_5px_3px_rgba(1,1,1,0.3)]
+      enabled:hover:bg-[#8b0000]
       focus-visible:outline-[#ff9b00]
     `,
     inner:
-      "bg-[radial-gradient(circle,rgb(0,0,0)_0%,rgb(0,0,0)_0%,rgba(0,0,20,1)_50%)]",
-    text: "text-[#ff9b00] group-hover:text-[#8b0000]",
+      "bg-[radial-gradient(circle,rgb(0,0,0)_0%,rgba(0,0,20,1)_50%)]",
+    text: "text-[#ff9b00] group-enabled:group-hover:text-[#ff5a3c]",
   },
   warm: {
     frame: `
       bg-amber-200
-      text-amber-100
-      hover:bg-amber-50
+      enabled:hover:bg-amber-50
       focus-visible:outline-amber-200
     `,
     inner:
       "bg-[radial-gradient(circle,rgba(70,38,8,1)_0%,rgba(30,15,4,1)_70%)]",
-    text: "text-amber-100 [text-shadow:0_0_8px_rgba(255,214,140,0.7)] group-hover:text-white",
+    text: "text-amber-100 [text-shadow:0_0_8px_rgba(255,214,140,0.7)] group-enabled:group-hover:text-white",
   },
+};
+
+const sizeClasses: Record<ActionButtonSize, string> = {
+  default: "min-w-44 px-8 py-4 text-lg",
+  medium: "min-w-36 px-7 py-3.5 text-base tracking-wide",
+  small: "min-w-23 px-4 py-1.5 text-xs",
 };
 
 export function ActionButton({
@@ -44,53 +66,51 @@ export function ActionButton({
   code = "bda249",
   size = "default",
   variant = "default",
-  disabled,
   className = "",
   ...props
 }: ActionButtonProps) {
-  const sizeClasses =
-    size === "small" ? "px-12 py-4 text-xs" : "px-22.5 py-7 text-base";
   const v = variantClasses[variant];
+  const bevel = BEVEL[size];
+  const innerBevel = bevel - BORDER * (2 - Math.SQRT2);
 
   return (
     <button
       {...props}
-      disabled={disabled}
+      style={{ clipPath: bevelPath(bevel), ...props.style }}
       className={`
         group
         relative
         z-3
+        inline-flex
         cursor-pointer
         border-0
-        ${v.frame}
-        ${sizeClasses}
+        p-0.5
         uppercase
         outline-none
-        transition-all
+        transition-colors
         duration-200
-        [clip-path:polygon(92%_0,100%_25%,100%_100%,8%_100%,0_75%,0_0)]
+        ${v.frame}
         focus-visible:outline-1
         focus-visible:outline-offset-4
         disabled:cursor-not-allowed
         disabled:opacity-40
         ${className}
-        ${disabled ? "cursor-not-allowed opacity-40" : ""}
       `}
     >
       <span
+        style={{ clipPath: bevelPath(innerBevel) }}
         className={`
-          absolute
-          inset-0.5
-          z-4
           flex
+          w-full
           items-center
           justify-center
           font-bold
-          ${v.inner}
-          ${v.text}
+          whitespace-nowrap
           transition-colors
           duration-200
-          [clip-path:polygon(92%_0,100%_25%,100%_100%,8%_100%,0_75%,0_0)]
+          ${sizeClasses[size]}
+          ${v.inner}
+          ${v.text}
         `}
       >
         {text}
@@ -98,20 +118,19 @@ export function ActionButton({
 
       <span
         className={`
+          pointer-events-none
           absolute
-          -bottom-0.75
-          right-[8%]
+          right-2
+          bottom-1.5
           z-5
-          h-3
-          ${v.inner}
-          px-1.25
-          text-[0.5rem]
+          text-[0.6rem]
           leading-none
           font-bold
           lowercase
-          ${v.text}
+          opacity-60
           transition-colors
           duration-200
+          ${v.text}
         `}
       >
         {code}

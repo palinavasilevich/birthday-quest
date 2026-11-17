@@ -100,7 +100,7 @@ export function GameLayout({
           w-full
           px-4
           text-shadow-lg
-          ${showBackgroundOnly ? "" : "max-w-180 py-2"}
+          ${showBackgroundOnly ? "" : "max-w-200 py-2"}
           ${classNameContentBlock}
         `}
       >

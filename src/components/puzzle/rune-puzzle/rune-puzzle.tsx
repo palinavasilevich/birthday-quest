@@ -40,6 +40,11 @@ interface YouTubeNamespace {
         playsinline?: number;
         rel?: number;
       };
+      events?: {
+        onReady?: () => void;
+        onError?: () => void;
+        onStateChange?: (event: { data: number }) => void;
+      };
     },
   ) => YouTubePlayer;
 }
@@ -57,7 +62,19 @@ const DISCOVERY_START_DELAY = 1200;
 
 const RICKROLL_VIDEO_ID = "dQw4w9WgXcQ";
 const RICKROLL_DURATION = 10000;
-const AFTER_RICKROLL_DELAY = 1700;
+const AFTER_RICKROLL_DELAY = 1500;
+
+/* YT.PlayerState.PLAYING */
+const YT_STATE_PLAYING = 1;
+
+/*
+ * How long to wait for the rickroll to actually start playing.
+ * If it doesn't (YouTube blocked, offline, autoplay denied),
+ * the stone "sings" the joke as text instead.
+ */
+const RICKROLL_START_TIMEOUT = 2500;
+const FALLBACK_BLOCKED_DURATION = 3500;
+const FALLBACK_LYRICS_DURATION = 3500;
 
 /*
  * Upper bound for the intro note (1.2s note + time to load piano samples).
@@ -122,6 +139,16 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
   const youtubePlayerRef = useRef<YouTubePlayer | null>(null);
 
   const youtubeContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const isPlayerReadyRef = useRef(false);
+  const isVideoStartedRef = useRef(false);
+  const isFallbackRef = useRef(false);
+
+  const finaleTimeoutsRef = useRef<number[]>([]);
+
+  const [finaleFallback, setFinaleFallback] = useState<
+    "none" | "blocked" | "lyrics"
+  >("none");
 
   const discoveryStartedRef = useRef(false);
 
@@ -225,6 +252,27 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
             playsinline: 1,
             rel: 0,
           },
+          events: {
+            onReady: () => {
+              isPlayerReadyRef.current = true;
+            },
+            onError: () => {
+              isPlayerReadyRef.current = false;
+            },
+            onStateChange: (event) => {
+              if (event.data !== YT_STATE_PLAYING) {
+                return;
+              }
+
+              // Started too late — the text fallback is already running.
+              if (isFallbackRef.current) {
+                youtubePlayerRef.current?.stopVideo();
+                return;
+              }
+
+              isVideoStartedRef.current = true;
+            },
+          },
         },
       );
     };
@@ -259,8 +307,65 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
       youtubePlayerRef.current?.destroy();
       youtubePlayerRef.current = null;
+      isPlayerReadyRef.current = false;
     };
   }, []);
+
+  /*
+   * Finale timers are cleared if the puzzle unmounts mid-finale.
+   */
+  useEffect(() => {
+    const timeouts = finaleTimeoutsRef.current;
+
+    return () => {
+      timeouts.forEach((id) => window.clearTimeout(id));
+    };
+  }, []);
+
+  /*
+   * ------------------------------------------------------------
+   * FINALE: RICKROLL (OR ITS TEXT FALLBACK)
+   * ------------------------------------------------------------
+   */
+
+  const later = (callback: () => void, delay: number) => {
+    finaleTimeoutsRef.current.push(window.setTimeout(callback, delay));
+  };
+
+  const startFinale = () => {
+    const player = youtubePlayerRef.current;
+
+    if (player && isPlayerReadyRef.current) {
+      try {
+        player.playVideo();
+      } catch (error) {
+        console.warn("Rickroll failed to start:", error);
+      }
+    }
+
+    later(() => {
+      if (isVideoStartedRef.current) {
+        later(() => {
+          youtubePlayerRef.current?.stopVideo();
+
+          later(() => setScene(nextScene), AFTER_RICKROLL_DELAY);
+        }, RICKROLL_DURATION - RICKROLL_START_TIMEOUT);
+
+        return;
+      }
+
+      isFallbackRef.current = true;
+
+      setFinaleFallback("blocked");
+
+      later(() => setFinaleFallback("lyrics"), FALLBACK_BLOCKED_DURATION);
+
+      later(
+        () => setScene(nextScene),
+        FALLBACK_BLOCKED_DURATION + FALLBACK_LYRICS_DURATION,
+      );
+    }, RICKROLL_START_TIMEOUT);
+  };
 
   /*
    * ------------------------------------------------------------
@@ -550,15 +655,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
     completePuzzle(puzzleId);
 
-    youtubePlayerRef.current?.playVideo();
-
-    window.setTimeout(() => {
-      youtubePlayerRef.current?.stopVideo();
-
-      window.setTimeout(() => {
-        setScene(nextScene);
-      }, AFTER_RICKROLL_DELAY);
-    }, RICKROLL_DURATION);
+    startFinale();
   };
 
   /*
@@ -587,6 +684,14 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
   const message = () => {
     if (isSolved) {
+      if (finaleFallback === "blocked") {
+        return "Камень пытался спеть тебе песню, но его заблокировал блокировщик рекламы.";
+      }
+
+      if (finaleFallback === "lyrics") {
+        return "Never gonna give you up…";
+      }
+
       return "Мелодия отозвалась в камне.";
     }
 
