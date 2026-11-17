@@ -18,6 +18,7 @@ import startScreen from "../../public/images/start_new.jpeg";
 
 export function Game() {
   const [isStarted, setIsStarted] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
 
   const currentSceneId = useGameStore((state) => state.currentSceneId);
 
@@ -35,21 +36,33 @@ export function Game() {
     return <div>Scene not found</div>;
   }
 
+  // Music and game state start right on click (browsers allow audio only
+  // inside a user gesture); the scene itself appears after the exit animation.
   const handleStart = () => {
+    if (isLeaving) return;
     startGame();
-    setIsStarted(true);
+    setIsLeaving(true);
   };
 
   return (
     <>
-      <GameMusic src={scene.audio} enabled={isStarted} />
+      <GameMusic src={scene.audio} enabled={isLeaving || isStarted} />
 
       {isStarted && <GameSfx src={scene.sfx} trigger={scene.id} />}
 
       {!isStarted ? (
-        <GameLayout backgroundImg={startScreen} sceneKey="start-screen">
-          <StartScreen onStart={handleStart} />
-        </GameLayout>
+        <div className="h-dvh w-full overflow-hidden bg-black">
+          <GameLayout
+            backgroundImg={startScreen}
+            sceneKey="start-screen"
+            contentOpacity={1}
+            particles="fireflies"
+            isLeaving={isLeaving}
+            onLeaveComplete={() => setIsStarted(true)}
+          >
+            <StartScreen onStart={handleStart} isLeaving={isLeaving} />
+          </GameLayout>
+        </div>
       ) : (
         <Scene scene={scene} />
       )}

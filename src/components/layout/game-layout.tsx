@@ -2,7 +2,10 @@ import type { ReactNode } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 
-import { AmbientParticles } from "@/components/layout/ambient-particles";
+import {
+  AmbientParticles,
+  type ParticlesVariant,
+} from "@/components/layout/ambient-particles";
 import { FullscreenButton } from "@/components/layout/fullscreen-button";
 import { SoundToggleButton } from "@/components/layout/sound-toggle-button";
 import { SceneEffects } from "@/components/layout/scene-effects";
@@ -19,6 +22,11 @@ interface GameLayoutProps {
   specialEffects?: SpecialEffect[];
   effectDelay?: number;
   onEffectComplete?: () => void;
+  contentOpacity?: number;
+  particles?: ParticlesVariant;
+  /* Exit animation: particles scatter, background fades to black. */
+  isLeaving?: boolean;
+  onLeaveComplete?: () => void;
 }
 
 export function GameLayout({
@@ -31,6 +39,10 @@ export function GameLayout({
   specialEffects = [],
   effectDelay,
   onEffectComplete,
+  contentOpacity = 0.85,
+  particles = "default",
+  isLeaving = false,
+  onLeaveComplete,
 }: GameLayoutProps) {
   return (
     <div
@@ -70,7 +82,17 @@ export function GameLayout({
         </SceneEffects>
       )}
 
-      <AmbientParticles />
+      {isLeaving && (
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-0 bg-black"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, delay: 0.1, ease: "easeIn" }}
+          onAnimationComplete={onLeaveComplete}
+        />
+      )}
+
+      <AmbientParticles variant={particles} scatter={isLeaving} />
 
       <div
         className={`
@@ -87,7 +109,7 @@ export function GameLayout({
             key={sceneKey}
             initial={{ opacity: 0 }}
             animate={{
-              opacity: showBackgroundOnly ? 1 : isPuzzle ? 1 : 0.85,
+              opacity: showBackgroundOnly ? 1 : isPuzzle ? 1 : contentOpacity,
             }}
             exit={{ opacity: 0 }}
             transition={{
