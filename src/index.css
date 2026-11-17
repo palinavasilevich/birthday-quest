@@ -1,8 +1,21 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600&display=swap");
-
 @import "tailwindcss";
 
+/* Fonts are loaded in index.html (<link>), so they start downloading before the CSS bundle. */
 @theme {
-  --font-display: "Cinzel", serif;
+  /* Headings: small caps from the same family as the story text, supports Cyrillic. */
+  --font-display: "Cormorant SC", "Cormorant Garamond", serif;
   --font-story: "Cormorant Garamond", serif;
+}
+
+@layer base {
+  /* Cormorant defaults to old-style figures ("D20" looks like "D₂₀"); use cap-height digits. */
+  html {
+    font-variant-numeric: lining-nums;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+  }
 }

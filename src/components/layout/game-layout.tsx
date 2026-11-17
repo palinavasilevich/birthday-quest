@@ -45,6 +45,7 @@ export function GameLayout({
         overflow-hidden
         bg-black
         font-story
+        font-medium
         text-gray-100
       "
     >
@@ -96,7 +97,7 @@ export function GameLayout({
               showBackgroundOnly
                 ? "w-full"
                 : !isPuzzle
-                  ? "flex flex-col items-center rounded-2xl border border-white/10 bg-black/60 p-10 shadow-2xl backdrop-blur-md"
+                  ? "flex max-h-[calc(100dvh-2rem)] flex-col items-center overflow-y-auto rounded-2xl border border-white/10 bg-black/60 p-6 shadow-2xl backdrop-blur-md sm:p-10"
                   : ""
             }
           >

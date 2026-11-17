@@ -112,12 +112,12 @@ export function DiceCheck({ content }: DiceCheckProps) {
           Проверка характеристики
         </p>
 
-        <h2 className="text-2xl font-semibold text-amber-100">
+        <h2 className="text-3xl font-semibold text-amber-100">
           {content.title}
         </h2>
 
         {!isSettled && (
-          <p className="text-xl leading-relaxed text-stone-300">
+          <p className="text-lg leading-relaxed text-stone-300 sm:text-xl">
             {content.description}
           </p>
         )}
@@ -194,7 +194,7 @@ export function DiceCheck({ content }: DiceCheckProps) {
                 {roll} — {outcome?.title}
               </div>
 
-              <p className="text-xl leading-relaxed text-stone-300">
+              <p className="text-lg leading-relaxed text-stone-300 sm:text-xl">
                 {outcome?.text}
               </p>
 
