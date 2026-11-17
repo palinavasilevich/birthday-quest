@@ -5,5 +5,5 @@ export const RUNE_NOTES: Record<string, Note> = {
   axii: "A#4",
   igni: "A4",
   aard: "D4",
-  yrden: "C5",
+  yrden: "D#4",
 };

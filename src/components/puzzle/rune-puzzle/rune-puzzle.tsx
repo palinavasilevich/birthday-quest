@@ -53,11 +53,17 @@ declare global {
 
 const ROLLBACK = 2;
 
-const DISCOVERY_START_DELAY = 900;
+const DISCOVERY_START_DELAY = 1200;
 
 const RICKROLL_VIDEO_ID = "dQw4w9WgXcQ";
-const RICKROLL_DURATION = 10_000;
-const AFTER_RICKROLL_DELAY = 1_700;
+const RICKROLL_DURATION = 10000;
+const AFTER_RICKROLL_DELAY = 1700;
+
+/*
+ * Upper bound for the intro note (1.2s note + time to load piano samples).
+ * After this the puzzle unlocks even if the sound never played.
+ */
+const INTRO_NOTE_TIMEOUT = 4000;
 
 /**
  * Note -> Rune mapping
@@ -105,6 +111,14 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
 
   const [introFinished, setIntroFinished] = useState(false);
 
+  /*
+   * Short pauses between player input and the next melody playback
+   * (after a mistake, between rounds, before the first round).
+   * Input is blocked so clicks don't leak into the next fragment
+   * or overlap the melody.
+   */
+  const [isWaiting, setIsWaiting] = useState(false);
+
   const youtubePlayerRef = useRef<YouTubePlayer | null>(null);
 
   const youtubeContainerRef = useRef<HTMLDivElement | null>(null);
@@ -141,22 +155,34 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
       setIsPlaying(true);
       setActiveRune("quen");
 
+      /*
+       * The intro note starts without a click. If the browser blocks
+       * audio (iOS Safari) or the piano samples fail to load, the
+       * promise may hang or reject — never let that lock the puzzle.
+       */
       try {
-        await playMelodyNote("G4", 1.2);
-      } finally {
-        if (!cancelled) {
-          setActiveRune(null);
-          setIsPlaying(false);
-        }
+        await Promise.race([
+          playMelodyNote("G4", 1.2),
+          new Promise<void>((resolve) => {
+            window.setTimeout(resolve, INTRO_NOTE_TIMEOUT);
+          }),
+        ]);
+      } catch (error) {
+        console.warn("Rune intro note failed to play:", error);
       }
 
-      if (!cancelled) {
-        window.setTimeout(() => {
-          if (!cancelled) {
-            setIntroFinished(true);
-          }
-        }, 1800);
+      if (cancelled) {
+        return;
       }
+
+      setActiveRune(null);
+      setIsPlaying(false);
+
+      window.setTimeout(() => {
+        if (!cancelled) {
+          setIntroFinished(true);
+        }
+      }, 1800);
     };
 
     void startIntro();
@@ -164,7 +190,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [runeHintLevel]);
 
   /*
    * ------------------------------------------------------------
@@ -289,6 +315,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     discoveryStartedRef.current = true;
 
     const timeout = window.setTimeout(() => {
+      setIsWaiting(true);
       setPhase("round");
       setRound(0);
       setSequence([]);
@@ -380,6 +407,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     }
 
     const timeout = window.setTimeout(() => {
+      setIsWaiting(false);
       void playCurrentMelody(0);
     }, 500);
 
@@ -399,7 +427,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
    */
 
   const handleRuneClick = async (rune: Rune) => {
-    if (phase !== "round" || isPlaying || isSolved) {
+    if (phase !== "round" || isPlaying || isWaiting || isSolved) {
       return;
     }
 
@@ -458,18 +486,18 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
       setSequence(rolledBackSequence);
 
       setReplayFrom(rollback);
+      setIsWaiting(true);
 
       /*
        * Play the melody again from the rollback point.
        */
 
       window.setTimeout(() => {
-        void playCurrentMelody(rollback);
-      }, 700);
-
-      window.setTimeout(() => {
         setIsMistake(false);
         setMistakeRune(null);
+        setIsWaiting(false);
+
+        void playCurrentMelody(rollback);
       }, 700);
 
       return;
@@ -502,6 +530,8 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
     if (round < LEVEL_MELODIES.length - 1) {
       setSequence([]);
       setReplayFrom(0);
+      // Stays true until the autoplay effect starts the next melody.
+      setIsWaiting(true);
 
       window.setTimeout(() => {
         setRound((currentRound) => currentRound + 1);
@@ -538,12 +568,13 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
    */
 
   const handleReplay = () => {
-    if (phase !== "round" || isPlaying || isSolved) {
+    if (phase !== "round" || isPlaying || isWaiting || isSolved) {
       return;
     }
 
     setIsMistake(false);
     setMistakeRune(null);
+    setReplayFrom(0);
 
     void playCurrentMelody(0);
   };
@@ -635,8 +666,9 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
         border
         border-white/10
         bg-black/60
-        p-12
+        p-6
         shadow-2xl
+        sm:p-12
         backdrop-blur-md
       "
     >
@@ -704,7 +736,10 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
               key={rune.id}
               type="button"
               disabled={
-                isPlaying || isSolved || (isDiscovered && phase === "discovery")
+                isPlaying ||
+                isWaiting ||
+                isSolved ||
+                (isDiscovered && phase === "discovery")
               }
               onClick={() =>
                 phase === "discovery"
@@ -716,8 +751,8 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
                 group
                 relative
                 flex
-                h-20
-                w-16
+                h-16
+                w-12
                 cursor-pointer
                 flex-col
                 items-center
@@ -771,7 +806,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
                 alt={rune.label}
                 src={rune.symbolImage}
                 className={`
-                  w-12
+                  w-8 sm:w-12
                   transition-transform
                   duration-200
                   ${isActive ? "scale-110" : ""}
@@ -883,7 +918,7 @@ export function RunePuzzle({ puzzleId, nextScene }: RunePuzzleProps) {
       {phase === "round" && !isSolved && (
         <button
           type="button"
-          disabled={isPlaying}
+          disabled={isPlaying || isWaiting}
           onClick={handleReplay}
           className="
             mt-8
