@@ -94,17 +94,10 @@ export function GameLayout({
 
       <AmbientParticles variant={particles} scatter={isLeaving} />
 
-      <div
-        className={`
-          z-10
-          w-full
-          px-4
-          text-shadow-lg
-          ${showBackgroundOnly ? "" : "max-w-200 py-2"}
-          ${classNameContentBlock}
-        `}
-      >
+      <div className="z-10 w-full px-4 text-shadow-lg">
         <AnimatePresence mode="wait">
+          {/* Width classes live on the keyed element so the exiting scene
+              keeps its own layout while fading out (no jump on scene change). */}
           <motion.div
             key={sceneKey}
             initial={{ opacity: 0 }}
@@ -115,13 +108,17 @@ export function GameLayout({
             transition={{
               duration: 0.8,
             }}
-            className={
-              showBackgroundOnly
-                ? "w-full"
-                : !isPuzzle
+            className={`
+              mx-auto
+              w-full
+              ${showBackgroundOnly ? "" : "max-w-200 my-2"}
+              ${classNameContentBlock}
+              ${
+                !showBackgroundOnly && !isPuzzle
                   ? "flex max-h-[calc(100dvh-2rem)] flex-col items-center overflow-y-auto rounded-2xl border border-white/10 bg-black/60 p-6 shadow-2xl backdrop-blur-md sm:p-10"
                   : ""
-            }
+              }
+            `}
           >
             {children}
           </motion.div>
