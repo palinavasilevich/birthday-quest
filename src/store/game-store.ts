@@ -78,10 +78,21 @@ export const useGameStore = create<GameState>()(
 
     setRuneHintLevel: (level) => set({ runeHintLevel: level }),
 
+    // The first scene is the initial currentSceneId, so setScene never fires
+    // for it — record its story event here instead.
     startGame: () =>
-      set({
-        gameStartedAt: Date.now(),
-        runeHintLevel: "none",
+      set((state) => {
+        const now = Date.now();
+        const event = SCENE_STORY_EVENTS[state.currentSceneId];
+
+        return {
+          gameStartedAt: now,
+          runeHintLevel: "none",
+          storyTimestamps:
+            event && !state.storyTimestamps[event]
+              ? { ...state.storyTimestamps, [event]: now }
+              : state.storyTimestamps,
+        };
       }),
 
     markStoryEvent: (event) =>

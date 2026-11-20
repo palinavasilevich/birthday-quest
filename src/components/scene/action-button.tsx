@@ -55,10 +55,17 @@ const variantClasses: Record<
   },
 };
 
+/** Fixed width per size so buttons don't grow with their label. */
+const widthClasses: Record<ActionButtonSize, string> = {
+  default: "w-80",
+  medium: "w-64",
+  small: "w-28",
+};
+
 const sizeClasses: Record<ActionButtonSize, string> = {
-  default: "min-w-44 px-8 py-4 text-lg",
-  medium: "min-w-36 px-7 py-3.5 text-base tracking-wide",
-  small: "min-w-23 px-4 py-1.5 text-xs",
+  default: "px-8 py-4 text-lg",
+  medium: "px-7 py-3.5 text-base tracking-wide",
+  small: "px-4 py-1.5 text-xs",
 };
 
 export function ActionButton({
@@ -82,6 +89,8 @@ export function ActionButton({
         relative
         z-3
         inline-flex
+        ${widthClasses[size]}
+        max-w-full
         cursor-pointer
         border-0
         p-0.5
@@ -104,8 +113,9 @@ export function ActionButton({
           w-full
           items-center
           justify-center
+          text-center
           font-bold
-          whitespace-nowrap
+          text-balance
           transition-colors
           duration-200
           ${sizeClasses[size]}

@@ -134,14 +134,12 @@ export function DiceCheck({ content }: DiceCheckProps) {
               text="В игре"
               size="medium"
               onClick={handleGameRoll}
-              className="w-full"
             />
 
             <ActionButton
               text="Настоящий кубик"
               size="medium"
               onClick={() => setMode("physical")}
-              className="w-full"
             />
           </div>
         </div>

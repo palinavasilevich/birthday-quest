@@ -432,7 +432,7 @@ export const firstChapter: ChapterData = {
       },
       audio: audio.music.room,
 
-      sfx: audio.sfx.doorRoomOpen,
+      sfx: audio.sfx.doorClose,
       nextScene: "chapter1-chamber-5",
     },
     {
